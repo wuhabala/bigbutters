@@ -50,15 +50,18 @@
   --ochre:        #8b6438;
   --rule:         #c5b59c;
 
+  /* 自托管字体 */
   --font-serif:   'Noto Serif SC', 'EB Garamond', Georgia, serif;
-  --font-sans:    'Inter', 'Noto Sans SC', -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
   --font-script:  'Caveat', cursive;
+
+  /* system fallback · 等真用到时再决定是否自托管 */
+  --font-sans:    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace;
 
   --content-max:  760px;
 }
 
-/* ============ typography defaults ============ */
+/* ============ minimal globals ============ */
 body {
   background: var(--bg);
   color: var(--ink);
@@ -66,14 +69,33 @@ body {
   font-size: 17px;
   line-height: 1.85;
 }
-h1 { font-size: clamp(44px, 7vw, 72px); line-height: 1.05; font-weight: 600; letter-spacing: -0.01em; }
-h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; font-weight: 600; }
-h3 { font-size: 24px; line-height: 1.3; font-weight: 600; }
-p  { margin-bottom: 22px; }
 em { font-style: italic; }
 strong { font-weight: 600; }
 
-blockquote {
+/* ============ 文章排版 · .prose 作用域 ============ */
+/* 用于 markdown 渲染的内容容器（IssueLayout/ArticleLayout/topic-summary 等）。
+   chrome 与 UI 组件（Header/Nav/CoverCard 等）不挂 .prose，自定义自己的样式。 */
+
+.prose h1 {
+  font-size: clamp(44px, 7vw, 72px);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.prose h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  font-weight: 600;
+}
+.prose h3 {
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.prose p {
+  margin-bottom: 22px;
+}
+.prose blockquote {
   border-left: 2px solid var(--accent);
   padding: 4px 16px;
   margin: 24px 0;
@@ -81,20 +103,20 @@ blockquote {
   font-size: 16px;
   color: var(--ink-soft);
 }
-hr {
+.prose hr {
   border: 0;
   height: 1px;
   background: var(--rule);
   margin: 32px 0;
 }
-a {
+.prose a {
   border-bottom: 1px solid var(--accent);
   padding-bottom: 1px;
 }
-a:hover { color: var(--accent); }
+.prose a:hover { color: var(--accent); }
 
 /* ============ responsive ============ */
 @media (max-width: 640px) {
   body { font-size: 16px; line-height: 1.75; }
-  blockquote { font-size: 15px; }
+  .prose blockquote { font-size: 15px; }
 }

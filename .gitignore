@@ -9,8 +9,9 @@ dist/
 # Test coverage
 coverage/
 
-# Obsidian
+# Obsidian（本仓库只发布内容+模板，不复现作者工作环境）
 .obsidian/
+.trash/
 
 # OS
 .DS_Store
