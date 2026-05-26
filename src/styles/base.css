@@ -1,0 +1,100 @@
+/* src/styles/base.css */
+
+/* ============ font-face ============ */
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NotoSerifSC-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NotoSerifSC-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/EBGaramond-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url('/fonts/EBGaramond-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Caveat';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/Caveat-Regular.woff2') format('woff2');
+}
+
+/* ============ root tokens (default = 席勒) ============ */
+:root {
+  --bg:           #ece1cf;
+  --bg-soft:      #f1e8d6;
+  --bg-deep:      #e0d4bc;
+  --ink:          #2a1a14;
+  --ink-soft:     #5d4a3e;
+  --ink-faint:    #8b7d6c;
+  --accent:       #7a2820;
+  --accent-soft:  #a8463a;
+  --ochre:        #8b6438;
+  --rule:         #c5b59c;
+
+  --font-serif:   'Noto Serif SC', 'EB Garamond', Georgia, serif;
+  --font-sans:    'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-script:  'Caveat', cursive;
+
+  --content-max:  760px;
+}
+
+/* ============ typography defaults ============ */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.85;
+}
+h1 { font-size: clamp(44px, 7vw, 72px); line-height: 1.05; font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; font-weight: 600; }
+h3 { font-size: 24px; line-height: 1.3; font-weight: 600; }
+p  { margin-bottom: 22px; }
+em { font-style: italic; }
+strong { font-weight: 600; }
+
+blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 4px 16px;
+  margin: 24px 0;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
+  margin: 32px 0;
+}
+a {
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
+}
+a:hover { color: var(--accent); }
+
+/* ============ responsive ============ */
+@media (max-width: 640px) {
+  body { font-size: 16px; line-height: 1.75; }
+  blockquote { font-size: 15px; }
+}
