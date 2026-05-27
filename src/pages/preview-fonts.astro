@@ -1,15 +1,21 @@
 ---
 // src/pages/preview-fonts.astro
-// 临时页面：比较 5 个中文艺术字体备选 · 用于挑选 Basquiat 主题大标题字体
+// 临时页面：比较中文艺术字体 · 用于挑选 Basquiat 主题大标题字体
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
 
 const samples = [
   {
+    id: 'zt-ziyouti',
+    name: 'ZT ZiYouTi · 卓特自由体',
+    note: '当前在用 · Basquiat 中文品牌名与标题统一字体',
+    family: "'ZT ZiYouTi', 'Noto Serif SC', serif",
+  },
+  {
     id: 'zcool-qingke-huangyou',
     name: 'ZCOOL QingKe HuangYou · 清刻黄油体',
-    note: '当前在用 · 字体名与品牌"大大黄油"同源 · 圆胖卡通',
+    note: '上一版字体 · 字体名与品牌"大大黄油"同源 · 圆胖卡通',
     family: "'ZCOOL QingKe HuangYou', 'Noto Serif SC', serif",
   },
   {
@@ -51,7 +57,7 @@ const samples = [
     <header class="preview-head">
       <p class="preview-eyebrow">FONT PREVIEW</p>
       <h1>Basquiat 主题 · 中文艺术字候选</h1>
-      <p class="preview-note">同一段标题 + 同一段正文，6 种字体并列。挑你觉得最像 Basquiat 气质的，告诉我 id，我应用到整个主题。</p>
+      <p class="preview-note">同一段标题 + 同一段正文，字体效果并列展示。当前 Basquiat 中文品牌名和标题采用卓特自由体。</p>
     </header>
 
     <div class="grid">
@@ -73,8 +79,8 @@ const samples = [
 
     <section class="how">
       <h2>怎么用</h2>
-      <p>选定后告诉我对应 id（如 <code>liu-jian-mao-cao</code>），我把 base.css 里 Basquiat hero / prose h2/h3 / article-title 的 font-family 改成那个。其他选项的 woff2 不会被生产使用，但留在 public/fonts/ 备用（删除可释放 ~5MB 资产）。</p>
-      <p><strong>关于"卓特自由体"</strong>：商业字库 · 不在 @fontsource · 需许可（若你有 woff2 + 商用许可，给我直接接入）。</p>
+      <p>Basquiat hero、文章大标题、正文 h2/h3 以及中文品牌名统一采用 <code>zt-ziyouti</code>。其他选项的 woff2 留在 <code>public/fonts/</code> 备用。</p>
+      <p><strong>关于"卓特自由体"</strong>：2026-04 发布版采用 SIL OFL 1.1，可用于网页嵌入与再分发；许可信息记录在 <code>public/fonts/LICENSE.md</code>。</p>
     </section>
   </main>
   <Footer />
