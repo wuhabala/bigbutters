@@ -1,25 +1,40 @@
 ---
 // src/components/chrome/CoverCard.astro
-// 显示一张专题/研究封面缩略（用于首页 + 列表页）
-// 当前 Phase 1 占位阶段：coverImage 一般为空，使用主题色 + 文字 fallback 渲染
-// Phase 2 真有 MJ 出图时：传 coverImage 显示真图
+// 专题/研究封面缩略 · 用于首页 + 列表页
+// coverImage 接 ImageMetadata（Astro image() schema 输出）时，
+// 自动用 Astro <Image> 优化管线（WebP + 多倍图 + lazy + width/height）
+import { Image } from 'astro:assets';
 import { getTheme, type ThemeId } from '@themes';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   href: string;
   title: string;
   theme: ThemeId;
   meta?: string;
-  coverImage?: string;
+  /** 优先接 ImageMetadata（Zod image() 处理后），其次 string（原始 URL） */
+  coverImage?: ImageMetadata | string;
   aspectRatio?: string;
 }
 const { href, title, theme, meta, coverImage, aspectRatio = '3 / 4' } = Astro.props;
 const pack = getTheme(theme);
+const hasImage = !!coverImage;
+const isMetadata = !!coverImage && typeof coverImage !== 'string' && 'src' in coverImage;
 ---
 <a class="cover-card" href={href} data-theme={theme}
    style={`background: ${pack.tokens.bg}; color: ${pack.tokens.ink}; aspect-ratio: ${aspectRatio};`}>
-  {coverImage ? (
-    <img src={coverImage} alt={title} loading="lazy" />
+  {hasImage && isMetadata ? (
+    <Image
+      src={coverImage as ImageMetadata}
+      alt={title}
+      widths={[320, 640, 960]}
+      sizes="(max-width: 640px) 100vw, 320px"
+      loading="lazy"
+      decoding="async"
+      format="webp"
+    />
+  ) : hasImage ? (
+    <img src={coverImage as string} alt={title} loading="lazy" decoding="async" />
   ) : (
     <div class="cover-fallback">
       <span class="cover-title" style={`color: ${pack.tokens.ink};`}>{title}</span>
@@ -40,7 +55,7 @@ const pack = getTheme(theme);
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.12);
   }
-  .cover-card img { width: 100%; height: 100%; object-fit: cover; }
+  .cover-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cover-fallback {
     position: absolute; inset: 0;
     padding: 12px 14px;
@@ -57,5 +72,16 @@ const pack = getTheme(theme);
     font-size: 10px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
+  }
+
+  /* Basquiat 主题下封面卡 hover 更夸张 */
+  :global(body.theme-basquiat) .cover-card {
+    border: 2.5px solid var(--ink);
+    box-shadow: 4px 4px 0 0 var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  :global(body.theme-basquiat) .cover-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--ink);
   }
 </style>

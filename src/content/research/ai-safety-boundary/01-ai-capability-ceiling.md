@@ -4,6 +4,8 @@ order: 1
 date: 2026-05-22
 length: 5065
 type: 思考片段
+cover:
+  hero_image: ./images/01.png
 tags:
   - "AI"
   - "能力上限"

@@ -5,6 +5,7 @@ import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
 import CoverCard from '@components/chrome/CoverCard.astro';
 import type { ThemeId } from '@themes';
+import type { ImageMetadata } from 'astro';
 
 export interface FeaturedTopic {
   slug: string;
@@ -14,7 +15,7 @@ export interface FeaturedTopic {
   issueHref: string;
   issueNum: number;
   blurb: string;
-  coverImage?: string;
+  coverImage?: ImageMetadata | string;
 }
 
 export interface TopicCardData {
@@ -22,7 +23,7 @@ export interface TopicCardData {
   title: string;
   theme: ThemeId;
   meta: string;
-  coverImage?: string;
+  coverImage?: ImageMetadata | string;
 }
 
 export interface ResearchEntry {

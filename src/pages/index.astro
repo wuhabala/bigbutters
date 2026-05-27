@@ -38,7 +38,7 @@ if (!isEmptyState) {
         issueHref: `/topics/${topicSlug}/${issueSlug}/`,
         issueNum: latestIssue.data.issue,
         blurb: latestIssue.data.summary ?? featuredTopic.data.summary,
-        coverImage: featuredTopic.data.cover?.hero_image?.src,
+        coverImage: featuredTopic.data.cover?.hero_image,
       };
     }
   }
@@ -54,7 +54,7 @@ if (!isEmptyState) {
       issueHref: `/topics/${fallbackSlug}/`,
       issueNum: 0,
       blurb: fallbackTopic.data.summary,
-      coverImage: fallbackTopic.data.cover?.hero_image?.src,
+      coverImage: fallbackTopic.data.cover?.hero_image,
     };
   }
 }
@@ -79,7 +79,7 @@ const allTopics: TopicCardData[] = topics
       title: t.data.title,
       theme: t.data.theme,
       meta,
-      coverImage: t.data.cover?.hero_image?.src,
+      coverImage: t.data.cover?.hero_image,
     };
   });
 

@@ -92,7 +92,7 @@ const research = defineCollection({
 // =================================================================
 const researchArticles = defineCollection({
   loader: glob({ pattern: '*/!(index).{md,mdx}', base: './src/content/research' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     date: z.coerce.date(),
     length: z.number().int().positive().optional(),
@@ -101,6 +101,10 @@ const researchArticles = defineCollection({
     /** 期次序号 · 与文件名前缀对齐（如 01-foo.md → order: 1）；
      *  研究专题首页按此升序排序，并在列表显示"第 N 期" */
     order: z.number().int().positive().optional(),
+    /** 文章封面图 · 用 Astro <Image /> 优化（自动 WebP + 多倍图 + lazy） */
+    cover: z.object({
+      hero_image: image().optional(),
+    }).optional(),
     sources: z.array(z.object({
       title: z.string(),
       author: z.string().optional(),

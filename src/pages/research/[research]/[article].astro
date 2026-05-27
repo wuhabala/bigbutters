@@ -33,6 +33,7 @@ const { Content } = await render(article);
   type={article.data.type}
   tags={article.data.tags}
   order={article.data.order}
+  coverImage={article.data.cover?.hero_image}
   theme={research.data.theme}
 >
   <Content />

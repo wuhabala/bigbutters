@@ -41,6 +41,7 @@ const { Content } = await render(research);
   theme={research.data.theme}
   description={research.data.summary}
   ogImage={research.data.cover?.hero_image?.src}
+  heroImage={research.data.cover?.hero_image}
 >
   <div class={`research-summary prose ${research.data.theme === 'basquiat' ? 'bsq-summary' : ''}`}>
     <p>{research.data.summary}</p>

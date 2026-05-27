@@ -4,6 +4,8 @@ order: 9
 date: 2026-05-23
 length: 4293
 type: 文献综述
+cover:
+  hero_image: ./images/09.png
 tags:
   - "AI"
   - "中美"

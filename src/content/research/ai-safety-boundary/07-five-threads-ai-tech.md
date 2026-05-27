@@ -4,6 +4,8 @@ order: 7
 date: 2026-05-23
 length: 3591
 type: 文献综述
+cover:
+  hero_image: ./images/07.png
 tags:
   - "AI"
   - "前沿"

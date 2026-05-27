@@ -29,7 +29,7 @@ const sorted = research.sort((a, b) => b.data.started.localeCompare(a.data.start
                 title={r.data.title}
                 theme={r.data.theme}
                 meta={r.data.status === 'ongoing' ? '进行中' : '已沉淀'}
-                coverImage={r.data.cover?.hero_image?.src}
+                coverImage={r.data.cover?.hero_image}
               />
               <div class="r-text">
                 <h3>{r.data.title}</h3>

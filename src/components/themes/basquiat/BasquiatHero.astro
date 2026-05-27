@@ -1,7 +1,9 @@
 ---
 // src/components/themes/basquiat/BasquiatHero.astro
 // Basquiat 主题专属 hero（用于研究专题首页和文章页 hero 区）
+import { Image } from 'astro:assets';
 import Crown from './Crown.astro';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   eyebrow: string;          // 顶部小标签 · 如 "研究"
@@ -9,26 +11,45 @@ export interface Props {
   subtitle?: string;
   /** 装饰角章号文字 · 如 "01 / 09" 或 "RESEARCH" */
   stamp?: string;
+  /** Hero 大图（竖版优先 · 在右侧） */
+  heroImage?: ImageMetadata;
 }
-const { eyebrow, title, subtitle, stamp } = Astro.props;
+const { eyebrow, title, subtitle, stamp, heroImage } = Astro.props;
+const hasImage = !!heroImage;
 ---
-<header class="bsq-hero">
-  <div class="bsq-hero-top">
-    <Crown size={42} />
-    <span class="bsq-hero-eyebrow">{eyebrow}</span>
-    {stamp && <span class="bsq-hero-stamp">{stamp}</span>}
+<header class:list={['bsq-hero', { 'bsq-hero-with-image': hasImage }]}>
+  <div class="bsq-hero-text">
+    <div class="bsq-hero-top">
+      <Crown size={42} />
+      <span class="bsq-hero-eyebrow">{eyebrow}</span>
+      {stamp && <span class="bsq-hero-stamp">{stamp}</span>}
+    </div>
+
+    <h1 class="bsq-hero-title">{title}</h1>
+    <!-- 手绘下划线 · 不规则 -->
+    <svg class="bsq-hero-underline" viewBox="0 0 400 14" preserveAspectRatio="none">
+      <path d="M 4 8 Q 50 3, 100 8 T 200 10 T 300 6 T 396 9"
+            fill="none" stroke="#0a0a0a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 80 12 L 320 12"
+            stroke="#c43838" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    </svg>
+
+    {subtitle && <p class="bsq-hero-subtitle">{subtitle}</p>}
   </div>
 
-  <h1 class="bsq-hero-title">{title}</h1>
-  <!-- 手绘下划线 · 不规则 -->
-  <svg class="bsq-hero-underline" viewBox="0 0 400 14" preserveAspectRatio="none">
-    <path d="M 4 8 Q 50 3, 100 8 T 200 10 T 300 6 T 396 9"
-          fill="none" stroke="#0a0a0a" stroke-width="4" stroke-linecap="round"/>
-    <path d="M 80 12 L 320 12"
-          stroke="#c43838" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
-  </svg>
-
-  {subtitle && <p class="bsq-hero-subtitle">{subtitle}</p>}
+  {hasImage && (
+    <figure class="bsq-hero-image">
+      <Image
+        src={heroImage!}
+        alt={title}
+        widths={[320, 480, 720]}
+        sizes="(max-width: 760px) 100vw, 360px"
+        loading="eager"
+        decoding="async"
+        format="webp"
+      />
+    </figure>
+  )}
 </header>
 
 <style>
@@ -36,6 +57,34 @@ const { eyebrow, title, subtitle, stamp } = Astro.props;
     margin-bottom: 56px;
     max-width: var(--content-max);
     position: relative;
+  }
+  /* 含 hero 大图时双栏布局：左文字 + 右图 */
+  .bsq-hero-with-image {
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 36px;
+    align-items: start;
+  }
+  .bsq-hero-text { min-width: 0; }
+  .bsq-hero-image {
+    margin: 0;
+    border: 3.5px solid var(--ink);
+    box-shadow: 8px 8px 0 0 var(--ink);
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .bsq-hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  @media (max-width: 760px) {
+    .bsq-hero-with-image {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .bsq-hero-image { box-shadow: 5px 5px 0 0 var(--ink); border-width: 3px; }
   }
   .bsq-hero-top {
     display: flex;

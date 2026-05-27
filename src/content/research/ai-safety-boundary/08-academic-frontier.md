@@ -4,6 +4,8 @@ order: 8
 date: 2026-05-23
 length: 5480
 type: 人物思想综述
+cover:
+  hero_image: ./images/08.png
 tags:
   - "AI"
   - "学术"

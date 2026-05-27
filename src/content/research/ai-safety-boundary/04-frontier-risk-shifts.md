@@ -4,6 +4,8 @@ order: 4
 date: 2026-05-23
 length: 5063
 type: 文献综述
+cover:
+  hero_image: ./images/04.png
 tags:
   - "AI"
   - "对齐"

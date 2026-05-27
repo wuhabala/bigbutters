@@ -29,7 +29,7 @@ const sorted = topics.sort((a, b) => b.data.started.localeCompare(a.data.started
                 title={t.data.title}
                 theme={t.data.theme}
                 meta={t.data.status === 'ongoing' ? '进行中' : t.data.status === 'planning' ? '筹备' : '已完结'}
-                coverImage={t.data.cover?.hero_image?.src}
+                coverImage={t.data.cover?.hero_image}
               />
               <div class="topic-text">
                 <h3>{t.data.title}</h3>

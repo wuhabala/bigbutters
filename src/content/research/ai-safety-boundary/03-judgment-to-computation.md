@@ -4,6 +4,8 @@ order: 3
 date: 2026-05-22
 length: 5257
 type: 思考片段
+cover:
+  hero_image: ./images/03.png
 tags:
   - "AI"
   - "意义"

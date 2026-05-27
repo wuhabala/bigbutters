@@ -4,6 +4,8 @@ order: 5
 date: 2026-05-23
 length: 4205
 type: 文献综述
+cover:
+  hero_image: ./images/05.png
 tags:
   - "AI"
   - "防御"

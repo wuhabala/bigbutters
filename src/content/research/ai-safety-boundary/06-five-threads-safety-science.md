@@ -4,6 +4,8 @@ order: 6
 date: 2026-05-23
 length: 4630
 type: 思想综述
+cover:
+  hero_image: ./images/06.png
 tags:
   - "AI"
   - "安全科学"
