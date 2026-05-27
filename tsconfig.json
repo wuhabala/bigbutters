@@ -11,6 +11,6 @@
       "@content/*":    ["src/content/*"]
     }
   },
-  "include": [".astro/types.d.ts", "**/*", "tests/**/*"],
-  "exclude": ["dist", "node_modules"]
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist", "node_modules", "tests", "vitest.config.ts"]
 }
