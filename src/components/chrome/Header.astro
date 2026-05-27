@@ -1,0 +1,35 @@
+---
+// src/components/chrome/Header.astro
+import Nav from './Nav.astro';
+export interface Props {
+  activeNav?: 'topics' | 'research' | 'about' | null;
+}
+const { activeNav = null } = Astro.props;
+---
+<header class="site-header">
+  <a href="/" class="brand">🪳 大大黄油</a>
+  <Nav active={activeNav} />
+</header>
+<style>
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--rule);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .brand {
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    border-bottom: none;
+  }
+  @media (max-width: 640px) {
+    .site-header { padding: 16px 20px; }
+    .brand { font-size: 16px; }
+  }
+</style>

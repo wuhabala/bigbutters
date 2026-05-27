@@ -1,0 +1,61 @@
+---
+// src/components/chrome/CoverCard.astro
+// 显示一张专题/研究封面缩略（用于首页 + 列表页）
+// 当前 Phase 1 占位阶段：coverImage 一般为空，使用主题色 + 文字 fallback 渲染
+// Phase 2 真有 MJ 出图时：传 coverImage 显示真图
+import { getTheme, type ThemeId } from '@themes';
+
+export interface Props {
+  href: string;
+  title: string;
+  theme: ThemeId;
+  meta?: string;
+  coverImage?: string;
+  aspectRatio?: string;
+}
+const { href, title, theme, meta, coverImage, aspectRatio = '3 / 4' } = Astro.props;
+const pack = getTheme(theme);
+---
+<a class="cover-card" href={href} data-theme={theme}
+   style={`background: ${pack.tokens.bg}; color: ${pack.tokens.ink}; aspect-ratio: ${aspectRatio};`}>
+  {coverImage ? (
+    <img src={coverImage} alt={title} loading="lazy" />
+  ) : (
+    <div class="cover-fallback">
+      <span class="cover-title" style={`color: ${pack.tokens.ink};`}>{title}</span>
+      {meta && <span class="cover-meta" style={`color: ${pack.tokens.accent};`}>{meta}</span>}
+    </div>
+  )}
+</a>
+<style>
+  .cover-card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border-bottom: none;
+  }
+  .cover-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  }
+  .cover-card img { width: 100%; height: 100%; object-fit: cover; }
+  .cover-fallback {
+    position: absolute; inset: 0;
+    padding: 12px 14px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .cover-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .cover-meta {
+    font-family: 'EB Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+</style>

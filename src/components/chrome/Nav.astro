@@ -1,0 +1,33 @@
+---
+// src/components/chrome/Nav.astro
+export interface Props {
+  active?: 'topics' | 'research' | 'about' | null;
+}
+const { active = null } = Astro.props;
+---
+<nav class="site-nav">
+  <a href="/topics/" class:list={['nav-link', { active: active === 'topics' }]}>专题</a>
+  <a href="/research/" class:list={['nav-link', { active: active === 'research' }]}>研究</a>
+  <a href="/about/" class:list={['nav-link', { active: active === 'about' }]}>关于</a>
+</nav>
+<style>
+  .site-nav {
+    display: flex;
+    gap: 18px;
+    font-family: 'EB Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .nav-link {
+    border-bottom: none;
+    color: var(--ink-soft);
+    transition: color 0.15s;
+  }
+  .nav-link:hover { color: var(--accent); }
+  .nav-link.active {
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+  }
+</style>
