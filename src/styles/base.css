@@ -265,6 +265,68 @@ body.theme-basquiat .prose code {
   border-radius: 0;
 }
 
+/* table · Basquiat 风：黑边粗、表头黑底奶黄字、行 hover 黄底 */
+body.theme-basquiat .prose .table-wrap,
+body.theme-basquiat .prose table {
+  width: 100%;
+  margin: 28px 0;
+  display: block;
+  overflow-x: auto;        /* 移动端横向滚 */
+  max-width: 100%;
+}
+body.theme-basquiat .prose table {
+  border-collapse: collapse;
+  border: 3px solid var(--ink);
+  background: #fffdf5;
+  display: table;          /* 还原为 table 渲染（容器在外层 .prose 已是 block）*/
+  min-width: 100%;
+}
+body.theme-basquiat .prose thead {
+  background: var(--ink);
+  color: var(--bg);
+}
+body.theme-basquiat .prose th {
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 13.5px;
+  letter-spacing: 0.08em;
+  border-right: 2px solid var(--bg);
+  font-weight: 400;
+  white-space: nowrap;
+}
+body.theme-basquiat .prose th:last-child { border-right: none; }
+body.theme-basquiat .prose td {
+  padding: 10px 14px;
+  border-top: 2px solid var(--ink);
+  border-right: 2px dashed rgba(10,10,10,0.3);
+  font-size: 15px;
+  line-height: 1.6;
+  vertical-align: top;
+}
+body.theme-basquiat .prose td:last-child { border-right: none; }
+body.theme-basquiat .prose tbody tr {
+  transition: background 0.15s ease;
+}
+body.theme-basquiat .prose tbody tr:hover {
+  background: rgba(248, 209, 43, 0.45);
+}
+/* 表格内 strong / em 弱化（已在表格高对比环境）*/
+body.theme-basquiat .prose td strong {
+  background: none;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  body.theme-basquiat .prose table {
+    font-size: 13px;
+    border-width: 2.5px;
+  }
+  body.theme-basquiat .prose th { font-size: 12px; padding: 8px 10px; }
+  body.theme-basquiat .prose td { font-size: 13.5px; padding: 8px 10px; line-height: 1.55; }
+}
+
 /* 移动端 · 卡片边距收紧、字号再降一档 */
 @media (max-width: 640px) {
   body.theme-basquiat .article-body.prose,
