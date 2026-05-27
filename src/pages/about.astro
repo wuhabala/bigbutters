@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
+import HandSignature from '@components/themes/schiele/HandSignature.astro';
+---
+<BaseLayout title="关于" description="关于大大黄油">
+  <Header activeNav="about" />
+  <main class="about-main">
+    <header class="page-header">
+      <p class="page-eyebrow">关于</p>
+      <h1>关于大大黄油</h1>
+    </header>
+    <article class="about-body prose">
+      <p>
+        大大黄油是一个个人的<strong>交互式学术策展空间</strong>——
+        承载不同方向的研究：福柯/规训、AIX 教育、AI 边界伦理、内卷文化、通向实在之路……
+      </p>
+      <p>
+        每个专题挂载一位艺术家的视觉系统——同一个站，因为研究主题不同而呈现完全不同的"面貌"。
+        像一个走在不同展厅里的人，每个展厅是自己的世界。
+      </p>
+      <p>
+        这里首先是为我自己做的研究花园——慢读、慢写、长期沉淀。
+        但你既然路过了，也欢迎在某个展厅里停留。
+      </p>
+      <HandSignature name="大大黄油" />
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
+<style>
+  .about-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; }
+  .page-header { margin-bottom: 32px; }
+  .page-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .page-header h1 { font-size: clamp(40px, 6vw, 64px); font-weight: 500; }
+  .about-body { font-size: 17px; line-height: 1.85; }
+  @media (max-width: 640px) { .about-main { padding: 24px 20px; } }
+</style>

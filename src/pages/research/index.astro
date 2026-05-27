@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
+import CoverCard from '@components/chrome/CoverCard.astro';
+import { getCollection } from 'astro:content';
+
+const research = await getCollection('research');
+const sorted = research.sort((a, b) => b.data.started.localeCompare(a.data.started));
+---
+<BaseLayout title="所有研究" description="大大黄油的全部研究">
+  <Header activeNav="research" />
+  <main class="research-index">
+    <header class="page-header">
+      <p class="page-eyebrow">研究</p>
+      <h1>所有研究</h1>
+      <p class="page-meta">{sorted.length} 个研究</p>
+    </header>
+    {sorted.length === 0 ? (
+      <p class="empty">还没有发布的研究。</p>
+    ) : (
+      <div class="research-grid">
+        {sorted.map(r => {
+          const slug = r.id.split('/')[0];
+          return (
+            <div class="research-item">
+              <CoverCard
+                href={`/research/${slug}/`}
+                title={r.data.title}
+                theme={r.data.theme}
+                meta={r.data.status === 'ongoing' ? '进行中' : '已沉淀'}
+                coverImage={r.data.cover?.hero_image?.src}
+              />
+              <div class="r-text">
+                <h3>{r.data.title}</h3>
+                {r.data.subtitle && <p class="r-sub">{r.data.subtitle}</p>}
+                <p class="r-summary">{r.data.summary}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>
+<style>
+  .research-index { max-width: 1100px; margin: 0 auto; padding: 48px 32px; }
+  .page-header { margin-bottom: 48px; }
+  .page-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .page-header h1 { font-size: clamp(40px, 6vw, 64px); margin-bottom: 8px; font-weight: 500; }
+  .page-meta { font-family: 'EB Garamond', serif; font-style: italic; color: var(--ink-faint); }
+  .empty { color: var(--ink-faint); font-style: italic; font-family: 'EB Garamond', serif; }
+  .research-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .r-text { margin-top: 12px; }
+  .r-text h3 { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+  .r-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; }
+  .r-summary { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  @media (max-width: 768px) { .research-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .research-grid { grid-template-columns: 1fr; } .research-index { padding: 24px 20px; } }
+</style>

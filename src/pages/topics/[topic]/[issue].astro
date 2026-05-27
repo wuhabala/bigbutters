@@ -1,0 +1,40 @@
+---
+import IssueLayout from '@layouts/IssueLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('issues');
+  const topics = await getCollection('topics');
+  const topicMap = new Map(topics.map(t => [t.id.split('/')[0], t]));
+
+  return issues
+    .filter(i => i.data.status === 'published')   // 过滤 draft
+    .map(i => {
+      const parts = i.id.split('/');
+      const topicSlug = parts[0];
+      const issueSlug = parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+      const topic = topicMap.get(topicSlug);
+      return {
+        params: { topic: topicSlug, issue: issueSlug },
+        props: { issue: i, topic },
+      };
+    });
+}
+
+const { issue, topic } = Astro.props;
+if (!topic) throw new Error(`Topic not found for issue ${issue.id}`);
+
+const topicSlug = topic.id.split('/')[0];
+const { Content } = await render(issue);
+---
+<IssueLayout
+  title={issue.data.title}
+  issueNum={issue.data.issue}
+  topicTitle={topic.data.title}
+  topicHref={`/topics/${topicSlug}/`}
+  date={issue.data.date}
+  theme={topic.data.theme}
+  description={issue.data.summary}
+>
+  <Content />
+</IssueLayout>

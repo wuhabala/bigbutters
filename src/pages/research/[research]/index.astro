@@ -1,0 +1,89 @@
+---
+import ResearchLayout from '@layouts/ResearchLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const research = await getCollection('research');
+  return research.map(r => {
+    const slug = r.id.split('/')[0];
+    return {
+      params: { research: slug },
+      props: { research: r },
+    };
+  });
+}
+
+const { research } = Astro.props;
+const slug = research.id.split('/')[0];
+
+const allArticles = await getCollection('researchArticles');
+const articles = allArticles
+  .filter(a => a.id.startsWith(slug + '/'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const { Content } = await render(research);
+---
+<ResearchLayout
+  title={research.data.title}
+  subtitle={research.data.subtitle}
+  theme={research.data.theme}
+  description={research.data.summary}
+  ogImage={research.data.cover?.hero_image?.src}
+>
+  <div class="research-summary prose">
+    <p>{research.data.summary}</p>
+    <Content />
+  </div>
+
+  <section class="articles">
+    <h2 class="articles-title">研究文章</h2>
+    {articles.length === 0 ? (
+      <p class="articles-empty">这个研究暂时还没有发布的文章。</p>
+    ) : (
+      <ol class="articles-list">
+        {articles.map(a => {
+          const articleSlug = a.id.split('/').slice(1).join('/').replace(/\.(md|mdx)$/, '');
+          return (
+            <li class="article-entry">
+              <a href={`/research/${slug}/${articleSlug}/`}>
+                <span class="a-date">{a.data.date.toISOString().slice(0, 10)}</span>
+                <span class="a-body">
+                  <span class="a-title">{a.data.title}</span>
+                  <span class="a-meta">{a.data.type}{a.data.length && ` · ${a.data.length} 字`}</span>
+                  {a.data.tags.length > 0 && (
+                    <span class="a-tags">{a.data.tags.map(t => `#${t}`).join(' ')}</span>
+                  )}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    )}
+  </section>
+</ResearchLayout>
+<style>
+  .research-summary { max-width: var(--content-max); font-size: 17px; line-height: 1.85; margin-bottom: 48px; }
+  .articles-title {
+    font-family: 'EB Garamond', serif; font-size: 12px;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 8px;
+    font-weight: 400;
+  }
+  .articles-empty { color: var(--ink-faint); font-style: italic; }
+  .articles-list { display: grid; gap: 4px; padding: 0; list-style: none; }
+  .article-entry { border-bottom: 1px dotted var(--rule); }
+  .article-entry a {
+    display: grid; grid-template-columns: 100px 1fr;
+    gap: 20px; padding: 14px 0;
+    border-bottom: none; color: inherit;
+  }
+  .a-date {
+    font-family: 'EB Garamond', serif;
+    font-size: 12px; letter-spacing: 0.1em; color: var(--ink-faint);
+  }
+  .a-title { display: block; font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .a-meta { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-soft); margin: 0 0 4px 0; }
+  .a-tags { display: block; font-family: 'EB Garamond', serif; font-size: 11px; color: var(--ochre); margin: 0; }
+</style>

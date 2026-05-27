@@ -1,39 +1,114 @@
 ---
-// src/pages/index.astro
-// 临时 smoke 页 · 用于验证 BaseLayout 主题注入、字体加载、prose 作用域。
-// Task 17 实现真正的 V1.1 首页时会被替换。
-import BaseLayout from '@layouts/BaseLayout.astro';
+import HomeLayout from '@layouts/HomeLayout.astro';
+import type { FeaturedTopic, TopicCardData, ResearchEntry } from '@layouts/HomeLayout.astro';
+import { getCollection } from 'astro:content';
+
+const topics = await getCollection('topics');
+const topicMap = new Map(topics.map(t => [t.id.split('/')[0], t]));
+
+const allIssues = await getCollection('issues');
+const publishedIssues = allIssues.filter(i => i.data.status === 'published');
+const latestIssue = [...publishedIssues].sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+)[0];
+
+let featured: FeaturedTopic;
+if (latestIssue && topics.length > 0) {
+  const parts = latestIssue.id.split('/');
+  const topicSlug = parts[0];
+  const issueSlug = parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+  const featuredTopic = topicMap.get(topicSlug)!;
+  featured = {
+    slug: topicSlug,
+    title: featuredTopic.data.title,
+    theme: featuredTopic.data.theme,
+    issueTitle: latestIssue.data.title,
+    issueHref: `/topics/${topicSlug}/${issueSlug}/`,
+    issueNum: latestIssue.data.issue,
+    blurb: latestIssue.data.summary ?? featuredTopic.data.summary,
+    coverImage: featuredTopic.data.cover?.hero_image?.src,
+  };
+} else if (topics.length > 0) {
+  // fallback：无已发布期时用第一个专题
+  const fallbackTopic = topics[0]!;
+  const fallbackSlug = fallbackTopic.id.split('/')[0];
+  featured = {
+    slug: fallbackSlug,
+    title: fallbackTopic.data.title,
+    theme: fallbackTopic.data.theme,
+    issueTitle: fallbackTopic.data.title,
+    issueHref: `/topics/${fallbackSlug}/`,
+    issueNum: 0,
+    blurb: fallbackTopic.data.summary,
+    coverImage: fallbackTopic.data.cover?.hero_image?.src,
+  };
+} else {
+  // 极端 fallback：完全没有内容时
+  featured = {
+    slug: '',
+    title: '大大黄油',
+    theme: 'schiele',
+    issueTitle: '外壳搭建中',
+    issueHref: '/about/',
+    issueNum: 0,
+    blurb: '内容正在准备。',
+  };
+}
+
+const allTopics: TopicCardData[] = topics
+  .sort((a, b) => b.data.started.localeCompare(a.data.started))
+  .map(t => {
+    const slug = t.id.split('/')[0];
+    const numIssues = publishedIssues.filter(i => i.id.startsWith(slug + '/')).length;
+    let meta = '';
+    if (t.data.status === 'ongoing') {
+      meta = t.data.type === 'series'
+        ? `${numIssues} / ${t.data.planned_issues ?? '?'} 期 · 进行中`
+        : '进行中';
+    } else if (t.data.status === 'planning') {
+      meta = t.data.type === 'series' ? '筹备 · 多期' : '筹备 · 单期';
+    } else {
+      meta = '已完结';
+    }
+    return {
+      slug,
+      title: t.data.title,
+      theme: t.data.theme,
+      meta,
+      coverImage: t.data.cover?.hero_image?.src,
+    };
+  });
+
+const allArticles = await getCollection('researchArticles');
+const researchAll = await getCollection('research');
+const researchMap = new Map(researchAll.map(r => [r.id.split('/')[0], r]));
+
+const recentResearch: ResearchEntry[] = [...allArticles]
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 6)
+  .map(a => {
+    const parts = a.id.split('/');
+    const researchSlug = parts[0];
+    const articleSlug = parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+    const r = researchMap.get(researchSlug);
+    return {
+      href: `/research/${researchSlug}/${articleSlug}/`,
+      title: a.data.title,
+      date: a.data.date,
+      type: a.data.type,
+      length: a.data.length,
+      researchTitle: r?.data.title ?? researchSlug,
+      researchSlug,
+    };
+  });
+
+const tagSet = new Set<string>();
+allArticles.forEach(a => a.data.tags.forEach(t => tagSet.add(t)));
+const researchTags = Array.from(tagSet).slice(0, 8);
 ---
-<BaseLayout title="WIP" description="bigbutters · 外壳搭建中" theme="schiele" ogType="website">
-  <main style="max-width: 760px; margin: 0 auto; padding: 48px 32px;">
-    <p style="font-family: 'EB Garamond', serif; font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--accent);">
-      🪳 bigbutters · phase 1 · work in progress
-    </p>
-
-    <article class="prose" style="margin-top: 24px;">
-      <h1>大大黄油</h1>
-      <p>个人交互式学术策展空间——<strong>外壳搭建中</strong>。</p>
-
-      <blockquote>
-        读得慢，写得久——把每一段思考当作一处地形。
-      </blockquote>
-
-      <h2>视觉系统验证</h2>
-      <p>
-        这一段用 <em>italic</em> 验证斜体；用 <strong>strong 加重</strong> 验证 600 字重；
-        以及一个 <a href="/about/">链接样式</a> 验证 prose 范围。
-      </p>
-
-      <hr />
-
-      <h3>下一阶段</h3>
-      <p>
-        Tasks 4-7（主题系统 + Content Collections）✅ →
-        Tasks 8-12（核心组件） →
-        Tasks 13-14（Layouts） →
-        Tasks 15-17（路由 + 真正的首页 V1.1） →
-        Tasks 18-22（占位内容 + 模板 + 部署 + 验收）。
-      </p>
-    </article>
-  </main>
-</BaseLayout>
+<HomeLayout
+  featured={featured}
+  allTopics={allTopics}
+  recentResearch={recentResearch}
+  researchTags={researchTags}
+/>
