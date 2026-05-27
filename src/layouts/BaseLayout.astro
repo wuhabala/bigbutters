@@ -29,13 +29,17 @@ const fontFamilyOverride = [
   pack.fonts?.script ? `--font-script: ${pack.fonts.script};` : '',
 ].filter(Boolean).join(' ');
 const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : null;
+
+// Title 拼接：如果 title 已包含品牌名（如首页 title="大大黄油"），不重复后缀
+const BRAND = '大大黄油';
+const pageTitle = title.includes(BRAND) ? title : `${title} · ${BRAND}`;
 ---
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title} · 大大黄油</title>
+  <title>{pageTitle}</title>
   {description && <meta name="description" content={description} />}
 
   {/* OG / 社交分享 */}
