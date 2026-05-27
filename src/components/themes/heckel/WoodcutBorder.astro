@@ -1,0 +1,35 @@
+---
+// src/components/themes/heckel/WoodcutBorder.astro
+// 木刻风格的锯齿装饰边——可用作 section 分隔条、卡片顶/底缘。
+// variant: 'zigzag' 锯齿 | 'block' 方块阵 | 'wave' 棱角波
+export interface Props {
+  variant?: 'zigzag' | 'block' | 'wave';
+  color?: string;
+  height?: number;
+  /** 拼贴第二色（block/wave 用） */
+  accent?: string;
+}
+const { variant = 'zigzag', color = '#0f0a06', height = 18, accent = '#d92410' } = Astro.props;
+---
+{variant === 'zigzag' && (
+  <svg class="hk-border" viewBox="0 0 400 18" preserveAspectRatio="none" style={`height:${height}px`} aria-hidden="true">
+    <polygon points="0,0 20,18 40,0 60,18 80,0 100,18 120,0 140,18 160,0 180,18 200,0 220,18 240,0 260,18 280,0 300,18 320,0 340,18 360,0 380,18 400,0 400,18 0,18" fill={color}/>
+  </svg>
+)}
+{variant === 'block' && (
+  <svg class="hk-border" viewBox="0 0 400 18" preserveAspectRatio="none" style={`height:${height}px`} aria-hidden="true">
+    {Array.from({ length: 20 }).map((_, i) => (
+      <rect x={i * 20} y={i % 2 === 0 ? 0 : 6} width="14" height="12" fill={i % 3 === 0 ? accent : color}/>
+    ))}
+  </svg>
+)}
+{variant === 'wave' && (
+  <svg class="hk-border" viewBox="0 0 400 18" preserveAspectRatio="none" style={`height:${height}px`} aria-hidden="true">
+    <polyline points="0,9 25,2 50,16 75,4 100,14 125,2 150,16 175,4 200,14 225,2 250,16 275,4 300,14 325,2 350,16 375,4 400,12"
+      fill="none" stroke={color} stroke-width="3.5" stroke-linejoin="miter"/>
+  </svg>
+)}
+
+<style>
+  .hk-border { display: block; width: 100%; }
+</style>

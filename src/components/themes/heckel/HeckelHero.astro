@@ -1,0 +1,233 @@
+---
+// src/components/themes/heckel/HeckelHero.astro
+// 木刻表现主义首页 hero——粗黑标题 + 套色错位 + 角山/太阳/抽象人脸装饰
+import HeckelMark from './HeckelMark.astro';
+export interface Props {
+  title?: string;
+  brandEn?: string;
+  subtitle?: string;
+  claim?: string;
+}
+const {
+  title = '大大黄油',
+  brandEn = 'BIGBUTTERS',
+  subtitle = '个人交互式学术策展空间',
+  claim = '在福柯、AIX 教育、AI 安全、内卷文化、通向实在之路诸方向上慢读一寸。',
+} = Astro.props;
+---
+<header class="hk-hero">
+  <div class="hk-hero-inner">
+    <div class="hk-hero-left">
+      <p class="hk-hero-eyebrow">
+        <span class="hk-rule"></span>
+        Erich Heckel · Die Brücke · 1905
+      </p>
+
+      <h1 class="hk-hero-title">
+        <span class="hk-title-shadow" aria-hidden="true">{title}</span>
+        <span class="hk-title-main">{title}</span>
+      </h1>
+
+      <p class="hk-hero-en">{brandEn}</p>
+
+      <p class="hk-hero-subtitle">{subtitle}</p>
+      <p class="hk-hero-claim">{claim}</p>
+
+      <div class="hk-hero-cta">
+        <a href="#topics" class="hk-cta-primary">↓ 看专题</a>
+        <a href="#research" class="hk-cta-muted">↓ 看研究</a>
+      </div>
+    </div>
+
+    <div class="hk-hero-right">
+      <div class="hk-hero-face">
+        <HeckelMark variant="face" size={300} ink="#0f0a06" accent="#d92410" bg="#f4ead0"/>
+      </div>
+      <div class="hk-hero-mountain">
+        <HeckelMark variant="mountain" size={150} ink="#0f0a06" accent="#1c4a8a"/>
+      </div>
+      <div class="hk-hero-sun">
+        <HeckelMark variant="sun" size={92} ink="#0f0a06" accent="#f5b800"/>
+      </div>
+    </div>
+  </div>
+
+  {/* 底缘锯齿过渡 */}
+  <svg class="hk-hero-cut" viewBox="0 0 800 22" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,0 24,22 48,0 72,22 96,0 120,22 144,0 168,22 192,0 216,22 240,0 264,22 288,0 312,22 336,0 360,22 384,0 408,22 432,0 456,22 480,0 504,22 528,0 552,22 576,0 600,22 624,0 648,22 672,0 696,22 720,0 744,22 768,0 792,22 800,0 800,22 0,22" fill="#0f0a06"/>
+  </svg>
+</header>
+
+<style>
+  .hk-hero {
+    position: relative;
+    background: #f4ead0;
+    border-bottom: none;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .hk-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 64px 32px 80px;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+  .hk-hero-left { min-width: 0; }
+
+  .hk-hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #d92410;
+    margin-bottom: 22px;
+  }
+  .hk-rule {
+    display: inline-block;
+    width: 36px;
+    height: 3px;
+    background: #d92410;
+  }
+
+  /* 标题——套色错位（红影 + 黑字） */
+  .hk-hero-title {
+    position: relative;
+    margin: 0 0 12px;
+    line-height: 0.92;
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-weight: 900;
+    font-size: clamp(72px, 11vw, 140px);
+    letter-spacing: 0.02em;
+    color: #0f0a06;
+  }
+  .hk-title-shadow {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    color: #d92410;
+    z-index: 0;
+    user-select: none;
+  }
+  .hk-title-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hk-hero-en {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(14px, 1.6vw, 22px);
+    letter-spacing: 0.45em;
+    color: #1c4a8a;
+    margin: 6px 0 28px;
+    font-weight: 600;
+  }
+
+  .hk-hero-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 19px;
+    color: #0f0a06;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .hk-hero-claim {
+    font-family: 'EB Garamond', 'Noto Serif SC', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #3a2e22;
+    max-width: 36ch;
+    margin-bottom: 32px;
+  }
+
+  .hk-hero-cta { display: flex; gap: 18px; }
+  .hk-cta-primary, .hk-cta-muted {
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 2.5px solid #0f0a06;
+    background: #f4ead0;
+    color: #0f0a06;
+    transition: transform 160ms ease, background-color 160ms ease, color 160ms ease;
+  }
+  .hk-cta-primary {
+    background: #d92410;
+    color: #f4ead0;
+    border-color: #0f0a06;
+    box-shadow: 4px 4px 0 0 #0f0a06;
+  }
+  .hk-cta-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 #0f0a06; }
+  .hk-cta-muted { box-shadow: 4px 4px 0 0 #1c4a8a; }
+  .hk-cta-muted:hover { background: #1c4a8a; color: #f4ead0; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 #0f0a06; }
+
+  /* 右侧装饰：人脸主体，山形/太阳偏移叠放 */
+  .hk-hero-right {
+    position: relative;
+    min-height: 420px;
+  }
+  .hk-hero-face {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+  }
+  .hk-hero-mountain {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    z-index: 1;
+  }
+  .hk-hero-sun {
+    position: absolute;
+    top: -22px;
+    left: 30px;
+    z-index: 3;
+    animation: hk-sun-rotate 28s linear infinite;
+    transform-origin: 50% 50%;
+  }
+  @keyframes hk-sun-rotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hk-hero-sun { animation: none; }
+  }
+
+  /* 底缘——黑色锯齿，连接到下一节 */
+  .hk-hero-cut {
+    display: block;
+    width: 100%;
+    height: 22px;
+    margin-top: 0;
+  }
+
+  @media (max-width: 880px) {
+    .hk-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 36px;
+      padding: 48px 24px 60px;
+    }
+    .hk-hero-right { min-height: 300px; }
+    .hk-hero-face :global(img),
+    .hk-hero-face :global(svg) { width: 200px !important; height: auto !important; }
+    .hk-hero-mountain :global(img),
+    .hk-hero-mountain :global(svg) { width: 110px !important; height: auto !important; }
+    .hk-hero-sun :global(img),
+    .hk-hero-sun :global(svg) { width: 60px !important; height: auto !important; }
+  }
+  @media (max-width: 560px) {
+    .hk-hero-title { font-size: clamp(56px, 16vw, 84px); }
+    .hk-hero-en { font-size: 12px; letter-spacing: 0.35em; }
+    .hk-hero-subtitle { font-size: 16px; }
+    .hk-hero-claim { font-size: 14px; }
+    .hk-cta-primary, .hk-cta-muted { padding: 8px 14px; font-size: 11px; }
+  }
+</style>

@@ -12,6 +12,8 @@ export interface Props {
   ogImage?: string;
   /** Open Graph type: 'website' for home/index pages, 'article' for issues/research articles */
   ogType?: 'website' | 'article';
+  /** Extra body class merged with theme classOverrides (e.g. 'home-heckel' for the home page) */
+  bodyClass?: string;
 }
 
 const {
@@ -20,9 +22,11 @@ const {
   theme,
   ogImage,
   ogType = 'website',
+  bodyClass,
 } = Astro.props;
 const pack = getTheme(theme);
 const cssVars = tokensToCss(pack.tokens);
+const mergedBodyClass = [pack.classOverrides, bodyClass].filter(Boolean).join(' ');
 const fontFamilyOverride = [
   pack.fonts?.serif  ? `--font-serif: ${pack.fonts.serif};` : '',
   pack.fonts?.sans   ? `--font-sans: ${pack.fonts.sans};` : '',
@@ -57,7 +61,7 @@ const pageTitle = title.includes(BRAND) ? title : `${title} · ${BRAND}`;
   ))}
 
 </head>
-<body class={pack.classOverrides ?? ''} data-theme={pack.id} style={`${cssVars} ${fontFamilyOverride}`}>
+<body class={mergedBodyClass} data-theme={pack.id} style={`${cssVars} ${fontFamilyOverride}`}>
   <slot />
 </body>
 </html>

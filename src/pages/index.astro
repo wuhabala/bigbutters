@@ -2,8 +2,8 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
-import HomeLayout from '@layouts/HomeLayout.astro';
-import type { FeaturedTopic, TopicCardData, ResearchEntry } from '@layouts/HomeLayout.astro';
+import HeckelHome from '@layouts/HeckelHome.astro';
+import type { FeaturedTopic, TopicCardData, ResearchGroup } from '@layouts/HeckelHome.astro';
 import { getCollection } from 'astro:content';
 
 const topics = await getCollection('topics');
@@ -28,7 +28,6 @@ if (!isEmptyState) {
     const topicSlug = parts[0];
     const issueSlug = parts.slice(1).join('/');
     const featuredTopic = topicMap.get(topicSlug);
-    // 评审 #4: 不用 non-null 断言。若 issue 找不到父 topic 就 fallback 到第一个专题。
     if (featuredTopic) {
       featured = {
         slug: topicSlug,
@@ -38,12 +37,12 @@ if (!isEmptyState) {
         issueHref: `/topics/${topicSlug}/${issueSlug}/`,
         issueNum: latestIssue.data.issue,
         blurb: latestIssue.data.summary ?? featuredTopic.data.summary,
-        coverImage: featuredTopic.data.cover?.hero_image,
+        // 首页卡片优先竖版（aspect-ratio 4:5），缺省回退横版
+        coverImage: featuredTopic.data.cover?.hero_image_portrait ?? featuredTopic.data.cover?.hero_image,
       };
     }
   }
   if (!featured) {
-    // fallback：无已发布期（或孤儿期）时用第一个专题做 hero
     const fallbackTopic = topics[0];
     const fallbackSlug = fallbackTopic.id.split('/')[0];
     featured = {
@@ -54,7 +53,7 @@ if (!isEmptyState) {
       issueHref: `/topics/${fallbackSlug}/`,
       issueNum: 0,
       blurb: fallbackTopic.data.summary,
-      coverImage: fallbackTopic.data.cover?.hero_image,
+      coverImage: fallbackTopic.data.cover?.hero_image_portrait ?? fallbackTopic.data.cover?.hero_image,
     };
   }
 }
@@ -79,36 +78,55 @@ const allTopics: TopicCardData[] = topics
       title: t.data.title,
       theme: t.data.theme,
       meta,
-      coverImage: t.data.cover?.hero_image,
+      // 首页横向轮播也用竖版优先
+      coverImage: t.data.cover?.hero_image_portrait ?? t.data.cover?.hero_image,
     };
   });
 
+// 研究 · 按研究专题分组，每组带最新 3 篇
 const allArticles = await getCollection('researchArticles');
 const researchAll = await getCollection('research');
-const researchMap = new Map(researchAll.map(r => [r.id.split('/')[0], r]));
 
-const recentResearch: ResearchEntry[] = [...allArticles]
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 6)
-  .map(a => {
-    const parts = a.id.split('/');
-    const researchSlug = parts[0];
-    const articleSlug = parts.slice(1).join('/');
-    const r = researchMap.get(researchSlug);
+const researchGroups: ResearchGroup[] = researchAll
+  .map(r => {
+    const slug = r.id.split('/')[0];
+    const articles = allArticles
+      .filter(a => a.id.startsWith(slug + '/'))
+      .sort((a, b) => {
+        // 优先用 order（与文件名 01/02 对齐），其次 date 倒序
+        if (a.data.order != null && b.data.order != null) return a.data.order - b.data.order;
+        return b.data.date.getTime() - a.data.date.getTime();
+      });
+    const latest = articles.slice(0, 3).map(a => {
+      const parts = a.id.split('/');
+      return {
+        href: `/research/${parts[0]}/${parts.slice(1).join('/')}/`,
+        title: a.data.title,
+        date: a.data.date,
+        type: a.data.type,
+        order: a.data.order,
+      };
+    });
     return {
-      href: `/research/${researchSlug}/${articleSlug}/`,
-      title: a.data.title,
-      date: a.data.date,
-      type: a.data.type,
-      length: a.data.length,
-      researchTitle: r?.data.title ?? researchSlug,
-      researchSlug,
-    };
+      slug,
+      title: r.data.title,
+      subtitle: r.data.subtitle,
+      summary: r.data.summary,
+      href: `/research/${slug}/`,
+      status: r.data.status,
+      started: r.data.started,
+      // 首页研究区卡片竖版优先
+      coverImage: r.data.cover?.hero_image_portrait ?? r.data.cover?.hero_image,
+      totalArticles: articles.length,
+      latestArticles: latest,
+    } satisfies ResearchGroup;
+  })
+  .filter(g => g.latestArticles.length > 0)
+  // 进行中优先；同状态按 started 降序
+  .sort((a, b) => {
+    if (a.status !== b.status) return a.status === 'ongoing' ? -1 : 1;
+    return b.started.localeCompare(a.started);
   });
-
-const tagSet = new Set<string>();
-allArticles.forEach(a => a.data.tags.forEach(t => tagSet.add(t)));
-const researchTags = Array.from(tagSet).slice(0, 8);
 ---
 {isEmptyState ? (
   <BaseLayout title="大大黄油" description="个人交互式学术策展空间">
@@ -131,11 +149,10 @@ const researchTags = Array.from(tagSet).slice(0, 8);
     <Footer />
   </BaseLayout>
 ) : (
-  <HomeLayout
+  <HeckelHome
     featured={featured!}
     allTopics={allTopics}
-    recentResearch={recentResearch}
-    researchTags={researchTags}
+    researchGroups={researchGroups}
   />
 )}
 

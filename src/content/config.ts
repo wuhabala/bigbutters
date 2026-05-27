@@ -26,7 +26,10 @@ const topics = defineCollection({
     planned_issues: z.number().int().positive().optional(),
     summary: z.string(),
     cover: z.object({
+      /** 横版主图——子首页 hero（左文右图 2 栏布局）+ 文章页通栏封面 */
       hero_image: image().optional(),
+      /** 竖版主图——站点首页专题/研究卡片（aspect-ratio 4:5），缺省回退 hero_image */
+      hero_image_portrait: image().optional(),
     }).optional(),
     // TODO(Task 15): consider migrating to reference('research') once we confirm
     // Astro 5 ID format for our glob loader. For now keep as string array,
@@ -84,7 +87,10 @@ const research = defineCollection({
     status: z.enum(['ongoing', 'dormant']),
     summary: z.string(),
     cover: z.object({
+      /** 横版主图——子首页 hero + 文章页通栏 */
       hero_image: image().optional(),
+      /** 竖版主图——站点首页研究卡片，缺省回退 hero_image */
+      hero_image_portrait: image().optional(),
     }).optional(),
     // TODO(Task 15): see related_research comment above re: reference() migration
     related_topic: z.string().optional(),

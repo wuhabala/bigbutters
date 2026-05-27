@@ -1,0 +1,75 @@
+---
+// src/components/themes/heckel/HeckelSectionTitle.astro
+// 木刻风段落标题 · 黑底白字 + 红印章 + 锯齿底缘
+import HeckelMark from './HeckelMark.astro';
+export interface Props {
+  eyebrow?: string;       // 顶部小字（英文 / 拉丁）
+  title: string;          // 主标题（中文）
+  count?: string | number;
+  mark?: 'mountain' | 'sun' | 'face' | 'tree' | 'bird';
+}
+const { eyebrow, title, count, mark } = Astro.props;
+---
+<div class="hk-sec-title">
+  <div class="hk-sec-title-bar">
+    {mark && <HeckelMark variant={mark} size={36} ink="#f4ead0" accent="#f5b800"/>}
+    <div class="hk-sec-title-text">
+      {eyebrow && <span class="hk-sec-eyebrow">{eyebrow}</span>}
+      <span class="hk-sec-title-main">{title}</span>
+    </div>
+    {count !== undefined && <span class="hk-sec-count">{count}</span>}
+  </div>
+  <svg class="hk-sec-zigzag" viewBox="0 0 400 8" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,0 16,8 32,0 48,8 64,0 80,8 96,0 112,8 128,0 144,8 160,0 176,8 192,0 208,8 224,0 240,8 256,0 272,8 288,0 304,8 320,0 336,8 352,0 368,8 384,0 400,8 400,0" fill="#0f0a06"/>
+  </svg>
+</div>
+
+<style>
+  .hk-sec-title {
+    margin-bottom: 28px;
+  }
+  .hk-sec-title-bar {
+    background: #0f0a06;
+    color: #f4ead0;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: none;
+  }
+  .hk-sec-title-text { display: flex; flex-direction: column; line-height: 1.05; flex: 1; }
+  .hk-sec-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #f5b800;
+    margin-bottom: 4px;
+  }
+  .hk-sec-title-main {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .hk-sec-count {
+    font-family: 'EB Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: #f5b800;
+    border: 1.5px solid #f5b800;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+  .hk-sec-zigzag {
+    display: block;
+    width: 100%;
+    height: 8px;
+    margin-top: -1px;
+  }
+
+  @media (max-width: 560px) {
+    .hk-sec-title-main { font-size: 18px; }
+    .hk-sec-title-bar { padding: 10px 14px; }
+  }
+</style>

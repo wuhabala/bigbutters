@@ -1,0 +1,57 @@
+---
+// src/components/themes/heckel/HeckelBackground.astro
+// 满屏静态木刻装饰层——四角散点（MJ 真图） + 微妙纸纹。z-index 在内容之下。
+import { Image } from 'astro:assets';
+import cornerTL from '../../../assets/themes/heckel/bg-corner-tl.png';
+import cornerTR from '../../../assets/themes/heckel/bg-corner-tr.png';
+import cornerBL from '../../../assets/themes/heckel/bg-corner-bl.png';
+import cornerBR from '../../../assets/themes/heckel/bg-corner-br.png';
+---
+<div class="hk-bg" aria-hidden="true">
+  <Image class="hk-bg-img hk-bg-tl" src={cornerTL} alt="" width={560} densities={[1, 2]} format="webp" loading="lazy" decoding="async"/>
+  <Image class="hk-bg-img hk-bg-tr" src={cornerTR} alt="" width={560} densities={[1, 2]} format="webp" loading="lazy" decoding="async"/>
+  <Image class="hk-bg-img hk-bg-bl" src={cornerBL} alt="" width={520} densities={[1, 2]} format="webp" loading="lazy" decoding="async"/>
+  <Image class="hk-bg-img hk-bg-br" src={cornerBR} alt="" width={520} densities={[1, 2]} format="webp" loading="lazy" decoding="async"/>
+  {/* 细密纸纹（垂直刀痕） */}
+  <div class="hk-bg-texture"></div>
+</div>
+
+<style>
+  .hk-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .hk-bg-img {
+    position: absolute;
+    width: 280px;
+    height: auto;
+    opacity: 0.22;
+    mix-blend-mode: multiply;
+    /* 让木刻贴近底色不抢戏 */
+  }
+  .hk-bg-tl { top: -30px; left: -30px; }
+  .hk-bg-tr { top: 20px; right: -40px; }
+  .hk-bg-br { bottom: -30px; right: -40px; }
+  .hk-bg-bl { bottom: 30px; left: -50px; }
+
+  /* 微弱垂直刀痕——模拟手工纸 */
+  .hk-bg-texture {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 3px,
+      rgba(26, 20, 16, 0.018) 3px,
+      rgba(26, 20, 16, 0.018) 4px
+    );
+  }
+
+  @media (max-width: 760px) {
+    .hk-bg-img { width: 180px; opacity: 0.18; }
+    .hk-bg-bl, .hk-bg-br { opacity: 0.15; }
+  }
+</style>

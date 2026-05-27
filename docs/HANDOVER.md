@@ -158,6 +158,9 @@ status: planning              # planning | ongoing | completed
 type: series                  # series | single
 planned_issues: 10            # series 时必填
 summary: 一句话简介
+cover:                        # 可选 · 横竖两版分别给（详见 §3.5.1）
+  hero_image: ./images/hero.png                   # 横版 · 子首页 + 文章页通栏
+  hero_image_portrait: ./images/hero-portrait.png # 竖版 · 站点首页/列表卡片
 related_research:             # 可选
   - some-research-slug
 started: 2026-05
@@ -217,7 +220,8 @@ summary: 一句话简介
 related_topic: some-topic   # 可选反向关联
 started: 2026-05
 cover:
-  hero_image: ./images/hero.png   # 可选，放在 images/ 子目录
+  hero_image: ./images/hero.png                   # 横版 · 子首页 hero + 文章页通栏
+  hero_image_portrait: ./images/hero-portrait.png # 竖版 · 站点首页卡片（可选，缺省回退 hero_image）
 ---
 
 简介。
@@ -260,6 +264,45 @@ sources:                     # 可选
 3. Astro Sharp pipeline 自动生成多倍 WebP（320/640/960/1280 widths）。原 3MB PNG → ~280KB WebP。
 
 **注意**：图片必须放在 `src/content/<collection>/<slug>/images/` 或同级目录内（schema 的 `image()` 函数要求相对内容文件路径）。**不要**放 `public/`（那里不被优化）。
+
+#### 3.5.1 封面图必须出**横竖两版**
+
+约定（schema 已落地，topics + research 都支持）：
+
+| 字段 | 版型 | 用在哪 |
+|---|---|---|
+| `cover.hero_image` | **横版**（16:9 / 16:10 / 3:2） | 子首页 hero（左文右图 2 栏）、文章页通栏 |
+| `cover.hero_image_portrait` | **竖版**（4:5 / 3:4） | 站点首页 `/`、`/topics/`、`/research/` 列表卡片（aspect-ratio 4:5 或 3:4） |
+
+**工作流**：跑 AI 出图时，按 [docs/HECKEL-PROMPTS.md](./HECKEL-PROMPTS.md) §1a / §1b 同时跑两版 prompt（用相同 `--seed` 保持美学一致），命名：
+
+```
+src/content/<topics|research>/<slug>/images/
+├── hero.png            # 横版
+└── hero-portrait.png   # 竖版
+```
+
+然后 frontmatter 同时填两个字段，**不用改任何代码**：
+
+```yaml
+cover:
+  hero_image: ./images/hero.png
+  hero_image_portrait: ./images/hero-portrait.png
+```
+
+**只填一个也行**：
+
+- 只填 `hero_image` → 首页卡片自动 fallback 用横版（会被 `object-fit: cover` 裁切，不一定好看）
+- 只填 `hero_image_portrait` → 子首页 hero 没图（BasquiatHero 之类会退化为纯文字 hero）
+
+**为什么必须分两版**：站点首页强调封面墙（竖卡片整齐排），子首页强调单图叙事（横构图配合左侧标题文字）。同一张图压两种比例都会糟糕——竖图拉横元素分散，横图压竖人物挤压。
+
+**调用点**（已实现，仅记录）：
+
+- `src/pages/index.astro` —— featured / allTopics / researchGroups 三处均 `?? hero_image`
+- `src/pages/topics/index.astro` + `src/pages/research/index.astro` —— 通过 `HeckelListPage` 列表布局
+- `src/pages/topics/[topic]/index.astro` + `src/pages/research/[research]/index.astro` —— 子首页用 `hero_image`（横版）
+- `ArticleLayout.astro` —— 文章页通栏用 `hero_image`（横版）
 
 ### 3.6 添加一个新主题包（例如 Klimt）
 
@@ -523,6 +566,8 @@ const slug = entry.id.split('/')[0];   // 永远拿到 slug
 4. **theme 字段允许默认 schiele**：未指定时全站默认席勒（母站门厅调性）。
 5. **`order` 字段优先于 `date`** 用于研究文章排序：用户偏好按文件名编号顺序展示。
 6. **图片放 `src/content/` 内**而非 `public/`：让 Astro Sharp 自动多倍 WebP。
+7. **封面图横竖分版**：`cover.hero_image`（横版，子首页/文章页）+ `cover.hero_image_portrait`（竖版，列表/首页卡）。理由：列表卡片是 4:5 portrait，子首页是 1.4fr/1fr 左文右图——横竖一图通用必然有一边糟糕。详见 §3.5.1。
+8. **站点首页 + 列表页统一 Heckel 木刻系统**：`/` `/topics/` `/research/` 三页通过 `body.home-heckel` class + `HeckelHome` / `HeckelListPage` 布局共享同一套视觉（Header 芥黄强撞色、四角木刻装饰、套色错位大标题、三色循环卡片阴影）。子页面（topic / research 详情 / 文章）仍按各自 theme 渲染——首页/列表保持「门厅」气质，进入内容后切到对应艺术家系统。
 
 ---
 

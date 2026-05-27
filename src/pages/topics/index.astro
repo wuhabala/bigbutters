@@ -1,65 +1,38 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import Header from '@components/chrome/Header.astro';
-import Footer from '@components/chrome/Footer.astro';
-import CoverCard from '@components/chrome/CoverCard.astro';
+import HeckelListPage from '@layouts/HeckelListPage.astro';
+import type { ListItem } from '@layouts/HeckelListPage.astro';
 import { getCollection } from 'astro:content';
 
 const topics = await getCollection('topics');
 const sorted = topics.sort((a, b) => b.data.started.localeCompare(a.data.started));
+const items: ListItem[] = sorted.map(t => {
+  const slug = t.id.split('/')[0];
+  const meta =
+    t.data.status === 'ongoing'
+      ? '进行中'
+      : t.data.status === 'planning'
+      ? '筹备'
+      : '已完结';
+  return {
+    href: `/topics/${slug}/`,
+    title: t.data.title,
+    subtitle: t.data.subtitle,
+    summary: t.data.summary,
+    meta,
+    theme: t.data.theme,
+    coverImage: t.data.cover?.hero_image_portrait ?? t.data.cover?.hero_image,
+  };
+});
 ---
-<BaseLayout title="所有专题" description="大大黄油的全部专题">
-  <Header activeNav="topics" />
-  <main class="topics-index">
-    <header class="page-header">
-      <p class="page-eyebrow">专题</p>
-      <h1>所有专题</h1>
-      <p class="page-meta">{sorted.length} 个专题</p>
-    </header>
-    {sorted.length === 0 ? (
-      <p class="empty">还没有发布的专题。</p>
-    ) : (
-      <div class="topics-grid">
-        {sorted.map(t => {
-          const slug = t.id.split('/')[0];
-          return (
-            <div class="topic-item">
-              <CoverCard
-                href={`/topics/${slug}/`}
-                title={t.data.title}
-                theme={t.data.theme}
-                meta={t.data.status === 'ongoing' ? '进行中' : t.data.status === 'planning' ? '筹备' : '已完结'}
-                coverImage={t.data.cover?.hero_image}
-              />
-              <div class="topic-text">
-                <h3>{t.data.title}</h3>
-                {t.data.subtitle && <p class="t-sub">{t.data.subtitle}</p>}
-                <p class="t-summary">{t.data.summary}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    )}
-  </main>
-  <Footer />
-</BaseLayout>
-<style>
-  .topics-index { max-width: 1100px; margin: 0 auto; padding: 48px 32px; }
-  .page-header { margin-bottom: 48px; }
-  .page-eyebrow {
-    font-family: 'EB Garamond', serif;
-    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 12px;
-  }
-  .page-header h1 { font-size: clamp(40px, 6vw, 64px); margin-bottom: 8px; font-weight: 500; }
-  .page-meta { font-family: 'EB Garamond', serif; font-style: italic; color: var(--ink-faint); }
-  .empty { color: var(--ink-faint); font-style: italic; font-family: 'EB Garamond', serif; }
-  .topics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-  .topic-text { margin-top: 12px; }
-  .topic-text h3 { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
-  .t-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; }
-  .t-summary { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
-  @media (max-width: 768px) { .topics-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 480px) { .topics-grid { grid-template-columns: 1fr; } .topics-index { padding: 24px 20px; } }
-</style>
+<HeckelListPage
+  activeNav="topics"
+  pageTitle="所有专题"
+  description="大大黄油的全部专题"
+  eyebrow="All Topics"
+  zhTitle="所有专题"
+  mark="mountain"
+  count={`${sorted.length} 个专题`}
+  cols={4}
+  items={items}
+  emptyText="还没有发布的专题。"
+/>

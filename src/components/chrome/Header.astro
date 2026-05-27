@@ -15,6 +15,10 @@ const { activeNav = null } = Astro.props;
     </a>
     <Nav active={activeNav} />
   </div>
+  {/* Heckel 首页专用：底部木刻锯齿——只在 body.home-heckel 下显示 */}
+  <svg class="site-header-cut" viewBox="0 0 800 14" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,0 20,14 40,0 60,14 80,0 100,14 120,0 140,14 160,0 180,14 200,0 220,14 240,0 260,14 280,0 300,14 320,0 340,14 360,0 380,14 400,0 420,14 440,0 460,14 480,0 500,14 520,0 540,14 560,0 580,14 600,0 620,14 640,0 660,14 680,0 700,14 720,0 740,14 760,0 780,14 800,0 800,14 0,14" fill="#0f0a06"/>
+  </svg>
 </header>
 <style>
   .site-header {
@@ -42,9 +46,91 @@ const { activeNav = null } = Astro.props;
   }
   .brand-en, .brand-cn { display: inline-block; }
   .brand-sep { opacity: 0.4; }
+  /* 默认主题下隐藏 Heckel 锯齿 */
+  .site-header-cut { display: none; }
 
   @media (max-width: 640px) {
     .site-header-inner { padding: 16px 20px; }
     .brand { font-size: 15px; gap: 4px; }
+  }
+
+  /* ======== Heckel 首页强撞色 ======== */
+  :global(body.home-heckel) .site-header {
+    background: #f5b800;          /* 芥黄底 */
+    border-bottom: none;
+    position: relative;
+  }
+  :global(body.home-heckel) .site-header-inner {
+    padding: 22px 32px;
+    align-items: center;
+  }
+  :global(body.home-heckel) .brand {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    gap: 10px;
+  }
+  :global(body.home-heckel) .brand-en {
+    color: #d92410;                /* 朱红 */
+    font-style: italic;
+    text-shadow: 2px 2px 0 #0f0a06;
+  }
+  :global(body.home-heckel) .brand-cn {
+    color: #0f0a06;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 0.04em;
+  }
+  :global(body.home-heckel) .brand-sep {
+    color: #0f0a06;
+    opacity: 1;
+    font-size: 22px;
+  }
+  :global(body.home-heckel) .site-header-cut {
+    display: block;
+    width: 100%;
+    height: 14px;
+    margin-top: 0;
+  }
+
+  /* Heckel 首页 nav 强对比 */
+  :global(body.home-heckel) .site-nav { gap: 22px; }
+  :global(body.home-heckel) .nav-link {
+    font-family: 'EB Garamond', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f0a06;
+    letter-spacing: 0.32em;
+    padding: 6px 12px;
+    border: 2.5px solid #0f0a06;
+    background: #f4ead0;           /* 奶白底 */
+    transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease, color 140ms ease;
+  }
+  :global(body.home-heckel) .nav-link:hover {
+    background: #0f0a06;
+    color: #f5b800;
+    transform: translate(-2px, -2px);
+    box-shadow: 3px 3px 0 0 #d92410;
+  }
+  :global(body.home-heckel) .nav-link.active {
+    background: #d92410;
+    color: #f4ead0;
+    border-color: #0f0a06;
+    box-shadow: 3px 3px 0 0 #0f0a06;
+    padding-bottom: 6px;
+  }
+
+  @media (max-width: 640px) {
+    :global(body.home-heckel) .site-header-inner {
+      padding: 14px 18px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    :global(body.home-heckel) .brand { font-size: 20px; }
+    :global(body.home-heckel) .brand-cn { font-size: 22px; }
+    :global(body.home-heckel) .site-nav { gap: 8px; flex-wrap: wrap; }
+    :global(body.home-heckel) .nav-link { font-size: 11px; padding: 4px 8px; letter-spacing: 0.2em; }
   }
 </style>

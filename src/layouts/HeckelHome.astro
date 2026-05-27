@@ -1,0 +1,625 @@
+---
+// src/layouts/HeckelHome.astro
+// Erich Heckel 木刻表现主义首页 · 强张力布局
+import BaseLayout from './BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
+import CoverCard from '@components/chrome/CoverCard.astro';
+import HeckelHero from '@components/themes/heckel/HeckelHero.astro';
+import HeckelBackground from '@components/themes/heckel/HeckelBackground.astro';
+import HeckelSectionTitle from '@components/themes/heckel/HeckelSectionTitle.astro';
+import HeckelMark from '@components/themes/heckel/HeckelMark.astro';
+import ScrollReveal from '@components/themes/heckel/ScrollReveal.svelte';
+import { Image } from 'astro:assets';
+import type { ThemeId } from '@themes';
+import type { ImageMetadata } from 'astro';
+
+// 数据契约 —— 与 pages/index.astro 对齐
+export interface FeaturedTopic {
+  slug: string;
+  title: string;
+  theme: ThemeId;
+  issueTitle: string;
+  issueHref: string;
+  issueNum: number;
+  blurb: string;
+  coverImage?: ImageMetadata | string;
+}
+export interface TopicCardData {
+  slug: string;
+  title: string;
+  theme: ThemeId;
+  meta: string;
+  coverImage?: ImageMetadata | string;
+}
+export interface ResearchArticleLite {
+  href: string;
+  title: string;
+  date: Date;
+  type: string;
+  order?: number;
+}
+export interface ResearchGroup {
+  slug: string;
+  title: string;
+  subtitle?: string;
+  summary: string;
+  href: string;
+  status: 'ongoing' | 'dormant';
+  started: string;
+  coverImage?: ImageMetadata;
+  totalArticles: number;
+  latestArticles: ResearchArticleLite[];
+}
+
+export interface Props {
+  featured: FeaturedTopic;
+  allTopics: TopicCardData[];
+  researchGroups: ResearchGroup[];
+}
+const { featured, allTopics, researchGroups } = Astro.props;
+const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
+---
+<BaseLayout title="大大黄油" description="个人交互式学术策展空间" bodyClass="home-heckel">
+  <HeckelBackground />
+  <Header activeNav={null} />
+
+  <main class="hk-main">
+    {/* ============ HERO ============ */}
+    <HeckelHero />
+
+    {/* ============ 当期主推 ============ */}
+    <section class="hk-section hk-featured-wrap">
+      <div class="hk-section-inner">
+        <ScrollReveal client:idle>
+          <HeckelSectionTitle eyebrow="Featured" title="当期主推" mark="sun"/>
+        </ScrollReveal>
+
+        <ScrollReveal client:idle delay={80}>
+          <div class="hk-featured">
+            <a class="hk-featured-cover" href={featured.issueHref}>
+              <CoverCard
+                href={featured.issueHref}
+                title={featured.title}
+                theme={featured.theme}
+                meta={`第 ${featured.issueNum} 期`}
+                coverImage={featured.coverImage}
+                aspectRatio="4 / 5"
+              />
+              {/* 红色印章 */}
+              <span class="hk-featured-stamp">第 {featured.issueNum} 期</span>
+            </a>
+            <div class="hk-featured-meta">
+              <p class="hk-featured-eyebrow">现在正在写</p>
+              <h2 class="hk-featured-title">{featured.issueTitle}</h2>
+              <p class="hk-featured-by">{featured.title}</p>
+              <p class="hk-featured-blurb">{featured.blurb}</p>
+              <div class="hk-featured-actions">
+                <a href={featured.issueHref} class="hk-btn-primary">↪ 读这期</a>
+                <a href={`/topics/${featured.slug}/`} class="hk-btn-muted">↪ 看专题</a>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+
+    {/* ============ 所有专题 · 横向滚动 ============ */}
+    <section id="topics" class="hk-section hk-topics-wrap">
+      <div class="hk-section-inner">
+        <ScrollReveal client:idle>
+          <HeckelSectionTitle eyebrow="All Topics" title="所有专题" count={`${allTopics.length} 个`} mark="mountain"/>
+        </ScrollReveal>
+        <p class="hk-topics-hint">← 横向滑动 / 拖动 →</p>
+      </div>
+
+      <ScrollReveal client:idle delay={100}>
+        <div class="hk-topic-rail" role="region" aria-label="所有专题">
+          {allTopics.map((t, i) => (
+            <article class="hk-topic-card" style={`--card-i:${i}`}>
+              <a href={`/topics/${t.slug}/`} class="hk-topic-cover">
+                <CoverCard
+                  href={`/topics/${t.slug}/`}
+                  title={t.title}
+                  theme={t.theme}
+                  meta={t.meta}
+                  coverImage={t.coverImage}
+                  aspectRatio="3 / 4"
+                />
+              </a>
+              <div class="hk-topic-meta">
+                <span class="hk-topic-num">{String(i + 1).padStart(2, '0')}</span>
+                <div class="hk-topic-text">
+                  <h3 class="hk-topic-title">{t.title}</h3>
+                  <p class="hk-topic-sub">{t.meta}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+          <div class="hk-topic-end" aria-hidden="true">
+            <HeckelMark variant="bird" size={64} ink="#0f0a06" accent="#d92410"/>
+            <span>END</span>
+          </div>
+        </div>
+      </ScrollReveal>
+    </section>
+
+    {/* ============ 研究 · 多专题纵向排布 ============ */}
+    <section id="research" class="hk-section hk-research-wrap">
+      <div class="hk-section-inner">
+        <ScrollReveal client:idle>
+          <HeckelSectionTitle eyebrow="Research" title="研究" count={`${researchGroups.length} 项`} mark="tree"/>
+        </ScrollReveal>
+
+        <div class="hk-research-stack">
+          {researchGroups.map((g, gi) => (
+            <ScrollReveal client:idle delay={60 + gi * 40}>
+              <article class="hk-research-row">
+                {/* 左：封面 + 标题在下方 */}
+                <a href={g.href} class="hk-research-cover">
+                  <div class="hk-research-cover-img">
+                    {g.coverImage ? (
+                      <Image
+                        src={g.coverImage}
+                        alt={g.title}
+                        widths={[280, 420]}
+                        sizes="(max-width: 720px) 100vw, 240px"
+                        format="webp"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <div class="hk-research-cover-fallback">
+                        <HeckelMark variant="tree" size={80} ink="#0f0a06" accent="#d92410"/>
+                      </div>
+                    )}
+                  </div>
+                  <div class="hk-research-cover-caption">
+                    <span class="hk-research-num">No. {String(gi + 1).padStart(2, '0')}</span>
+                    <h3 class="hk-research-title">{g.title}</h3>
+                    <p class="hk-research-status">
+                      {g.status === 'ongoing' ? '· 进行中' : '· 蛰伏'} · 共 {g.totalArticles} 篇
+                    </p>
+                  </div>
+                </a>
+
+                {/* 右：最新 3 期 */}
+                <ol class="hk-research-issues">
+                  {g.latestArticles.map((a, ai) => (
+                    <li class="hk-research-issue">
+                      <a href={a.href}>
+                        <span class="hk-issue-num">
+                          {a.order ? String(a.order).padStart(2, '0') : String(ai + 1).padStart(2, '0')}
+                        </span>
+                        <span class="hk-issue-body">
+                          <span class="hk-issue-title">{a.title}</span>
+                          <span class="hk-issue-foot">
+                            <span class="hk-issue-date">{fmtDate(a.date)}</span>
+                            <span class="hk-issue-type">· {a.type}</span>
+                          </span>
+                        </span>
+                        <span class="hk-issue-arrow" aria-hidden="true">→</span>
+                      </a>
+                    </li>
+                  ))}
+                  {g.totalArticles > g.latestArticles.length && (
+                    <li class="hk-research-more">
+                      <a href={g.href}>↪ 看全部 {g.totalArticles} 篇</a>
+                    </li>
+                  )}
+                </ol>
+              </article>
+            </ScrollReveal>
+          ))}
+        </div>
+
+        <div class="hk-research-foot">
+          <a href="/research/" class="hk-btn-muted">↪ 看全部研究</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* ========== 全局 ========== */
+  .hk-main {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+  }
+  .hk-section { position: relative; padding: 56px 0 64px; }
+  .hk-section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* 间错的浅色块——为节段切分张力 */
+  .hk-featured-wrap { background: rgba(232, 176, 32, 0.08); }
+  .hk-topics-wrap   { background: rgba(35, 78, 125, 0.06); }
+  .hk-research-wrap { background: rgba(193, 39, 45, 0.05); }
+
+  /* ========== 当期主推 ========== */
+  .hk-featured {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .hk-featured-cover {
+    position: relative;
+    display: block;
+    border: 4px solid #0f0a06;
+    box-shadow: 12px 12px 0 0 #d92410;
+    background: #f4ead0;
+    border-bottom: 4px solid #0f0a06;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+  .hk-featured-cover:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 16px 16px 0 0 #d92410;
+  }
+  .hk-featured-cover :global(.cover-card) {
+    border: none;
+    box-shadow: none;
+  }
+  .hk-featured-stamp {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    background: #f5b800;
+    color: #0f0a06;
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    padding: 6px 12px;
+    border: 2.5px solid #0f0a06;
+    transform: rotate(-4deg);
+    z-index: 5;
+  }
+
+  .hk-featured-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #d92410;
+    margin-bottom: 14px;
+  }
+  .hk-featured-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 3.6vw, 40px);
+    line-height: 1.12;
+    font-weight: 700;
+    color: #0f0a06;
+    margin-bottom: 10px;
+    border-left: 6px solid #1c4a8a;
+    padding-left: 16px;
+  }
+  .hk-featured-by {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: #3a2e22;
+    margin-bottom: 18px;
+    padding-left: 22px;
+  }
+  .hk-featured-blurb {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #0f0a06;
+    margin-bottom: 26px;
+  }
+  .hk-featured-actions { display: flex; gap: 14px; }
+
+  .hk-btn-primary, .hk-btn-muted {
+    font-family: 'EB Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 2.5px solid #0f0a06;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .hk-btn-primary {
+    background: #d92410;
+    color: #f4ead0;
+    box-shadow: 4px 4px 0 0 #0f0a06;
+  }
+  .hk-btn-muted {
+    background: #f4ead0;
+    color: #0f0a06;
+    box-shadow: 4px 4px 0 0 #1c4a8a;
+  }
+  .hk-btn-primary:hover, .hk-btn-muted:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 #0f0a06;
+  }
+
+  /* ========== 横向滚动 · 专题 ========== */
+  .hk-topics-hint {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: #3a2e22;
+    opacity: 0.6;
+    margin-top: -14px;
+    margin-bottom: 20px;
+  }
+  .hk-topic-rail {
+    display: flex;
+    gap: 24px;
+    padding: 12px 32px 32px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #0f0a06 transparent;
+  }
+  .hk-topic-rail::-webkit-scrollbar { height: 8px; }
+  .hk-topic-rail::-webkit-scrollbar-track { background: transparent; }
+  .hk-topic-rail::-webkit-scrollbar-thumb {
+    background: #0f0a06;
+    border-radius: 0;
+  }
+  .hk-topic-card {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  .hk-topic-cover {
+    display: block;
+    border: 3.5px solid #0f0a06;
+    box-shadow: 7px 7px 0 0 #1c4a8a;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    background: #f4ead0;
+  }
+  .hk-topic-cover :global(.cover-card) { border: none; box-shadow: none; }
+  .hk-topic-card:nth-child(3n+1) .hk-topic-cover { box-shadow: 7px 7px 0 0 #d92410; }
+  .hk-topic-card:nth-child(3n+2) .hk-topic-cover { box-shadow: 7px 7px 0 0 #1c4a8a; }
+  .hk-topic-card:nth-child(3n)   .hk-topic-cover { box-shadow: 7px 7px 0 0 #f5b800; }
+  .hk-topic-cover:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 10px 10px 0 0 #0f0a06 !important;
+  }
+  .hk-topic-meta {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0 0;
+    align-items: baseline;
+  }
+  .hk-topic-num {
+    font-family: 'EB Garamond', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #d92410;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+  .hk-topic-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: #0f0a06;
+    line-height: 1.3;
+  }
+  .hk-topic-sub {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #3a2e22;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .hk-topic-end {
+    flex: 0 0 120px;
+    scroll-snap-align: end;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #3a2e22;
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+    gap: 8px;
+  }
+
+  /* ========== 研究 · 纵向卡 ========== */
+  .hk-research-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    margin-top: 24px;
+  }
+  .hk-research-row {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 36px;
+    background: #f4ead0;
+    border: 3px solid #0f0a06;
+    box-shadow: 8px 8px 0 0 #0f0a06;
+    padding: 24px;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .hk-research-row:nth-child(odd)  { box-shadow: 8px 8px 0 0 #1c4a8a; }
+  .hk-research-row:nth-child(even) { box-shadow: 8px 8px 0 0 #d92410; }
+  .hk-research-row:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 12px 12px 0 0 #0f0a06;
+  }
+
+  .hk-research-cover {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: none;
+    color: inherit;
+  }
+  .hk-research-cover-img {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 2.5px solid #0f0a06;
+    background: #f4ead0;
+  }
+  .hk-research-cover-img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hk-research-cover-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7efdb;
+  }
+  .hk-research-cover-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hk-research-num {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #d92410;
+  }
+  .hk-research-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: #0f0a06;
+    line-height: 1.25;
+    margin: 0;
+  }
+  .hk-research-status {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: #3a2e22;
+    margin: 0;
+  }
+
+  /* 右侧期次列表 */
+  .hk-research-issues {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .hk-research-issue { border-bottom: 1.5px dashed rgba(26, 20, 16, 0.25); }
+  .hk-research-issue:last-of-type { border-bottom: none; }
+  .hk-research-issue a {
+    display: grid;
+    grid-template-columns: 44px 1fr 22px;
+    gap: 16px;
+    align-items: start;
+    padding: 14px 4px;
+    color: #0f0a06;
+    border-bottom: none;
+    transition: background-color 160ms ease;
+  }
+  .hk-research-issue a:hover {
+    background: rgba(232, 176, 32, 0.18);
+  }
+  .hk-issue-num {
+    font-family: 'EB Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1c4a8a;
+    line-height: 0.9;
+    padding-top: 2px;
+  }
+  .hk-issue-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .hk-issue-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #0f0a06;
+    line-height: 1.4;
+  }
+  .hk-issue-foot {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: #3a2e22;
+  }
+  .hk-issue-type { margin-left: 4px; }
+  .hk-issue-arrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    color: #d92410;
+    transition: transform 160ms ease;
+    align-self: center;
+  }
+  .hk-research-issue a:hover .hk-issue-arrow { transform: translateX(3px); }
+
+  .hk-research-more {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 2px solid #0f0a06;
+  }
+  .hk-research-more a {
+    font-family: 'EB Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: #d92410;
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+
+  .hk-research-foot {
+    margin-top: 36px;
+    text-align: center;
+  }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 880px) {
+    .hk-section { padding: 40px 0 48px; }
+    .hk-section-inner { padding: 0 20px; }
+    .hk-featured { grid-template-columns: 1fr; gap: 28px; }
+    .hk-featured-cover { box-shadow: 6px 6px 0 0 #d92410; }
+    .hk-featured-cover:hover { box-shadow: 9px 9px 0 0 #d92410; }
+
+    .hk-research-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 20px;
+      box-shadow: 5px 5px 0 0 #0f0a06 !important;
+    }
+    .hk-research-row:nth-child(odd)  { box-shadow: 5px 5px 0 0 #1c4a8a !important; }
+    .hk-research-row:nth-child(even) { box-shadow: 5px 5px 0 0 #d92410 !important; }
+    .hk-research-cover { flex-direction: row; gap: 16px; align-items: flex-start; }
+    .hk-research-cover-img { flex: 0 0 120px; }
+    .hk-research-cover-caption { flex: 1; min-width: 0; }
+
+    .hk-topic-rail { padding: 12px 20px 24px; }
+    .hk-topic-card { flex: 0 0 220px; }
+  }
+
+  @media (max-width: 480px) {
+    .hk-featured-stamp { right: -8px; top: -10px; font-size: 11px; padding: 4px 9px; }
+    .hk-featured-title { font-size: 24px; padding-left: 12px; border-left-width: 4px; }
+    .hk-featured-by { padding-left: 16px; }
+    .hk-featured-blurb { font-size: 15px; }
+    .hk-btn-primary, .hk-btn-muted { padding: 8px 14px; font-size: 11px; }
+    .hk-research-row { padding: 16px; }
+    .hk-research-issue a { grid-template-columns: 36px 1fr 18px; gap: 10px; padding: 12px 2px; }
+    .hk-issue-num { font-size: 22px; }
+    .hk-issue-title { font-size: 14px; }
+  }
+</style>
