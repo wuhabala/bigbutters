@@ -1,0 +1,27 @@
+---
+// src/components/themes/basquiat/MarkerLine.astro
+// 不平直、手绘风分隔线
+---
+<svg
+  class="basquiat-marker-line"
+  viewBox="0 0 400 16"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+>
+  <path
+    d="M 8 7 Q 32 12, 64 7 T 128 8 T 192 6 T 256 8 T 320 7 T 392 9"
+    fill="none"
+    stroke="var(--ink)"
+    stroke-width="2.8"
+    stroke-linecap="round"
+  />
+</svg>
+<style>
+  .basquiat-marker-line {
+    display: block;
+    width: 100%;
+    height: 16px;
+    margin: 32px auto;
+    max-width: 400px;
+  }
+</style>

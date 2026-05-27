@@ -1,0 +1,36 @@
+---
+// src/components/themes/basquiat/ScribbleStamp.astro
+// 倾斜手写章 · 用作章号/标记/题字
+export interface Props {
+  text: string;
+  rotate?: number;
+  color?: 'red' | 'blue' | 'black';
+}
+const { text, rotate = -3, color = 'red' } = Astro.props;
+
+const colorMap = {
+  red:   { fg: '#c43838', bg: '#faf4e0' },
+  blue:  { fg: '#1a4ba8', bg: '#faf4e0' },
+  black: { fg: '#0a0a0a', bg: '#f8d12b' },
+};
+const c = colorMap[color];
+---
+<span
+  class="basquiat-stamp"
+  style={`color: ${c.fg}; background: ${c.bg}; border-color: ${c.fg}; transform: rotate(${rotate}deg);`}
+>
+  {text}
+</span>
+<style>
+  .basquiat-stamp {
+    display: inline-block;
+    font-family: 'Permanent Marker', 'Caveat', cursive;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border: 2.5px dashed;
+    border-radius: 2px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+</style>

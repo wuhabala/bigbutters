@@ -1,0 +1,34 @@
+---
+// src/components/themes/basquiat/BasquiatNote.astro
+// 黄底马克笔风边注 / 旁白
+export interface Props {
+  label?: string;
+}
+const { label = 'NOTE' } = Astro.props;
+---
+<aside class="basquiat-note">
+  <span class="bnote-label">{label}</span>
+  <div class="bnote-body"><slot /></div>
+</aside>
+<style>
+  .basquiat-note {
+    margin: 28px 0;
+    padding: 14px 18px 14px 22px;
+    background: #f8d12b;
+    border: 2.5px solid var(--ink);
+    position: relative;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .bnote-label {
+    display: inline-block;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .bnote-body :global(p:last-child) { margin-bottom: 0; }
+</style>

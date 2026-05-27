@@ -1,0 +1,24 @@
+---
+// src/components/themes/basquiat/StrikeText.astro
+// 红色粗划线（Basquiat 标志性"擦除即强调"）
+---
+<span class="basquiat-strike"><slot /></span>
+<style>
+  .basquiat-strike {
+    position: relative;
+    display: inline-block;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .basquiat-strike::after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 4px;
+    background: var(--accent);
+    transform: translateY(-50%) rotate(-1.5deg);
+    pointer-events: none;
+  }
+</style>

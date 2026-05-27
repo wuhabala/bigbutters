@@ -14,6 +14,7 @@
 | `EBGaramond-Regular.woff2` | EB Garamond | 400 normal | 21,704 | `b63448e2680a0dbde70ebb2f3de78f6c515122835491f938e8a8595b46f29210` |
 | `EBGaramond-Italic.woff2` | EB Garamond | 400 italic | 22,172 | `1bd1b20fd55986b334ba42dbcb0d9bed7e2d08fd7a713000e8041bfafa37e8ec` |
 | `Caveat-Regular.woff2` | Caveat | 400 normal | 48,836 | `d0b7b931b8980049327e8f8f9ac264617c8200b8422d62e886473d3d9527bad3` |
+| `PermanentMarker-Regular.woff2` | Permanent Marker | 400 normal | 29,564 | `4884fec2c73aa52a2461073c1b87d1ceb80f400520391b43f97ca7d3c39eeb24` |
 
 上游具体路径：
 - `https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc/files/noto-serif-sc-chinese-simplified-{400,600}-normal.woff2`
@@ -29,6 +30,7 @@
 - **Noto Serif SC** — © Google. SIL Open Font License 1.1. <https://fonts.google.com/noto/specimen/Noto+Serif+SC/license>
 - **EB Garamond** — © Georg Duffner. SIL Open Font License 1.1. <https://fonts.google.com/specimen/EB+Garamond/license>
 - **Caveat** — © Pablo Impallari / Brenda Gallo. SIL Open Font License 1.1. <https://fonts.google.com/specimen/Caveat/license>
+- **Permanent Marker** — © Font Diner. Apache License 2.0. <https://fonts.google.com/specimen/Permanent+Marker/about>（注：Apache 2.0 与 OFL 类似，允许嵌入与重新分发）
 
 OFL 全文：<https://scripts.sil.org/OFL>
 
