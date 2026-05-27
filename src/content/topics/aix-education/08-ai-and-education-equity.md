@@ -5,6 +5,8 @@ title: "AI 会让教育更公平，还是差距更大？"
 date: 2026-05-24
 status: published
 summary: "资源人人可得并不等于人人受益，AI 也可能放大新的教育鸿沟。"
+cover:
+  hero_image: ./images/08-ai-and-education-equity.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 7 期**

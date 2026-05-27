@@ -5,6 +5,8 @@ title: "把判断都交给 AI，我们会失去什么？"
 date: 2026-05-24
 status: published
 summary: "品格是在反复判断中练成的，而 AI 正可能抽走这次亲自判断的机会。"
+cover:
+  hero_image: ./images/10-outsourcing-judgment.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 9 期**

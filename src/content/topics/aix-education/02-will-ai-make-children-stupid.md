@@ -5,6 +5,8 @@ title: "孩子什么都问 AI，会变笨吗？"
 date: 2026-05-24
 status: published
 summary: "AI 可以延伸认知，也可能掏空正在形成的能力；关键在于外包了什么。"
+cover:
+  hero_image: ./images/02-will-ai-make-children-stupid.webp
 ---
 
 > **「AI 时代,教育守什么」· 第 1 期**

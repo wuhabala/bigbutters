@@ -60,6 +60,30 @@
   src: url('/fonts/ZTZiYouTi-Regular.woff2') format('woff2');
 }
 @font-face {
+  /* 台北黑体 Beta Light · OFL · Basquiat 页眉中文导航六字子集 */
+  font-family: 'Taipei Sans TC Beta';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/TaipeiSansTCBeta-Light-Nav.woff2') format('woff2');
+}
+@font-face {
+  /* 思源黑体 SC Light · OFL · Escher 标题及导航显示文本子集 */
+  font-family: 'Source Han Sans SC Escher';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/SourceHanSansSC-Light-Escher.woff2') format('woff2');
+}
+@font-face {
+  /* 思源黑体 SC Regular · OFL · Escher 标题及导航显示文本子集 */
+  font-family: 'Source Han Sans SC Escher';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/SourceHanSansSC-Regular-Escher.woff2') format('woff2');
+}
+@font-face {
   /* 马善政毛笔楷书 · OFL */
   font-family: 'Ma Shan Zheng';
   font-weight: 400;
@@ -624,7 +648,8 @@ body.theme-basquiat .brand-cn {
 /* nav 链接 Marker 字体 + 黑底主题适配 */
 body.theme-basquiat .site-nav { gap: 24px; }
 body.theme-basquiat .nav-link {
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'Taipei Sans TC Beta', 'Noto Serif SC', sans-serif;
+  font-weight: 300;
   font-size: 14px;
   letter-spacing: 0.18em;
   color: var(--bg);                       /* 白色（黑底上）*/
@@ -832,19 +857,19 @@ body.theme-escher .issue-body.prose::before {
 }
 body.theme-escher .prose h2 {
   font-family: var(--font-sans);
-  font-size: clamp(25px, 3.2vw, 31px);
-  font-weight: 500;
+  font-size: clamp(21px, 2.3vw, 24px);
+  font-weight: 400;
   line-height: 1.28;
-  letter-spacing: 0.05em;
-  margin: 42px 0 18px;
-  padding-left: 18px;
+  letter-spacing: 0.03em;
+  margin: 36px 0 16px;
+  padding-left: 14px;
   border-left: 2px solid var(--ochre);
 }
 body.theme-escher .prose h3 {
   font-family: var(--font-sans);
-  font-size: 21px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
   color: var(--ink-soft);
 }
 body.theme-escher .prose blockquote {
@@ -860,9 +885,9 @@ body.theme-escher .prose strong { color: var(--ink); font-weight: 600; }
 body.theme-escher .prose a { border-bottom-color: var(--ochre); }
 body.theme-escher .issue-title {
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.17;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.03em;
   max-width: 720px;
 }
 body.theme-escher .issue-eyebrow,
@@ -910,8 +935,8 @@ body.theme-escher .i-date {
     padding: 22px 18px;
     box-shadow: 8px 8px 0 rgba(201, 188, 169, 0.18);
   }
-  body.theme-escher .prose h2 { font-size: 22px; margin-top: 32px; }
-  body.theme-escher .issue-title { letter-spacing: 0.03em; }
+  body.theme-escher .prose h2 { font-size: 21px; margin-top: 30px; }
+  body.theme-escher .issue-title { letter-spacing: 0.02em; }
   body.theme-escher .i-num { min-width: 72px; font-size: 11px; }
   body.theme-escher .issue-entry a {
     grid-template-columns: 82px 1fr;

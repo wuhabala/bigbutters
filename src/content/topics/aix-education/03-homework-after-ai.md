@@ -5,6 +5,8 @@ title: "AI 能写完所有作业，我们到底在考什么？"
 date: 2026-05-24
 status: published
 summary: "当答案唾手可得，作业真正要保存的是学生亲自走过的探究过程。"
+cover:
+  hero_image: ./images/03-homework-after-ai.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 2 期**

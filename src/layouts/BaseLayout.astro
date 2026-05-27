@@ -56,10 +56,8 @@ const pageTitle = title.includes(BRAND) ? title : `${title} · ${BRAND}`;
     <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
   ))}
 
-  {/* 主题 CSS 变量注入 */}
-  <style is:inline set:html={`:root { ${cssVars} ${fontFamilyOverride} }`}></style>
 </head>
-<body class={pack.classOverrides ?? ''} data-theme={pack.id}>
+<body class={pack.classOverrides ?? ''} data-theme={pack.id} style={`${cssVars} ${fontFamilyOverride}`}>
   <slot />
 </body>
 </html>

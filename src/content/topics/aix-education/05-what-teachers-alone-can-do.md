@@ -5,6 +5,8 @@ title: "AI 什么都会教，但有一件事它永远做不到"
 date: 2026-05-24
 status: published
 summary: "教育不只是传递知识，还要把学生当作能够成为自己的主体。"
+cover:
+  hero_image: ./images/05-what-teachers-alone-can-do.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 4 期**

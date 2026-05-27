@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import loopStairs from '../../../assets/themes/escher/ornament-loop-stairs.webp';
 ---
 <div class="esch-bg" aria-hidden="true">
   <svg class="grid" viewBox="0 0 1200 900" preserveAspectRatio="none">
@@ -12,6 +14,15 @@
   <span class="axis axis-a">↗</span>
   <span class="axis axis-b">↙</span>
   <span class="loop">A → B → A</span>
+  <Image
+    class="ornament-stairs"
+    src={loopStairs}
+    alt=""
+    widths={[260, 360]}
+    sizes="min(28vw, 360px)"
+    loading="lazy"
+    format="webp"
+  />
 </div>
 <style>
   .esch-bg {
@@ -44,8 +55,17 @@
   .axis-a { top: 19%; right: 9%; }
   .axis-b { bottom: 18%; left: 7%; }
   .loop { bottom: 9%; right: 8%; font-size: 11px; }
+  .ornament-stairs {
+    position: absolute;
+    right: -24px;
+    bottom: 64px;
+    width: min(28vw, 360px);
+    height: auto;
+    opacity: 0.075;
+    mix-blend-mode: multiply;
+  }
   @media (max-width: 720px) {
     .grid { opacity: 0.27; }
-    .axis, .loop, .counter-route { display: none; }
+    .axis, .loop, .counter-route, .ornament-stairs { display: none; }
   }
 </style>

@@ -5,6 +5,8 @@ title: "AI 什么都会了，到底还该教孩子什么？"
 date: 2026-05-24
 status: published
 summary: "当信息处理可被代劳，辨真、理解与判断更应成为教育核心。"
+cover:
+  hero_image: ./images/09-what-still-teach.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 8 期**

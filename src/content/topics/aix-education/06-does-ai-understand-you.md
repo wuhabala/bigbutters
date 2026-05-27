@@ -5,6 +5,8 @@ title: "会说「我懂你」的机器，真的懂你吗？"
 date: 2026-05-24
 status: published
 summary: "能生成安慰话语的系统，是否能承担关怀关系中真正的在意。"
+cover:
+  hero_image: ./images/06-does-ai-understand-you.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 5 期**

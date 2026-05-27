@@ -16,7 +16,7 @@ export const escher: ThemePack = {
     rule:        '#c9bca9',
   },
   fonts: {
-    sans: "'Avenir Next', 'PingFang SC', -apple-system, sans-serif",
+    sans: "'Source Han Sans SC Escher', 'Source Han Sans SC', 'PingFang SC', -apple-system, sans-serif",
   },
   decorativeComponents: ['EscherBackground', 'EscherHero', 'EscherCover', 'ImpossibleSteps'],
   classOverrides: 'theme-escher',

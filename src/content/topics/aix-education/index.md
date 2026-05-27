@@ -6,6 +6,8 @@ status: completed
 type: series
 planned_issues: 12
 summary: 当 AI 变成孩子的日常工具，教育需要守住什么？十二篇文章沿一座不断翻转的知识迷宫，寻找机器无法返还的部分。
+cover:
+  hero_image: ./images/hero.webp
 related_research:
   - aix-literature
 started: 2026-03

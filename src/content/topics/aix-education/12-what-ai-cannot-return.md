@@ -5,6 +5,8 @@ title: "AI 能返还一切，除了教育最要紧的东西"
 date: 2026-05-24
 status: published
 summary: "十个问题归为同一道判准：教育要守住机器无法返还的那部分。"
+cover:
+  hero_image: ./images/12-what-ai-cannot-return.webp
 ---
 
 > **「AI 时代，教育守什么」· 收官**

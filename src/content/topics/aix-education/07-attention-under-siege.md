@@ -5,6 +5,8 @@ title: "不是孩子坐不住，是有人在抢他的注意力"
 date: 2026-05-24
 status: published
 summary: "注意力既需要教育来养成，也正在被平台和智能系统系统性争夺。"
+cover:
+  hero_image: ./images/07-attention-under-siege.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 6 期**

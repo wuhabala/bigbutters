@@ -5,6 +5,8 @@ title: "个性化：是因材施教，还是给孩子套上数据枷锁？"
 date: 2026-05-24
 status: published
 summary: "个性化学习既可能照顾差异，也可能把孩子锁进算法预测的轨道。"
+cover:
+  hero_image: ./images/04-personalization-or-data-cage.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 3 期**

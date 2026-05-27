@@ -5,6 +5,8 @@ title: "那个「帮你」的 AI，正在悄悄改变你怎么想"
 date: 2026-05-24
 status: published
 summary: "任何技术中介都在同时放大与缩减，AI 也从来不是中立工具。"
+cover:
+  hero_image: ./images/11-tools-are-not-neutral.webp
 ---
 
 > **「AI 时代，教育守什么」· 第 10 期**
