@@ -3,6 +3,8 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
+import BasquiatHero from '@components/themes/basquiat/BasquiatHero.astro';
+import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
 import type { ThemeId } from '@themes';
 
 export interface Props {
@@ -13,21 +15,33 @@ export interface Props {
   ogImage?: string;
 }
 const { title, subtitle, theme, description, ogImage } = Astro.props;
+const isBasquiat = theme === 'basquiat';
 ---
 <BaseLayout {title} {description} {theme} {ogImage}>
+  {isBasquiat && <BasquiatBackground />}
   <Header activeNav="research" />
-  <main class="research-main">
-    <header class="research-hero">
-      <p class="research-eyebrow">研究</p>
-      <h1 class="research-title">{title}</h1>
-      {subtitle && <p class="research-subtitle">{subtitle}</p>}
-    </header>
+  <main class="research-main" class:list={{ 'bsq-main': isBasquiat }}>
+    {isBasquiat ? (
+      <BasquiatHero
+        eyebrow="研究"
+        title={title}
+        subtitle={subtitle}
+        stamp="RESEARCH"
+      />
+    ) : (
+      <header class="research-hero">
+        <p class="research-eyebrow">研究</p>
+        <h1 class="research-title">{title}</h1>
+        {subtitle && <p class="research-subtitle">{subtitle}</p>}
+      </header>
+    )}
     <slot />
   </main>
   <Footer />
 </BaseLayout>
 <style>
-  .research-main { max-width: 1100px; margin: 0 auto; padding: 48px 32px; }
+  .research-main { max-width: 1100px; margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
+  .bsq-main { padding-top: 60px; }   /* Basquiat 顶部黑线让出空间 */
   .research-hero { margin-bottom: 48px; max-width: var(--content-max); }
   .research-eyebrow {
     font-family: 'EB Garamond', serif;

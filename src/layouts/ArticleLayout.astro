@@ -3,6 +3,8 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
+import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
+import Crown from '@components/themes/basquiat/Crown.astro';
 import type { ThemeId } from '@themes';
 
 export interface Props {
@@ -20,17 +22,31 @@ export interface Props {
 }
 const { title, researchTitle, researchHref, date, type, tags = [], order, theme, description, ogImage } = Astro.props;
 const dateStr = date.toISOString().slice(0, 10);
+const isBasquiat = theme === 'basquiat';
 ---
 <BaseLayout {title} {description} {theme} {ogImage} ogType="article">
+  {isBasquiat && <BasquiatBackground />}
   <Header activeNav="research" />
-  <article class="article-main">
-    <header class="article-hero">
+  <article class="article-main" class:list={{ 'bsq-article': isBasquiat }}>
+    <header class="article-hero" class:list={{ 'bsq-article-hero': isBasquiat }}>
+      {isBasquiat && order && (
+        <div class="bsq-issue-stamp">
+          <Crown size={28} />
+          <span class="bsq-issue-num">第 {order} 期</span>
+        </div>
+      )}
       <p class="article-eyebrow">
         <a href={researchHref}>{researchTitle}</a>
-        {order && <> · 第 {order} 期</>}
+        {!isBasquiat && order && <> · 第 {order} 期</>}
         · {type}
       </p>
       <h1 class="article-title">{title}</h1>
+      {isBasquiat && (
+        <svg class="bsq-article-underline" viewBox="0 0 300 10" preserveAspectRatio="none">
+          <path d="M 4 5 Q 50 2, 100 6 T 200 7 T 296 5"
+                fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      )}
       <p class="article-date">{dateStr}</p>
       {tags.length > 0 && (
         <div class="article-tags">
@@ -45,8 +61,28 @@ const dateStr = date.toISOString().slice(0, 10);
   <Footer />
 </BaseLayout>
 <style>
-  .article-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; }
+  .article-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
+  .bsq-article { padding-top: 60px; }   /* Basquiat 顶部线让位 */
   .article-hero { margin-bottom: 32px; }
+  .bsq-article-hero { position: relative; }
+  .bsq-issue-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 6px 14px 6px 8px;
+    background: #f8d12b;
+    border: 3px solid var(--ink);
+    transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .bsq-issue-num {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    line-height: 1;
+  }
   .article-eyebrow {
     font-family: 'EB Garamond', serif;
     font-size: 11px;
@@ -61,6 +97,17 @@ const dateStr = date.toISOString().slice(0, 10);
     line-height: 1.1;
     margin-bottom: 12px;
     font-weight: 500;
+  }
+  .bsq-article-hero .article-title {
+    font-weight: 700;
+    padding-left: 10px;
+    border-left: 5px solid var(--accent);
+  }
+  .bsq-article-underline {
+    display: block;
+    width: 50%;
+    height: 10px;
+    margin: 4px 0 16px 10px;
   }
   .article-date {
     font-family: 'EB Garamond', serif;
@@ -77,6 +124,13 @@ const dateStr = date.toISOString().slice(0, 10);
     background: var(--bg-soft);
     border: 1px solid var(--rule);
     color: var(--ink-soft);
+  }
+  .bsq-article-hero .tag {
+    background: var(--bg-soft);
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    font-family: 'Permanent Marker', cursive;
+    letter-spacing: 0.08em;
   }
   .article-body { font-size: 17px; line-height: 1.85; }
   @media (max-width: 640px) {

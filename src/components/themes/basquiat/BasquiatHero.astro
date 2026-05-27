@@ -1,0 +1,99 @@
+---
+// src/components/themes/basquiat/BasquiatHero.astro
+// Basquiat 主题专属 hero（用于研究专题首页和文章页 hero 区）
+import Crown from './Crown.astro';
+
+export interface Props {
+  eyebrow: string;          // 顶部小标签 · 如 "研究"
+  title: string;
+  subtitle?: string;
+  /** 装饰角章号文字 · 如 "01 / 09" 或 "RESEARCH" */
+  stamp?: string;
+}
+const { eyebrow, title, subtitle, stamp } = Astro.props;
+---
+<header class="bsq-hero">
+  <div class="bsq-hero-top">
+    <Crown size={42} />
+    <span class="bsq-hero-eyebrow">{eyebrow}</span>
+    {stamp && <span class="bsq-hero-stamp">{stamp}</span>}
+  </div>
+
+  <h1 class="bsq-hero-title">{title}</h1>
+  <!-- 手绘下划线 · 不规则 -->
+  <svg class="bsq-hero-underline" viewBox="0 0 400 14" preserveAspectRatio="none">
+    <path d="M 4 8 Q 50 3, 100 8 T 200 10 T 300 6 T 396 9"
+          fill="none" stroke="#0a0a0a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 80 12 L 320 12"
+          stroke="#c43838" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  </svg>
+
+  {subtitle && <p class="bsq-hero-subtitle">{subtitle}</p>}
+</header>
+
+<style>
+  .bsq-hero {
+    margin-bottom: 56px;
+    max-width: var(--content-max);
+    position: relative;
+  }
+  .bsq-hero-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .bsq-hero-eyebrow {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .bsq-hero-stamp {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    background: #f8d12b;
+    padding: 4px 12px;
+    border: 2.5px solid var(--ink);
+    transform: rotate(-3deg);
+    line-height: 1;
+    margin-left: auto;
+  }
+  .bsq-hero-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(48px, 7vw, 72px);
+    line-height: 1.02;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.015em;
+    /* 标题文字加微妙的"刷"效果——左侧短粗黑边 */
+    padding-left: 12px;
+    border-left: 6px solid var(--accent);
+  }
+  .bsq-hero-underline {
+    display: block;
+    width: 60%;
+    height: 14px;
+    margin-top: 8px;
+    margin-left: 12px;
+  }
+  .bsq-hero-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    padding-left: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .bsq-hero { margin-bottom: 40px; }
+    .bsq-hero-title { font-size: clamp(36px, 9vw, 48px); }
+    .bsq-hero-subtitle { font-size: 16px; }
+  }
+</style>

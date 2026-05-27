@@ -1,0 +1,173 @@
+---
+// src/components/themes/basquiat/BasquiatBackground.astro
+// Basquiat 主题专属全屏背景层 · 散落装饰元素
+// 用 position: fixed 在 body 内、main 后，z-index 在主内容下方
+---
+<div class="bsq-bg" aria-hidden="true">
+  <!-- 顶部一条不规则手绘粗黑线 -->
+  <svg class="bsq-topline" viewBox="0 0 1200 30" preserveAspectRatio="none">
+    <path d="M 10 18 Q 100 10, 200 16 T 400 14 T 600 18 T 800 12 T 1000 16 T 1190 14"
+          fill="none" stroke="#0a0a0a" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>
+
+  <!-- 散落英文单词碎片 -->
+  <span class="bsq-word w1">RISK</span>
+  <span class="bsq-word w2">SAFETY</span>
+  <span class="bsq-word w3">A.I.</span>
+  <span class="bsq-word w4">2026</span>
+  <span class="bsq-word w5">CROWN</span>
+  <span class="bsq-word w6">©</span>
+
+  <!-- 小皇冠装饰 1（左上） -->
+  <svg class="bsq-mini-crown c1" viewBox="0 0 32 22">
+    <path d="M 2 19 L 7 4 L 11 15 L 16 2 L 21 15 L 25 4 L 30 19 Z"
+          fill="#f8d12b" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="3" y1="20" x2="29" y2="20" stroke="#0a0a0a" stroke-width="1.5"/>
+  </svg>
+
+  <!-- 小皇冠 2（右下） -->
+  <svg class="bsq-mini-crown c2" viewBox="0 0 32 22">
+    <path d="M 2 19 L 7 4 L 11 15 L 16 2 L 21 15 L 25 4 L 30 19 Z"
+          fill="#f8d12b" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="3" y1="20" x2="29" y2="20" stroke="#0a0a0a" stroke-width="1.5"/>
+  </svg>
+
+  <!-- 红 × 标记（散落） -->
+  <svg class="bsq-x x1" viewBox="0 0 24 24">
+    <line x1="3" y1="3" x2="21" y2="21" stroke="#c43838" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="21" y1="3" x2="3" y2="21" stroke="#c43838" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>
+  <svg class="bsq-x x2" viewBox="0 0 24 24">
+    <line x1="3" y1="3" x2="21" y2="21" stroke="#c43838" stroke-width="3" stroke-linecap="round"/>
+    <line x1="21" y1="3" x2="3" y2="21" stroke="#c43838" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+
+  <!-- 蓝箭头 -->
+  <svg class="bsq-arrow a1" viewBox="0 0 60 24">
+    <line x1="6" y1="12" x2="50" y2="12" stroke="#1a4ba8" stroke-width="3" stroke-linecap="round"/>
+    <polyline points="40,4 54,12 40,20" fill="none" stroke="#1a4ba8" stroke-width="3"
+              stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <!-- 黑色斑点 -->
+  <svg class="bsq-splat s1" viewBox="0 0 50 50">
+    <path d="M 25 5 Q 38 8, 42 22 Q 48 33, 38 42 Q 25 48, 14 41 Q 4 33, 8 22 Q 12 8, 25 5 Z"
+          fill="#0a0a0a"/>
+  </svg>
+
+  <!-- 数字（手写） -->
+  <span class="bsq-num n1">9</span>
+  <span class="bsq-num n2">∞</span>
+</div>
+
+<style>
+  .bsq-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* 顶部粗黑横线 */
+  .bsq-topline {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 30px;
+  }
+
+  /* 散落英文单词 · Permanent Marker · 旋转 */
+  .bsq-word {
+    position: absolute;
+    font-family: 'Permanent Marker', cursive;
+    color: #0a0a0a;
+    opacity: 0.18;
+    pointer-events: none;
+    user-select: none;
+  }
+  .w1 { top: 8%;  left: 2%;  font-size: 64px; transform: rotate(-12deg); }
+  .w2 { top: 42%; left: 3%;  font-size: 38px; transform: rotate(-90deg); letter-spacing: 0.1em; }
+  .w3 { top: 18%; right: 4%; font-size: 96px; transform: rotate(8deg);  color: #c43838; opacity: 0.16; }
+  .w4 { bottom: 12%; right: 3%; font-size: 72px; transform: rotate(-6deg); }
+  .w5 { bottom: 30%; left: 4%; font-size: 32px; transform: rotate(2deg); opacity: 0.15; color: #1a4ba8; }
+  .w6 { top: 60%; right: 6%; font-size: 48px; opacity: 0.25; }
+
+  /* 小皇冠浮动 */
+  .bsq-mini-crown {
+    position: absolute;
+    width: 48px;
+    height: 32px;
+    opacity: 0.85;
+  }
+  .c1 {
+    top: 4%; left: 7%;
+    transform: rotate(-8deg);
+    animation: wobble 8s ease-in-out infinite;
+  }
+  .c2 {
+    bottom: 18%; right: 12%;
+    transform: rotate(12deg);
+    animation: wobble 10s ease-in-out infinite reverse;
+    width: 36px; height: 24px;
+  }
+
+  /* 红 × */
+  .bsq-x {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+  }
+  .x1 { top: 25%; left: 12%; transform: rotate(15deg); opacity: 0.8; }
+  .x2 { top: 70%; left: 10%; transform: rotate(-22deg); opacity: 0.6; width: 20px; height: 20px; }
+
+  /* 蓝箭头 */
+  .bsq-arrow {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+  }
+  .a1 {
+    top: 55%; right: 8%;
+    transform: rotate(-25deg);
+    opacity: 0.7;
+    animation: drift 12s ease-in-out infinite;
+  }
+
+  /* 黑斑 */
+  .bsq-splat {
+    position: absolute;
+    width: 32px; height: 32px;
+    opacity: 0.45;
+  }
+  .s1 { bottom: 8%; left: 18%; transform: rotate(20deg); }
+
+  /* 大数字（手写） */
+  .bsq-num {
+    position: absolute;
+    font-family: 'Permanent Marker', cursive;
+    color: #c43838;
+    opacity: 0.22;
+    pointer-events: none;
+    user-select: none;
+  }
+  .n1 { top: 6%; right: 28%; font-size: 84px; transform: rotate(-18deg); color: #0a0a0a; }
+  .n2 { bottom: 22%; right: 32%; font-size: 56px; transform: rotate(8deg); }
+
+  /* 动效 · subtle */
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-8deg) translateY(0); }
+    50%      { transform: rotate(-3deg) translateY(-4px); }
+  }
+  @keyframes drift {
+    0%, 100% { transform: rotate(-25deg) translateX(0); }
+    50%      { transform: rotate(-20deg) translateX(-6px); }
+  }
+
+  /* 移动端简化：装饰减少 */
+  @media (max-width: 768px) {
+    .w1, .w3, .w5, .w6, .bsq-splat, .bsq-arrow, .n2 { display: none; }
+    .w2, .w4 { font-size: 28px; opacity: 0.12; }
+    .n1 { font-size: 56px; opacity: 0.15; }
+  }
+</style>
