@@ -1,0 +1,23 @@
+---
+// src/components/themes/schiele/HandSignature.astro
+export interface Props {
+  name?: string;
+  rotate?: number;
+}
+const { name = '大大黄油', rotate = -2 } = Astro.props;
+---
+<div class="hand-signature-wrap">
+  <span class="hand-signature" style={`transform: rotate(${rotate}deg)`}>— {name}</span>
+</div>
+<style>
+  .hand-signature-wrap {
+    text-align: right;
+    margin: 24px 0 0 0;
+  }
+  .hand-signature {
+    display: inline-block;
+    font-family: var(--font-script);
+    font-size: 18px;
+    color: var(--accent);
+  }
+</style>

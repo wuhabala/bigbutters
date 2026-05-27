@@ -1,0 +1,12 @@
+---
+// src/components/themes/schiele/BloodHighlight.astro
+// 血红下划线高亮
+---
+<span class="blood-highlight"><slot /></span>
+<style>
+  .blood-highlight {
+    background: linear-gradient(180deg, transparent 65%, var(--accent-soft) 65%);
+    padding: 0 2px;
+    color: var(--ink);
+  }
+</style>
