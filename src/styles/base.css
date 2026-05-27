@@ -615,6 +615,7 @@ body.theme-basquiat .brand-sep {
 }
 body.theme-basquiat .brand-cn {
   font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
+  font-weight: 400;
   font-size: 24px;
   color: var(--bg);
   letter-spacing: 0.04em;
@@ -693,6 +694,7 @@ body.theme-basquiat .footer-sep {
 }
 body.theme-basquiat .footer-brand-cn {
   font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
+  font-weight: 400;
   font-size: 16px;
   color: var(--bg);
 }
