@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import archway from '../../../assets/themes/escher/ornament-archway.webp';
 import loopStairs from '../../../assets/themes/escher/ornament-loop-stairs.webp';
 ---
 <div class="esch-bg" aria-hidden="true">
@@ -14,6 +15,17 @@ import loopStairs from '../../../assets/themes/escher/ornament-loop-stairs.webp'
   <span class="axis axis-a">↗</span>
   <span class="axis axis-b">↙</span>
   <span class="loop">A → B → A</span>
+  <span class="floating-plane plane-a"></span>
+  <span class="floating-plane plane-b"></span>
+  <Image
+    class="ornament-archway"
+    src={archway}
+    alt=""
+    widths={[220, 320]}
+    sizes="min(23vw, 320px)"
+    loading="lazy"
+    format="webp"
+  />
   <Image
     class="ornament-stairs"
     src={loopStairs}
@@ -55,17 +67,45 @@ import loopStairs from '../../../assets/themes/escher/ornament-loop-stairs.webp'
   .axis-a { top: 19%; right: 9%; }
   .axis-b { bottom: 18%; left: 7%; }
   .loop { bottom: 9%; right: 8%; font-size: 11px; }
+  .floating-plane {
+    position: absolute;
+    border: 1px solid rgba(68, 141, 139, 0.25);
+    transform: skewY(-29deg);
+  }
+  .plane-a {
+    top: 20%;
+    left: -24px;
+    width: clamp(110px, 14vw, 190px);
+    height: clamp(70px, 9vw, 116px);
+  }
+  .plane-b {
+    right: 5%;
+    bottom: 30%;
+    width: clamp(86px, 10vw, 132px);
+    height: clamp(60px, 8vw, 98px);
+    border-color: rgba(201, 110, 85, 0.2);
+  }
+  .ornament-archway {
+    position: absolute;
+    left: -66px;
+    bottom: 110px;
+    width: min(23vw, 320px);
+    height: auto;
+    opacity: 0.17;
+    mix-blend-mode: multiply;
+  }
   .ornament-stairs {
     position: absolute;
-    right: -24px;
-    bottom: 64px;
-    width: min(28vw, 360px);
+    right: -12px;
+    bottom: 54px;
+    width: min(30vw, 390px);
     height: auto;
-    opacity: 0.075;
+    opacity: 0.16;
     mix-blend-mode: multiply;
   }
   @media (max-width: 720px) {
     .grid { opacity: 0.27; }
-    .axis, .loop, .counter-route, .ornament-stairs { display: none; }
+    .axis, .loop, .counter-route, .ornament-archway, .ornament-stairs { display: none; }
+    .floating-plane { opacity: 0.46; }
   }
 </style>

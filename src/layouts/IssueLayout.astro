@@ -69,6 +69,29 @@ const isEscher = theme === 'escher';
   }
   .esch-issue-main { position: relative; z-index: 1; padding-top: 52px; }
   .issue-hero { margin-bottom: 40px; }
+  .esch-issue-hero {
+    position: relative;
+    padding: 0 0 22px 28px;
+    border-left: 1px solid rgba(68, 141, 139, 0.42);
+  }
+  .esch-issue-hero::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    bottom: 0;
+    width: clamp(110px, 25vw, 196px);
+    height: 1px;
+    background: var(--ochre);
+  }
+  .esch-issue-hero::after {
+    content: '';
+    position: absolute;
+    left: clamp(110px, 25vw, 196px);
+    bottom: -5px;
+    width: 11px;
+    height: 11px;
+    background: var(--accent);
+  }
   .esch-chapter-mark {
     display: inline-flex;
     align-items: center;
@@ -104,9 +127,30 @@ const isEscher = theme === 'escher';
   .issue-body { font-size: 17px; line-height: 1.85; }
   .issue-cover { margin: 0 0 38px; }
   .issue-cover img { width: 100%; height: auto; display: block; }
-  .esch-cover { border: 1px solid var(--rule); padding: 12px; background: var(--bg-soft); box-shadow: 14px 14px 0 rgba(201,188,169,0.24); }
+  .esch-cover { position: relative; border: 1px solid var(--rule); padding: 12px; background: var(--bg-soft); box-shadow: 14px 14px 0 rgba(201,188,169,0.24); }
+  .esch-cover::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    right: 30px;
+    width: 74px;
+    height: 9px;
+    background: linear-gradient(90deg, var(--ochre) 0 56%, var(--accent) 56%);
+  }
+  .esch-cover::after {
+    content: '';
+    position: absolute;
+    left: -20px;
+    bottom: 42px;
+    width: 20px;
+    height: 96px;
+    border: 1px solid var(--ochre);
+    border-right: 0;
+  }
   @media (max-width: 640px) {
     .issue-main { padding: 24px 20px; }
     .issue-body { font-size: 16px; line-height: 1.75; }
+    .esch-issue-hero { padding-left: 18px; }
+    .esch-cover::after { display: none; }
   }
 </style>

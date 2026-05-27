@@ -1,5 +1,5 @@
 ---
-title: AIX 教育
+title: AIx教育
 subtitle: AI 时代的基础教育方法论
 theme: escher
 status: completed

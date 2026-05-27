@@ -20,8 +20,8 @@
 | `ZCOOLQingKeHuangYou-Regular.woff2` | ZCOOL QingKe HuangYou（清刻黄油体） | 400 normal | 1,765,712 | `6fc130d9d508e61fe6fd95f70a8b9251349b0e97810c1d537e3322b45739e3e0` |
 | `ZTZiYouTi-Regular.woff2` | ZT ZiYouTi（卓特自由体） | 400 normal | 641,048 | `fbed6a6be33340ff651bb46829afc26eca6add94ca943f231a246d77808fdf4f` |
 | `TaipeiSansTCBeta-Light-Nav.woff2` | Taipei Sans TC Beta Light（台北黑体 Beta Light，导航子集） | 300 normal | 2,224 | `ca283da94d6e947b673a32fca9e0c5258eea77b780a002f4b1950697d649c857` |
-| `SourceHanSansSC-Light-Escher.woff2` | Source Han Sans SC（思源黑体，Escher 显示子集） | 300 normal | 110,164 | `5a0e8f8f5ed6a070f4ff69f426e20684e0d0055517ae4e18709dbd2d2fa6c01f` |
-| `SourceHanSansSC-Regular-Escher.woff2` | Source Han Sans SC（思源黑体，Escher 显示子集） | 400 normal | 110,404 | `d79aacdd5f1bf0b3bdfa5875bf2e2bb1445ef52493b52c80b6b166f38dafc72d` |
+| `SourceHanSansSC-Light-Escher.woff2` | Source Han Sans SC（思源黑体，Escher 显示子集） | 300 normal | 110,188 | `429940d3fb4e65a3b97d93d86cc848fdb39a9b243dd35f097e6f0b2c8d5f7c2f` |
+| `SourceHanSansSC-Regular-Escher.woff2` | Source Han Sans SC（思源黑体，Escher 显示子集） | 400 normal | 110,616 | `ac8bfa62892c4423411455c1d0c06af2d9e84fb1e46e3ee95a84e71af2c82556` |
 | `MaShanZheng-Regular.woff2` | Ma Shan Zheng（马善政毛笔楷书） | 400 normal | 2,709,280 | `36b3f3924ef392b767df54bac30f283ec5b13f81606d26f3c7c8eec9ff638806` |
 
 上游具体路径：
