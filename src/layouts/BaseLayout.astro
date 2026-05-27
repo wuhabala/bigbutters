@@ -1,0 +1,53 @@
+---
+// src/layouts/BaseLayout.astro
+import { getTheme, tokensToCss, type ThemeId } from '@themes';
+import '@styles/reset.css';
+import '@styles/base.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  theme?: ThemeId;
+  /** OG image absolute or relative URL */
+  ogImage?: string;
+}
+
+const { title, description = '大大黄油 · 交互式学术策展空间', theme, ogImage } = Astro.props;
+const pack = getTheme(theme);
+const cssVars = tokensToCss(pack.tokens);
+const fontFamilyOverride = [
+  pack.fonts?.serif  ? `--font-serif: ${pack.fonts.serif};` : '',
+  pack.fonts?.sans   ? `--font-sans: ${pack.fonts.sans};` : '',
+  pack.fonts?.script ? `--font-script: ${pack.fonts.script};` : '',
+].filter(Boolean).join(' ');
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : null;
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} · 大大黄油</title>
+  {description && <meta name="description" content={description} />}
+
+  {/* OG / 社交分享 */}
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="大大黄油" />
+  {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+  {/* 字体预加载：只 preload 核心 Regular（外部评审反馈，避免 ~3MB 中文首屏负担）*/}
+  <link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/EBGaramond-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  {pack.preloadFonts?.map(href => (
+    <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+  ))}
+
+  {/* 主题 CSS 变量注入 */}
+  <style is:inline set:html={`:root { ${cssVars} ${fontFamilyOverride} }`}></style>
+</head>
+<body class={pack.classOverrides ?? ''} data-theme={pack.id}>
+  <slot />
+</body>
+</html>

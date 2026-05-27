@@ -1,0 +1,44 @@
+// src/themes/_types.ts
+
+export interface ThemeTokens {
+  bg: string;
+  bgSoft: string;
+  bgDeep: string;
+  ink: string;
+  inkSoft: string;
+  inkFaint: string;
+  accent: string;
+  accentSoft: string;
+  ochre: string;
+  rule: string;
+}
+
+export interface ThemeFonts {
+  serif?: string;
+  sans?: string;
+  script?: string;
+}
+
+export interface ThemePack {
+  /** Slug (matches frontmatter `theme` field) */
+  id: string;
+  /** Human-readable 中文名 */
+  name: string;
+  /** CSS variable values */
+  tokens: ThemeTokens;
+  /** Optional font overrides; falls back to base.css 默认 */
+  fonts?: ThemeFonts;
+  /** Whitelist of decorative components allowed under this theme */
+  decorativeComponents: string[];
+  /** Optional CSS class to inject on <body> */
+  classOverrides?: string;
+  /** Extra fonts to preload when this theme is active */
+  preloadFonts?: string[];
+}
+
+export type ThemeId =
+  | 'schiele'
+  | 'basquiat'
+  | 'haeckel'
+  | 'matisse'
+  | 'escher';
