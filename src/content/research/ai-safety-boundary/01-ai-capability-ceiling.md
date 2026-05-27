@@ -1,5 +1,6 @@
 ---
 title: AI 能力的上限
+order: 1
 date: 2026-05-22
 length: 5065
 type: 思考片段

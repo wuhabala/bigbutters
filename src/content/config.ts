@@ -98,6 +98,9 @@ const researchArticles = defineCollection({
     length: z.number().int().positive().optional(),
     type: z.string(),
     tags: z.array(z.string()).default([]),
+    /** 期次序号 · 与文件名前缀对齐（如 01-foo.md → order: 1）；
+     *  研究专题首页按此升序排序，并在列表显示"第 N 期" */
+    order: z.number().int().positive().optional(),
     sources: z.array(z.object({
       title: z.string(),
       author: z.string().optional(),

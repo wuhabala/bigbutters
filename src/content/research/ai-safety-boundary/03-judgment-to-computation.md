@@ -1,5 +1,6 @@
 ---
 title: 从判断到计算：AI 风险的另一种存亡
+order: 3
 date: 2026-05-22
 length: 5257
 type: 思考片段

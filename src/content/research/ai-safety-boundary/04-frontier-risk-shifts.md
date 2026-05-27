@@ -1,5 +1,6 @@
 ---
 title: 前沿 AI 风险：2025–2026 的几个转向
+order: 4
 date: 2026-05-23
 length: 5063
 type: 文献综述

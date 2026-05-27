@@ -1,5 +1,6 @@
 ---
 title: 中国与世界的 AI 对比：进展、时间线与评注
+order: 9
 date: 2026-05-23
 length: 4293
 type: 文献综述

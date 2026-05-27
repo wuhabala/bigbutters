@@ -12,18 +12,24 @@ export interface Props {
   date: Date;
   type: string;
   tags?: string[];
+  /** 期次序号 · 在 eyebrow 显示为「第 N 期」 */
+  order?: number;
   theme: ThemeId;
   description?: string;
   ogImage?: string;
 }
-const { title, researchTitle, researchHref, date, type, tags = [], theme, description, ogImage } = Astro.props;
+const { title, researchTitle, researchHref, date, type, tags = [], order, theme, description, ogImage } = Astro.props;
 const dateStr = date.toISOString().slice(0, 10);
 ---
 <BaseLayout {title} {description} {theme} {ogImage} ogType="article">
   <Header activeNav="research" />
   <article class="article-main">
     <header class="article-hero">
-      <p class="article-eyebrow"><a href={researchHref}>{researchTitle}</a> · {type}</p>
+      <p class="article-eyebrow">
+        <a href={researchHref}>{researchTitle}</a>
+        {order && <> · 第 {order} 期</>}
+        · {type}
+      </p>
       <h1 class="article-title">{title}</h1>
       <p class="article-date">{dateStr}</p>
       {tags.length > 0 && (

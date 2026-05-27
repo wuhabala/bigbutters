@@ -10,16 +10,16 @@ export const basquiat: ThemePack = {
   id: 'basquiat',
   name: 'Basquiat',
   tokens: {
-    bg:          '#faf4e0',   // 奶黄底（不是 #f8d12b 那种刺眼）
-    bgSoft:      '#fff9e8',
-    bgDeep:      '#f0e7c2',
+    bg:          '#f5d040',   // Basquiat 标志亮黄底（视觉强差异度 vs schiele 骨色）
+    bgSoft:      '#fae278',   // 亮黄软调（卡片底）
+    bgDeep:      '#e0bc28',   // 加深黄
     ink:         '#0a0a0a',   // Basquiat 标志性近黑墨
-    inkSoft:     '#2a2a2a',
-    inkFaint:    '#6a6a6a',
+    inkSoft:     '#1f1f1f',
+    inkFaint:    '#5a5040',   // 黄底配的暖灰，不是冷灰
     accent:      '#c43838',   // 鲜红 · 划掉 / 强调
     accentSoft:  '#e85a5a',
     ochre:       '#1a4ba8',   // 钴蓝 · 引用 / 副线索
-    rule:        '#0a0a0a',   // 粗黑分隔（不是 schiele 的淡米色）
+    rule:        '#0a0a0a',   // 粗黑分隔
   },
   fonts: {
     serif:  "'Noto Serif SC', 'EB Garamond', Georgia, serif",

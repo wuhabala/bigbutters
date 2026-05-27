@@ -1,5 +1,6 @@
 ---
 title: AI 学术前沿：内容、背景与人物
+order: 8
 date: 2026-05-23
 length: 5480
 type: 人物思想综述

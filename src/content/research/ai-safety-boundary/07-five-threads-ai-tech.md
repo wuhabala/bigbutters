@@ -1,5 +1,6 @@
 ---
 title: AI 科技的前沿：五条线索
+order: 7
 date: 2026-05-23
 length: 3591
 type: 文献综述

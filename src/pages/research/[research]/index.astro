@@ -17,9 +17,21 @@ const { research } = Astro.props;
 const slug = research.id.split('/')[0];
 
 const allArticles = await getCollection('researchArticles');
+
+// 排序：优先按 order 字段升序（用户指定的"第 1 期/第 2 期"序列）；
+// order 缺省时回退到按文件名 slug 字典序（自然 01-/02- 也对）；
+// 全无 order 时按日期降序（兼容旧数据）。
 const articles = allArticles
   .filter(a => a.id.startsWith(slug + '/'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  .sort((a, b) => {
+    const oa = a.data.order;
+    const ob = b.data.order;
+    if (oa !== undefined && ob !== undefined) return oa - ob;
+    if (oa !== undefined) return -1;
+    if (ob !== undefined) return 1;
+    // 退化：用 slug 字典序（01- 自然在 02- 前）
+    return a.id.localeCompare(b.id);
+  });
 
 const { Content } = await render(research);
 ---
@@ -43,10 +55,11 @@ const { Content } = await render(research);
       <ol class="articles-list">
         {articles.map(a => {
           const articleSlug = a.id.split('/').slice(1).join('/').replace(/\.(md|mdx)$/, '');
+          const issueLabel = a.data.order ? `第 ${a.data.order} 期` : null;
           return (
             <li class="article-entry">
               <a href={`/research/${slug}/${articleSlug}/`}>
-                <span class="a-date">{a.data.date.toISOString().slice(0, 10)}</span>
+                <span class="a-num">{issueLabel ?? a.data.date.toISOString().slice(0, 10)}</span>
                 <span class="a-body">
                   <span class="a-title">{a.data.title}</span>
                   <span class="a-meta">{a.data.type}{a.data.length && ` · ${a.data.length} 字`}</span>
@@ -79,9 +92,10 @@ const { Content } = await render(research);
     gap: 20px; padding: 14px 0;
     border-bottom: none; color: inherit;
   }
-  .a-date {
+  .a-num {
     font-family: 'EB Garamond', serif;
-    font-size: 12px; letter-spacing: 0.1em; color: var(--ink-faint);
+    font-size: 13px; letter-spacing: 0.15em; color: var(--accent);
+    font-weight: 600;
   }
   .a-title { display: block; font-size: 16px; font-weight: 500; margin-bottom: 4px; }
   .a-meta { display: block; font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-soft); margin: 0 0 4px 0; }

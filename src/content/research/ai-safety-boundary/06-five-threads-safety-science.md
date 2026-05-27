@@ -1,5 +1,6 @@
 ---
 title: AI 风险与安全科学：五条贯穿线索
+order: 6
 date: 2026-05-23
 length: 4630
 type: 思想综述

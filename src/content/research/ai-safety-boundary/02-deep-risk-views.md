@@ -1,5 +1,6 @@
 ---
 title: AI 安全：那些深刻而有理论支撑的风险观点
+order: 2
 date: 2026-05-22
 length: 11539
 type: 文献综述

@@ -1,5 +1,6 @@
 ---
 title: AI 安全的防御前沿：六条路线与它们的墙
+order: 5
 date: 2026-05-23
 length: 4205
 type: 文献综述

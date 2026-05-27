@@ -8,10 +8,11 @@ export interface Props {
 }
 const { text, rotate = -3, color = 'red' } = Astro.props;
 
+// 用 token 而非硬编码，跟随主题色板自动更新
 const colorMap = {
-  red:   { fg: '#c43838', bg: '#faf4e0' },
-  blue:  { fg: '#1a4ba8', bg: '#faf4e0' },
-  black: { fg: '#0a0a0a', bg: '#f8d12b' },
+  red:   { fg: 'var(--accent)',     bg: 'var(--bg-soft)' },
+  blue:  { fg: 'var(--ochre)',      bg: 'var(--bg-soft)' },
+  black: { fg: 'var(--ink)',        bg: '#f8d12b' },        // Crown 黄保留
 };
 const c = colorMap[color];
 ---

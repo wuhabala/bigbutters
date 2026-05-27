@@ -7,6 +7,16 @@ summary: 从能力的天花板出发，到对齐与控制的深层论证，再�
 started: 2025-10
 ---
 
+import Crown from '@components/themes/basquiat/Crown.astro';
+import StrikeText from '@components/themes/basquiat/StrikeText.astro';
+import ScribbleStamp from '@components/themes/basquiat/ScribbleStamp.astro';
+import MarkerLine from '@components/themes/basquiat/MarkerLine.astro';
+import BasquiatNote from '@components/themes/basquiat/BasquiatNote.astro';
+
+<Crown size={48} />
+
+<ScribbleStamp text="A.I. · 9 PIECES" rotate={-3} color="red" />
+
 九篇文章构成的研究地图：
 
 - **01-03** 是基本面：能力的上限 → 经典风险论证 → 一种容易被忽略的"意义式存亡"
@@ -14,3 +24,10 @@ started: 2025-10
 - **07-09** 是配景：技术与学术的前沿在哪、中国与世界的对比
 
 互相之间有大量交叉引用——每篇可以独立读，但合起来才是一张完整的图。
+
+<MarkerLine />
+
+<BasquiatNote label="阅读建议">
+按编号顺序看是最稳的路径。如果你只读一篇，挑 <StrikeText>第 03 期</StrikeText> 03 期——
+那篇讲的是"另一种存亡"，没有任何"AI 会失控"的前提，但结论可能更难避免。
+</BasquiatNote>
