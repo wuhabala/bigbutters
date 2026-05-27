@@ -74,23 +74,27 @@ strong { font-weight: 600; }
 
 /* ============ 文章排版 · .prose 作用域 ============ */
 /* 用于 markdown 渲染的内容容器（IssueLayout/ArticleLayout/topic-summary 等）。
-   chrome 与 UI 组件（Header/Nav/CoverCard 等）不挂 .prose，自定义自己的样式。 */
+   chrome 与 UI 组件（Header/Nav/CoverCard 等）不挂 .prose，自定义自己的样式。
+
+   字体权重说明：标题用 font-weight: 500（落到最近的 Regular @font-face，浏览器合成微粗），
+   避免首屏触发 ~1.5MB 的 Noto Serif SC SemiBold 下载。SemiBold 在 base.css 仍有 @font-face
+   声明，但仅当 <strong> 等 weight:600 元素出现时才会按需 lazy load。 */
 
 .prose h1 {
   font-size: clamp(44px, 7vw, 72px);
   line-height: 1.05;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 .prose h2 {
   font-size: clamp(28px, 4vw, 40px);
   line-height: 1.15;
-  font-weight: 600;
+  font-weight: 500;
 }
 .prose h3 {
   font-size: 24px;
   line-height: 1.3;
-  font-weight: 600;
+  font-weight: 500;
 }
 .prose p {
   margin-bottom: 22px;

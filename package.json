@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "find public src -name '.DS_Store' -delete 2>/dev/null || true",
     "build": "astro build",
+    "postbuild": "find dist -name '.DS_Store' -delete 2>/dev/null || true",
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",

@@ -36,9 +36,8 @@ export interface ThemePack {
   preloadFonts?: string[];
 }
 
-export type ThemeId =
-  | 'schiele'
-  | 'basquiat'
-  | 'haeckel'
-  | 'matisse'
-  | 'escher';
+/** Single source of truth for valid theme slugs.
+ *  Used both by TypeScript (ThemeId) and Zod (themeEnum in content/config.ts). */
+export const themeIds = ['schiele', 'basquiat', 'haeckel', 'matisse', 'escher'] as const;
+
+export type ThemeId = typeof themeIds[number];

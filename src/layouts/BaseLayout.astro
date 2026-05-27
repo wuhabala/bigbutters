@@ -10,9 +10,17 @@ export interface Props {
   theme?: ThemeId;
   /** OG image absolute or relative URL */
   ogImage?: string;
+  /** Open Graph type: 'website' for home/index pages, 'article' for issues/research articles */
+  ogType?: 'website' | 'article';
 }
 
-const { title, description = '大大黄油 · 交互式学术策展空间', theme, ogImage } = Astro.props;
+const {
+  title,
+  description = '大大黄油 · 交互式学术策展空间',
+  theme,
+  ogImage,
+  ogType = 'website',
+} = Astro.props;
 const pack = getTheme(theme);
 const cssVars = tokensToCss(pack.tokens);
 const fontFamilyOverride = [
@@ -33,7 +41,7 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : null;
   {/* OG / 社交分享 */}
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content="大大黄油" />
   {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
 

@@ -1,11 +1,17 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { themeIds } from '../themes/_types';
 
-const themeEnum = z.enum(['schiele', 'basquiat', 'haeckel', 'matisse', 'escher']);
+// Zod enum derived from same `as const` source as TypeScript ThemeId.
+// Adding a new theme = update src/themes/_types.ts; this stays in sync.
+const themeEnum = z.enum(themeIds);
 
 // =================================================================
 // 专题 · topics/<slug>/index.{md,mdx}
+//
+// type=series: planned_issues 必填（多期专题需要排期可见）
+// type=single: planned_issues 不应出现（语义冲突）
 // =================================================================
 const topics = defineCollection({
   loader: glob({ pattern: 'topics/*/index.{md,mdx}', base: './src/content' }),
@@ -20,8 +26,26 @@ const topics = defineCollection({
     cover: z.object({
       hero_image: image().optional(),
     }).optional(),
+    // TODO(Task 15): consider migrating to reference('research') once we confirm
+    // Astro 5 ID format for our glob loader. For now keep as string array,
+    // cross-validate manually in page templates if needed.
     related_research: z.array(z.string()).optional(),
     started: z.string().regex(/^\d{4}-\d{2}$/, 'YYYY-MM'),
+  }).superRefine((data, ctx) => {
+    if (data.type === 'series' && data.planned_issues === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['planned_issues'],
+        message: 'series 类型的专题必须填写 planned_issues',
+      });
+    }
+    if (data.type === 'single' && data.planned_issues !== undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['planned_issues'],
+        message: 'single 类型的专题不应填写 planned_issues',
+      });
+    }
   }),
 });
 
@@ -54,6 +78,7 @@ const research = defineCollection({
     cover: z.object({
       hero_image: image().optional(),
     }).optional(),
+    // TODO(Task 15): see related_research comment above re: reference() migration
     related_topic: z.string().optional(),
     started: z.string().regex(/^\d{4}-\d{2}$/, 'YYYY-MM'),
   }),
