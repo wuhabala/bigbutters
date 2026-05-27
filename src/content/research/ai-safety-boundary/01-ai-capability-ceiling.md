@@ -26,17 +26,82 @@ tags:
 
 本文谈的是后者,并主张:这些约束可以分成三层,从**可以推进的**到**无法突破的**。
 
-```
-┌─────────────────────────────────────────┐
-│  第三层  物理与数学硬上限（不可突破）        │
-│   ┌───────────────────────────────────┐  │
-│   │  第二层  认识论上限（决定能否超越人类）  │  │
-│   │   ┌─────────────────────────────┐ │  │
-│   │   │ 第一层 资源上限（可推进有成本） │ │  │
-│   │   └─────────────────────────────┘ │  │
-│   └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
+<div class="layer-diagram" role="img" aria-label="三层能力约束嵌套图：物理与数学硬上限包裹认识论上限包裹资源上限">
+  <div class="layer-box layer-3">
+    <div class="layer-tag">第三层 · 物理与数学硬上限</div>
+    <div class="layer-note">不可突破</div>
+    <div class="layer-box layer-2">
+      <div class="layer-tag">第二层 · 认识论上限</div>
+      <div class="layer-note">决定能否超越人类</div>
+      <div class="layer-box layer-1">
+        <div class="layer-tag">第一层 · 资源上限</div>
+        <div class="layer-note">可推进 · 有成本</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .layer-diagram {
+    margin: 32px auto;
+    max-width: 560px;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .layer-box {
+    border: 3.5px solid #0a0a0a;
+    padding: 14px 16px 16px 16px;
+    position: relative;
+    text-align: center;
+  }
+  .layer-tag {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .layer-note {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+    margin-bottom: 14px;
+  }
+  /* 外层 · 最重 */
+  .layer-3 {
+    background: #0a0a0a;
+    color: #f8d12b;
+    box-shadow: 7px 7px 0 0 #0a0a0a;
+  }
+  /* 中层 · 中性 */
+  .layer-2 {
+    background: #f8d12b;
+    color: #0a0a0a;
+    border-width: 3px;
+  }
+  /* 内层 · 最浅、最"可推进" */
+  .layer-1 {
+    background: #fffdf5;
+    color: #0a0a0a;
+    border-width: 3px;
+    border-style: dashed;
+    padding: 12px 14px 14px 14px;
+  }
+  .layer-1 .layer-note { margin-bottom: 0; }
+  /* 嵌套层之间的间距 */
+  .layer-3 > .layer-2 { margin: 6px 8px 4px 8px; }
+  .layer-2 > .layer-1 { margin: 6px 8px 2px 8px; }
+
+  @media (max-width: 640px) {
+    .layer-diagram { margin: 24px 0; }
+    .layer-box { padding: 12px 12px 14px 12px; }
+    .layer-tag { font-size: 14px; }
+    .layer-note { font-size: 12px; margin-bottom: 10px; }
+    .layer-3 { box-shadow: 5px 5px 0 0 #0a0a0a; }
+    .layer-3 > .layer-2 { margin: 4px 4px 2px 4px; }
+    .layer-2 > .layer-1 { margin: 4px 4px 2px 4px; }
+  }
+</style>
 
 越往外越根本、越不可动摇;越往里越是当下工程与经济在搏斗的地方。
 
