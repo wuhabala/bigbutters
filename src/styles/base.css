@@ -282,3 +282,141 @@ body.theme-basquiat .prose code {
   body.theme-basquiat .prose h3 { font-size: 17px; }
   body.theme-basquiat .prose blockquote { font-size: 14px; padding: 12px 14px; margin: 20px 0; }
 }
+
+/* =================================================================
+   Basquiat 主题 · Chrome（顶端/底部/标题/日期/eyebrow）风格化
+   ================================================================= */
+
+/* === 顶端 site header === */
+body.theme-basquiat .site-header {
+  border-bottom: 4px solid var(--ink);
+  background: var(--bg);
+  position: relative;
+  z-index: 2;
+  padding: 20px 32px;
+}
+body.theme-basquiat .site-header .brand {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+/* nav 链接全部 Marker 字体 + 间距加大 */
+body.theme-basquiat .site-nav { gap: 24px; }
+body.theme-basquiat .nav-link {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  border-bottom: none;
+  padding: 2px 4px;
+  transition: background 0.15s ease;
+}
+body.theme-basquiat .nav-link:hover {
+  background: #f8d12b;
+  color: var(--accent);
+}
+body.theme-basquiat .nav-link.active {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 2px 8px;
+  border-bottom: none;
+  transform: rotate(-1deg);
+}
+
+@media (max-width: 640px) {
+  body.theme-basquiat .site-header { padding: 14px 18px; border-bottom-width: 3px; }
+  body.theme-basquiat .site-header .brand { font-size: 18px; }
+  body.theme-basquiat .nav-link { font-size: 12px; letter-spacing: 0.12em; }
+  body.theme-basquiat .site-nav { gap: 14px; }
+}
+
+/* === 底部 footer === */
+body.theme-basquiat .site-footer {
+  border-top: 4px solid var(--ink);
+  background: var(--bg);
+  position: relative;
+  z-index: 2;
+  padding: 28px 32px;
+  margin-top: 80px;
+}
+body.theme-basquiat .footer-claim {
+  font-family: 'Noto Serif SC', serif;
+  font-style: italic;
+  color: var(--ink);
+  font-size: 13px;
+}
+body.theme-basquiat .footer-meta {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+body.theme-basquiat .footer-meta em {
+  color: var(--accent);
+  font-style: normal;
+  background: var(--ink);
+  padding: 1px 6px;
+  margin: 0 2px;
+}
+
+@media (max-width: 640px) {
+  body.theme-basquiat .site-footer { padding: 18px 18px; border-top-width: 3px; }
+}
+
+/* === Article hero · 大标题（增强） === */
+body.theme-basquiat .article-title {
+  font-weight: 700;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  padding-left: 14px;
+  border-left: 6px solid var(--accent);
+  position: relative;
+}
+
+/* === Article eyebrow（专题小字） · Marker 风 === */
+body.theme-basquiat .article-eyebrow {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+body.theme-basquiat .article-eyebrow a {
+  color: var(--ink);
+  border-bottom: 2.5px solid var(--ink);
+  padding-bottom: 1px;
+  transition: background 0.15s ease;
+}
+body.theme-basquiat .article-eyebrow a:hover {
+  background: #f8d12b;
+}
+
+/* === Article date · 倾斜黄章 === */
+body.theme-basquiat .article-date {
+  display: inline-block;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 13.5px;
+  color: var(--ink);
+  background: #f8d12b;
+  padding: 3px 11px;
+  border: 2.5px solid var(--ink);
+  letter-spacing: 0.12em;
+  transform: rotate(-1.5deg);
+  margin-top: 14px;
+  margin-bottom: 4px;
+  box-shadow: 3px 3px 0 0 var(--ink);
+  font-style: normal;
+}
+
+/* === Article tags · 已在 ArticleLayout 内置，再增强细节 === */
+body.theme-basquiat .article-tags { gap: 8px; margin-top: 16px; }
+
+@media (max-width: 640px) {
+  body.theme-basquiat .article-title { font-size: clamp(26px, 7vw, 32px); padding-left: 10px; border-left-width: 5px; }
+  body.theme-basquiat .article-date { box-shadow: 2px 2px 0 0 var(--ink); font-size: 12.5px; }
+  body.theme-basquiat .article-eyebrow { font-size: 12px; letter-spacing: 0.14em; }
+}
