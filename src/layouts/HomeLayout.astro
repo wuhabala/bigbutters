@@ -55,7 +55,8 @@ const { featured, allTopics, recentResearch, researchTags } = Astro.props;
         <span class="section-count">{allTopics.length} 个专题</span>
       </header>
       <div class="featured">
-        <a href={featured.issueHref} class="featured-cover">
+        {/* 不再嵌套外层 <a> · CoverCard 自身根节点就是 <a>，外包会产生非法 HTML（评审 #3）*/}
+        <div class="featured-cover">
           <CoverCard
             href={featured.issueHref}
             title={featured.title}
@@ -64,7 +65,7 @@ const { featured, allTopics, recentResearch, researchTags } = Astro.props;
             coverImage={featured.coverImage}
             aspectRatio="4 / 5"
           />
-        </a>
+        </div>
         <div class="featured-meta">
           <p class="top-label">现在正在写 · 第 {featured.issueNum} 期</p>
           <h2 class="featured-title">{featured.issueTitle}</h2>

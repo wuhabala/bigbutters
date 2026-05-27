@@ -7,13 +7,40 @@
   let { concept, definition, source = '' }: Props = $props();
 
   let open = $state(false);
+  let wrap: HTMLElement | undefined = $state();
+
   function toggle() {
     open = !open;
   }
+
+  // 评审 #8: Escape 关闭 + 点击外部关闭（无障碍 disclosure 行为）
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && open) {
+      open = false;
+    }
+  }
+
+  function handleDocumentClick(e: MouseEvent) {
+    if (!open || !wrap) return;
+    if (!wrap.contains(e.target as Node)) {
+      open = false;
+    }
+  }
+
+  $effect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleKeydown);
+      document.addEventListener('click', handleDocumentClick);
+      return () => {
+        document.removeEventListener('keydown', handleKeydown);
+        document.removeEventListener('click', handleDocumentClick);
+      };
+    }
+  });
 </script>
 
-<span class="concept-anchor-wrap">
-  <button class="concept-anchor" onclick={toggle} aria-expanded={open}>
+<span class="concept-anchor-wrap" bind:this={wrap}>
+  <button class="concept-anchor" onclick={toggle} aria-expanded={open} type="button">
     {concept}
   </button>
   {#if open}
@@ -51,7 +78,8 @@
     border: 1px solid var(--rule);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     padding: 12px 16px;
-    width: 280px;
+    width: min(280px, calc(100vw - 32px));   /* 评审 #8: 窄屏不溢出 */
+    max-width: 280px;
     z-index: 10;
     font-size: 14px;
     line-height: 1.6;

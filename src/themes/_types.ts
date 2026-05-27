@@ -20,8 +20,8 @@ export interface ThemeFonts {
 }
 
 export interface ThemePack {
-  /** Slug (matches frontmatter `theme` field) */
-  id: string;
+  /** Slug (matches frontmatter `theme` field). Typed to ThemeId so registry key drift gets caught at build. */
+  id: ThemeId;
   /** Human-readable 中文名 */
   name: string;
   /** CSS variable values */

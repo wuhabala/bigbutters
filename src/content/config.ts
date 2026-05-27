@@ -14,7 +14,9 @@ const themeEnum = z.enum(themeIds);
 // type=single: planned_issues 不应出现（语义冲突）
 // =================================================================
 const topics = defineCollection({
-  loader: glob({ pattern: 'topics/*/index.{md,mdx}', base: './src/content' }),
+  // base 指到 topics/，让生成的 ID 是 <slug>/index 而非 topics/<slug>/index。
+  // 这样下游 entry.id.split('/')[0] 直接拿到 slug。
+  loader: glob({ pattern: '*/index.{md,mdx}', base: './src/content/topics' }),
   schema: ({ image }) => z.object({
     title: z.string(),
     subtitle: z.string().optional(),
@@ -53,7 +55,8 @@ const topics = defineCollection({
 // 期 · topics/<topic-slug>/<issue-slug>.{md,mdx}
 // =================================================================
 const issues = defineCollection({
-  loader: glob({ pattern: 'topics/*/!(index).{md,mdx}', base: './src/content' }),
+  // 同上：base 到 topics/，ID = <topic-slug>/<issue-slug>
+  loader: glob({ pattern: '*/!(index).{md,mdx}', base: './src/content/topics' }),
   schema: z.object({
     issue: z.number().int().positive(),
     title: z.string(),
@@ -68,7 +71,7 @@ const issues = defineCollection({
 // 研究 · research/<slug>/index.{md,mdx}
 // =================================================================
 const research = defineCollection({
-  loader: glob({ pattern: 'research/*/index.{md,mdx}', base: './src/content' }),
+  loader: glob({ pattern: '*/index.{md,mdx}', base: './src/content/research' }),
   schema: ({ image }) => z.object({
     title: z.string(),
     subtitle: z.string().optional(),
@@ -88,7 +91,7 @@ const research = defineCollection({
 // 研究文章 · research/<research-slug>/<article-slug>.{md,mdx}
 // =================================================================
 const researchArticles = defineCollection({
-  loader: glob({ pattern: 'research/*/!(index).{md,mdx}', base: './src/content' }),
+  loader: glob({ pattern: '*/!(index).{md,mdx}', base: './src/content/research' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),

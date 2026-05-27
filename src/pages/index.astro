@@ -1,9 +1,15 @@
 ---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
 import HomeLayout from '@layouts/HomeLayout.astro';
 import type { FeaturedTopic, TopicCardData, ResearchEntry } from '@layouts/HomeLayout.astro';
 import { getCollection } from 'astro:content';
 
 const topics = await getCollection('topics');
+// Collection ID 格式（修正后）：
+//   topic.id  = '<slug>/index'        → split('/')[0] = slug
+//   issue.id  = '<topic-slug>/<issue-slug>'
 const topicMap = new Map(topics.map(t => [t.id.split('/')[0], t]));
 
 const allIssues = await getCollection('issues');
@@ -12,47 +18,45 @@ const latestIssue = [...publishedIssues].sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 )[0];
 
-let featured: FeaturedTopic;
-if (latestIssue && topics.length > 0) {
-  const parts = latestIssue.id.split('/');
-  const topicSlug = parts[0];
-  const issueSlug = parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
-  const featuredTopic = topicMap.get(topicSlug)!;
-  featured = {
-    slug: topicSlug,
-    title: featuredTopic.data.title,
-    theme: featuredTopic.data.theme,
-    issueTitle: latestIssue.data.title,
-    issueHref: `/topics/${topicSlug}/${issueSlug}/`,
-    issueNum: latestIssue.data.issue,
-    blurb: latestIssue.data.summary ?? featuredTopic.data.summary,
-    coverImage: featuredTopic.data.cover?.hero_image?.src,
-  };
-} else if (topics.length > 0) {
-  // fallback：无已发布期时用第一个专题
-  const fallbackTopic = topics[0]!;
-  const fallbackSlug = fallbackTopic.id.split('/')[0];
-  featured = {
-    slug: fallbackSlug,
-    title: fallbackTopic.data.title,
-    theme: fallbackTopic.data.theme,
-    issueTitle: fallbackTopic.data.title,
-    issueHref: `/topics/${fallbackSlug}/`,
-    issueNum: 0,
-    blurb: fallbackTopic.data.summary,
-    coverImage: fallbackTopic.data.cover?.hero_image?.src,
-  };
-} else {
-  // 极端 fallback：完全没有内容时
-  featured = {
-    slug: '',
-    title: '大大黄油',
-    theme: 'schiele',
-    issueTitle: '外壳搭建中',
-    issueHref: '/about/',
-    issueNum: 0,
-    blurb: '内容正在准备。',
-  };
+// 真空状态独立分支：不存在任何专题时，渲染纯介绍页（评审 #11）
+const isEmptyState = topics.length === 0;
+
+let featured: FeaturedTopic | null = null;
+if (!isEmptyState) {
+  if (latestIssue) {
+    const parts = latestIssue.id.split('/');
+    const topicSlug = parts[0];
+    const issueSlug = parts.slice(1).join('/');
+    const featuredTopic = topicMap.get(topicSlug);
+    // 评审 #4: 不用 non-null 断言。若 issue 找不到父 topic 就 fallback 到第一个专题。
+    if (featuredTopic) {
+      featured = {
+        slug: topicSlug,
+        title: featuredTopic.data.title,
+        theme: featuredTopic.data.theme,
+        issueTitle: latestIssue.data.title,
+        issueHref: `/topics/${topicSlug}/${issueSlug}/`,
+        issueNum: latestIssue.data.issue,
+        blurb: latestIssue.data.summary ?? featuredTopic.data.summary,
+        coverImage: featuredTopic.data.cover?.hero_image?.src,
+      };
+    }
+  }
+  if (!featured) {
+    // fallback：无已发布期（或孤儿期）时用第一个专题做 hero
+    const fallbackTopic = topics[0];
+    const fallbackSlug = fallbackTopic.id.split('/')[0];
+    featured = {
+      slug: fallbackSlug,
+      title: fallbackTopic.data.title,
+      theme: fallbackTopic.data.theme,
+      issueTitle: fallbackTopic.data.title,
+      issueHref: `/topics/${fallbackSlug}/`,
+      issueNum: 0,
+      blurb: fallbackTopic.data.summary,
+      coverImage: fallbackTopic.data.cover?.hero_image?.src,
+    };
+  }
 }
 
 const allTopics: TopicCardData[] = topics
@@ -89,7 +93,7 @@ const recentResearch: ResearchEntry[] = [...allArticles]
   .map(a => {
     const parts = a.id.split('/');
     const researchSlug = parts[0];
-    const articleSlug = parts.slice(1).join('/').replace(/\.(md|mdx)$/, '');
+    const articleSlug = parts.slice(1).join('/');
     const r = researchMap.get(researchSlug);
     return {
       href: `/research/${researchSlug}/${articleSlug}/`,
@@ -106,9 +110,80 @@ const tagSet = new Set<string>();
 allArticles.forEach(a => a.data.tags.forEach(t => tagSet.add(t)));
 const researchTags = Array.from(tagSet).slice(0, 8);
 ---
-<HomeLayout
-  featured={featured}
-  allTopics={allTopics}
-  recentResearch={recentResearch}
-  researchTags={researchTags}
-/>
+{isEmptyState ? (
+  <BaseLayout title="大大黄油" description="个人交互式学术策展空间">
+    <Header activeNav={null} />
+    <main class="empty-home">
+      <p class="empty-eyebrow">🪳 bigbutters · 外壳搭建完成 · 内容筹备中</p>
+      <h1 class="empty-title">大大黄油</h1>
+      <p class="empty-claim">
+        个人交互式学术策展空间——<br />
+        承载福柯、AIX 教育、AI 边界伦理、内卷文化、通向实在之路等方向的研究。
+      </p>
+      <p class="empty-detail">
+        每个专题挂载一位艺术家的视觉系统，同一个站点呈现完全不同的"展厅"。<br />
+        首批内容即将上线。
+      </p>
+      <div class="empty-cta">
+        <a href="/about/">↪ 关于大大黄油</a>
+      </div>
+    </main>
+    <Footer />
+  </BaseLayout>
+) : (
+  <HomeLayout
+    featured={featured!}
+    allTopics={allTopics}
+    recentResearch={recentResearch}
+    researchTags={researchTags}
+  />
+)}
+
+<style>
+  .empty-home {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 96px 32px;
+  }
+  .empty-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .empty-title {
+    font-size: clamp(56px, 9vw, 96px);
+    line-height: 1;
+    font-weight: 500;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+  .empty-claim {
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .empty-detail {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+  }
+  .empty-cta a {
+    font-family: 'EB Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+  }
+  @media (max-width: 640px) {
+    .empty-home { padding: 48px 24px; }
+  }
+</style>

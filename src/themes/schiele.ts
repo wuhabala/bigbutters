@@ -27,7 +27,6 @@ export const schiele: ThemePack = {
     'RomanChapter',
   ],
   classOverrides: 'theme-schiele',
-  preloadFonts: [
-    '/fonts/Caveat-Regular.woff2',
-  ],
+  // 注意：Caveat 不在主题包级 preload。
+  // 改由 HandSignature 组件按需 fetch (评审 #10：避免列表页/首页空载 49KB)。
 };
