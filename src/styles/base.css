@@ -769,3 +769,153 @@ body.theme-basquiat .article-tags { gap: 8px; margin-top: 16px; }
   body.theme-basquiat .article-date { box-shadow: 2px 2px 0 0 var(--ink); font-size: 12.5px; }
   body.theme-basquiat .article-eyebrow { font-size: 12px; letter-spacing: 0.14em; }
 }
+
+/* =================================================================
+   Escher 主题 · 不可能建筑的现代展厅
+   ================================================================= */
+
+body.theme-escher {
+  letter-spacing: 0.01em;
+  background: var(--bg);
+}
+body.theme-escher .site-header {
+  background: rgba(251, 247, 238, 0.82);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+body.theme-escher .site-header .brand {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+body.theme-escher .brand-sep { color: var(--accent); opacity: 1; }
+body.theme-escher .site-nav {
+  font-family: var(--font-sans);
+  letter-spacing: 0.25em;
+}
+body.theme-escher .nav-link.active {
+  color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+body.theme-escher .site-footer {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-soft);
+  border-top: 1px solid var(--rule);
+}
+body.theme-escher .site-footer-inner {
+  font-family: var(--font-sans);
+  letter-spacing: 0.16em;
+}
+body.theme-escher .footer-brand-cn { color: var(--ochre); }
+
+body.theme-escher .topic-summary.prose,
+body.theme-escher .issue-body.prose {
+  background: rgba(251, 247, 238, 0.88);
+  border: 1px solid var(--rule);
+  padding: clamp(22px, 4vw, 38px);
+  box-shadow: 14px 14px 0 rgba(201, 188, 169, 0.18);
+  position: relative;
+}
+body.theme-escher .topic-summary.prose::before,
+body.theme-escher .issue-body.prose::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 22px;
+  width: 62px;
+  height: 7px;
+  background: linear-gradient(90deg, var(--ochre) 0 55%, var(--accent) 55%);
+}
+body.theme-escher .prose h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(25px, 3.2vw, 31px);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: 0.05em;
+  margin: 42px 0 18px;
+  padding-left: 18px;
+  border-left: 2px solid var(--ochre);
+}
+body.theme-escher .prose h3 {
+  font-family: var(--font-sans);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+body.theme-escher .prose blockquote {
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  background: #fdfaf3;
+  padding: 18px 22px;
+  margin: 28px 0;
+  color: var(--ink);
+  font-style: normal;
+}
+body.theme-escher .prose strong { color: var(--ink); font-weight: 600; }
+body.theme-escher .prose a { border-bottom-color: var(--ochre); }
+body.theme-escher .issue-title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.17;
+  letter-spacing: 0.055em;
+  max-width: 720px;
+}
+body.theme-escher .issue-eyebrow,
+body.theme-escher .issue-date {
+  font-family: var(--font-sans);
+  letter-spacing: 0.27em;
+  font-style: normal;
+}
+body.theme-escher .issues-title {
+  font-family: var(--font-sans);
+  color: var(--ochre);
+  border-bottom-color: var(--rule);
+}
+body.theme-escher .issue-entry {
+  border-bottom: 1px solid var(--rule);
+}
+body.theme-escher .issue-entry a {
+  grid-template-columns: 112px 1fr auto;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+body.theme-escher .issue-entry a:hover {
+  transform: translateX(8px);
+  background: rgba(251, 247, 238, 0.66);
+}
+body.theme-escher .i-num {
+  min-width: 92px;
+  font-family: var(--font-sans);
+  color: var(--ochre);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+}
+body.theme-escher .i-title {
+  font-family: var(--font-sans);
+  letter-spacing: 0.04em;
+}
+body.theme-escher .i-date {
+  font-family: var(--font-sans);
+  font-style: normal;
+  letter-spacing: 0.12em;
+}
+
+@media (max-width: 640px) {
+  body.theme-escher .topic-summary.prose,
+  body.theme-escher .issue-body.prose {
+    padding: 22px 18px;
+    box-shadow: 8px 8px 0 rgba(201, 188, 169, 0.18);
+  }
+  body.theme-escher .prose h2 { font-size: 22px; margin-top: 32px; }
+  body.theme-escher .issue-title { letter-spacing: 0.03em; }
+  body.theme-escher .i-num { min-width: 72px; font-size: 11px; }
+  body.theme-escher .issue-entry a {
+    grid-template-columns: 82px 1fr;
+    gap: 10px;
+  }
+  body.theme-escher .i-date { grid-column: 2; }
+}

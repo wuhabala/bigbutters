@@ -1,0 +1,23 @@
+---
+export interface Props {
+  size?: number;
+}
+const { size = 76 } = Astro.props;
+---
+<svg class="impossible-steps" width={size} viewBox="0 0 100 100" aria-hidden="true">
+  <path d="M18 70 L46 86 L82 66 L55 50 Z" class="plane" />
+  <path d="M18 70 V61 L46 77 V86 M46 77 L82 57 V66" class="edge" />
+  <path d="M26 60 L36 65 L44 61 L34 56 Z M36 55 L46 60 L54 56 L44 51 Z M46 50 L56 55 L64 51 L54 46 Z M56 45 L66 50 L74 46 L64 41 Z" class="step" />
+  <path d="M74 46 L74 68 L66 72 L66 50" class="rise" />
+  <path d="M66 72 L57 67 L57 58 L66 63" class="rise" />
+  <path d="M57 67 L48 62 L48 53 L57 58" class="rise" />
+  <circle cx="32" cy="53" r="3.5" class="traveler" />
+</svg>
+<style>
+  .impossible-steps { display: block; }
+  .plane { fill: var(--bg-soft); stroke: var(--ink); stroke-width: 1.6; }
+  .edge { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+  .step { fill: #fefbf4; stroke: var(--ink); stroke-width: 1.35; }
+  .rise { fill: var(--bg-deep); stroke: var(--ink); stroke-width: 1.35; }
+  .traveler { fill: var(--accent); }
+</style>

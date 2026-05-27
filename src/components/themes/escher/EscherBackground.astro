@@ -1,0 +1,51 @@
+---
+---
+<div class="esch-bg" aria-hidden="true">
+  <svg class="grid" viewBox="0 0 1200 900" preserveAspectRatio="none">
+    <g class="grid-lines">
+      <path d="M0 180 L600 510 L1200 180 M0 260 L600 590 L1200 260 M0 340 L600 670 L1200 340" />
+      <path d="M160 90 L760 420 L760 900 M320 0 L920 330 L920 900 M1040 0 L440 330 L440 900 M1200 90 L600 420 L600 900" />
+    </g>
+    <path class="impossible-route" d="M64 210 L190 278 L190 230 L318 298 L318 250 L446 318 L446 458 L575 526 L575 386 L446 318" />
+    <path class="counter-route" d="M1050 680 L936 620 L936 665 L822 604 L822 650 L708 588" />
+  </svg>
+  <span class="axis axis-a">↗</span>
+  <span class="axis axis-b">↙</span>
+  <span class="loop">A → B → A</span>
+</div>
+<style>
+  .esch-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 77% 18%, rgba(68, 141, 139, 0.1), transparent 27%),
+      radial-gradient(circle at 17% 80%, rgba(201, 110, 85, 0.08), transparent 25%);
+  }
+  .grid { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.48; }
+  .grid-lines { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 2 11; }
+  .impossible-route, .counter-route {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 2;
+    opacity: 0.34;
+  }
+  .counter-route { stroke: var(--accent); opacity: 0.22; }
+  .axis, .loop {
+    position: absolute;
+    color: var(--ink-faint);
+    font-family: var(--font-sans);
+    letter-spacing: 0.26em;
+    opacity: 0.36;
+  }
+  .axis { font-size: 28px; }
+  .axis-a { top: 19%; right: 9%; }
+  .axis-b { bottom: 18%; left: 7%; }
+  .loop { bottom: 9%; right: 8%; font-size: 11px; }
+  @media (max-width: 720px) {
+    .grid { opacity: 0.27; }
+    .axis, .loop, .counter-route { display: none; }
+  }
+</style>

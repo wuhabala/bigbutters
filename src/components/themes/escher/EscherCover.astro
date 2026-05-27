@@ -1,0 +1,47 @@
+---
+export interface Props {
+  title: string;
+  meta?: string;
+}
+const { title, meta } = Astro.props;
+---
+<div class="esch-cover">
+  <svg class="architecture" viewBox="0 0 260 330" aria-hidden="true">
+    <path class="tower-left" d="M24 239 L104 281 L104 148 L24 106 Z" />
+    <path class="tower-right" d="M104 281 L232 215 L232 82 L104 148 Z" />
+    <path class="roof" d="M24 106 L151 40 L232 82 L104 148 Z" />
+    <path class="door" d="M61 214 V174 L83 186 V226 Z" />
+    <path class="bridge" d="M46 125 L114 160 L180 126 L111 90 Z" />
+    <path class="stairs" d="M60 119 L74 126 L88 119 L74 112 Z M74 112 L88 119 L102 112 L88 105 Z M88 105 L102 112 L116 105 L102 98 Z M102 98 L116 105 L130 98 L116 91 Z" />
+    <path class="return" d="M180 126 V177 L164 186 V135 M164 186 L149 178 V169 L164 177" />
+    <circle class="traveler" cx="54" cy="109" r="4" />
+  </svg>
+  <div class="caption">
+    <span class="cover-name">{title}</span>
+    {meta && <span class="cover-state">{meta}</span>}
+  </div>
+</div>
+<style>
+  .esch-cover {
+    position: absolute;
+    inset: 0;
+    padding: 18px 16px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      linear-gradient(145deg, rgba(255,255,255,0.62), transparent 44%),
+      var(--bg);
+  }
+  .architecture { width: 100%; height: auto; flex: 1; min-height: 0; }
+  .tower-left { fill: #d7c6ad; stroke: var(--ink); stroke-width: 1.4; }
+  .tower-right { fill: #eadfce; stroke: var(--ink); stroke-width: 1.4; }
+  .roof, .bridge { fill: #fbf7ee; stroke: var(--ink); stroke-width: 1.4; }
+  .door { fill: var(--ochre); opacity: 0.75; }
+  .stairs { fill: #fffdf8; stroke: var(--ink); stroke-width: 1.1; }
+  .return { fill: var(--bg-deep); stroke: var(--ink); stroke-width: 1.2; }
+  .traveler { fill: var(--accent); }
+  .caption { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--rule); padding-top: 10px; }
+  .cover-name { font-family: var(--font-sans); font-size: 15px; font-weight: 500; color: var(--ink); }
+  .cover-state { font-family: var(--font-sans); color: var(--ochre); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; }
+</style>

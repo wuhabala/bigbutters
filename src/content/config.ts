@@ -57,13 +57,18 @@ const topics = defineCollection({
 const issues = defineCollection({
   // 同上：base 到 topics/，ID = <topic-slug>/<issue-slug>
   loader: glob({ pattern: '*/!(index).{md,mdx}', base: './src/content/topics' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     issue: z.number().int().positive(),
+    /** Display marker for prologue/finale and source-defined issue numbering. */
+    chapter: z.string().optional(),
     title: z.string(),
     date: z.coerce.date(),
     status: z.enum(['draft', 'published']).default('published'),
     summary: z.string().optional(),
     free_layer: z.boolean().default(false),
+    cover: z.object({
+      hero_image: image().optional(),
+    }).optional(),
   }),
 });
 

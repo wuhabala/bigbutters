@@ -31,6 +31,7 @@ const { Content } = await render(topic);
   theme={topic.data.theme}
   description={topic.data.summary}
   ogImage={topic.data.cover?.hero_image?.src}
+  heroImage={topic.data.cover?.hero_image}
 >
   <div class="topic-summary prose">
     <p>{topic.data.summary}</p>
@@ -48,7 +49,7 @@ const { Content } = await render(topic);
           return (
             <li class="issue-entry">
               <a href={`/topics/${slug}/${issueSlug}/`}>
-                <span class="i-num">{String(i.data.issue).padStart(2, '0')}</span>
+                  <span class="i-num">{i.data.chapter ?? String(i.data.issue).padStart(2, '0')}</span>
                 <span class="i-body">
                   <span class="i-title">{i.data.title}</span>
                   {i.data.summary && <span class="i-summary">{i.data.summary}</span>}

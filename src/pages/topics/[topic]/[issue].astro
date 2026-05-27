@@ -30,11 +30,13 @@ const { Content } = await render(issue);
 <IssueLayout
   title={issue.data.title}
   issueNum={issue.data.issue}
+  chapter={issue.data.chapter}
   topicTitle={topic.data.title}
   topicHref={`/topics/${topicSlug}/`}
   date={issue.data.date}
   theme={topic.data.theme}
   description={issue.data.summary}
+  heroImage={issue.data.cover?.hero_image}
 >
   <Content />
 </IssueLayout>

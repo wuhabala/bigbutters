@@ -4,7 +4,8 @@
 // coverImage 接 ImageMetadata（Astro image() schema 输出）时，
 // 自动用 Astro <Image> 优化管线（WebP + 多倍图 + lazy + width/height）
 import { Image } from 'astro:assets';
-import { getTheme, type ThemeId } from '@themes';
+import { getTheme, tokensToCss, type ThemeId } from '@themes';
+import EscherCover from '@components/themes/escher/EscherCover.astro';
 import type { ImageMetadata } from 'astro';
 
 export interface Props {
@@ -18,11 +19,12 @@ export interface Props {
 }
 const { href, title, theme, meta, coverImage, aspectRatio = '3 / 4' } = Astro.props;
 const pack = getTheme(theme);
+const cardTokens = tokensToCss(pack.tokens);
 const hasImage = !!coverImage;
 const isMetadata = !!coverImage && typeof coverImage !== 'string' && 'src' in coverImage;
 ---
 <a class="cover-card" href={href} data-theme={theme}
-   style={`background: ${pack.tokens.bg}; color: ${pack.tokens.ink}; aspect-ratio: ${aspectRatio};`}>
+   style={`background: ${pack.tokens.bg}; color: ${pack.tokens.ink}; aspect-ratio: ${aspectRatio}; ${cardTokens}`}>
   {hasImage && isMetadata ? (
     <Image
       src={coverImage as ImageMetadata}
@@ -35,6 +37,8 @@ const isMetadata = !!coverImage && typeof coverImage !== 'string' && 'src' in co
     />
   ) : hasImage ? (
     <img src={coverImage as string} alt={title} loading="lazy" decoding="async" />
+  ) : theme === 'escher' ? (
+    <EscherCover {title} {meta} />
   ) : (
     <div class="cover-fallback">
       <span class="cover-title" style={`color: ${pack.tokens.ink};`}>{title}</span>
@@ -72,6 +76,14 @@ const isMetadata = !!coverImage && typeof coverImage !== 'string' && 'src' in co
     font-size: 10px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
+  }
+  .cover-card[data-theme='escher'] {
+    border: 1px solid #c9bca9;
+    box-shadow: 8px 8px 0 rgba(201, 188, 169, 0.22);
+  }
+  .cover-card[data-theme='escher']:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 14px 14px 0 rgba(201, 188, 169, 0.3);
   }
 
   /* Basquiat 主题下封面卡 hover 更夸张 */
