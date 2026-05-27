@@ -15,6 +15,8 @@
 | `EBGaramond-Italic.woff2` | EB Garamond | 400 italic | 22,172 | `1bd1b20fd55986b334ba42dbcb0d9bed7e2d08fd7a713000e8041bfafa37e8ec` |
 | `Caveat-Regular.woff2` | Caveat | 400 normal | 48,836 | `d0b7b931b8980049327e8f8f9ac264617c8200b8422d62e886473d3d9527bad3` |
 | `PermanentMarker-Regular.woff2` | Permanent Marker | 400 normal | 29,564 | `4884fec2c73aa52a2461073c1b87d1ceb80f400520391b43f97ca7d3c39eeb24` |
+| `ZCOOLQingKeHuangYou-Regular.woff2` | ZCOOL QingKe HuangYou（清刻黄油体） | 400 normal | 1,765,712 | `6fc130d9d508e61fe6fd95f70a8b9251349b0e97810c1d537e3322b45739e3e0` |
+| `MaShanZheng-Regular.woff2` | Ma Shan Zheng（马善政毛笔楷书） | 400 normal | 2,709,280 | `36b3f3924ef392b767df54bac30f283ec5b13f81606d26f3c7c8eec9ff638806` |
 
 上游具体路径：
 - `https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc/files/noto-serif-sc-chinese-simplified-{400,600}-normal.woff2`
@@ -31,6 +33,8 @@
 - **EB Garamond** — © Georg Duffner. SIL Open Font License 1.1. <https://fonts.google.com/specimen/EB+Garamond/license>
 - **Caveat** — © Pablo Impallari / Brenda Gallo. SIL Open Font License 1.1. <https://fonts.google.com/specimen/Caveat/license>
 - **Permanent Marker** — © Font Diner. Apache License 2.0. <https://fonts.google.com/specimen/Permanent+Marker/about>（注：Apache 2.0 与 OFL 类似，允许嵌入与重新分发）
+- **ZCOOL QingKe HuangYou（清刻黄油体）** — © 站酷网 (zcool.com.cn). SIL Open Font License 1.1. <https://fonts.google.com/specimen/ZCOOL+QingKe+HuangYou/license>（名字直译"清刻黄油"，与品牌"大大黄油"同源；中文艺术字体）
+- **Ma Shan Zheng（马善政毛笔楷书）** — © Ma Shan Zheng. SIL Open Font License 1.1. <https://fonts.google.com/specimen/Ma+Shan+Zheng/license>（中文行书风格艺术字）
 
 OFL 全文：<https://scripts.sil.org/OFL>
 

@@ -3,24 +3,40 @@
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
-  <span class="footer-claim">"读得慢，写得久 —— 把每一段思考当作一处地形。"</span>
-  <span class="footer-meta"><em>大大黄油</em> · since MMXXVI · {year}</span>
+  <div class="site-footer-inner">
+    <span class="footer-claim">"读得慢，写得久 —— 把每一段思考当作一处地形。"</span>
+    <span class="footer-meta">
+      <span class="footer-brand-en">BigButters</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-brand-cn">大大黄油</span>
+      <span class="footer-since">since MMXXVI · {year}</span>
+    </span>
+  </div>
 </footer>
 <style>
   .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 64px;
+    width: 100%;
+  }
+  .site-footer-inner {
     display: flex;
     justify-content: space-between;
+    gap: 16px;
     padding: 24px 32px;
-    border-top: 1px solid var(--rule);
-    margin: 64px auto 0 auto;
+    max-width: 1200px;
+    margin: 0 auto;
     font-family: 'EB Garamond', serif;
     font-size: 12px;
     color: var(--ink-faint);
-    max-width: 1200px;
   }
   .footer-claim { font-style: italic; }
-  .footer-meta em { color: var(--accent); font-style: italic; }
+  .footer-meta { display: inline-flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .footer-sep { opacity: 0.4; }
+  .footer-brand-cn { color: var(--accent); }
+  .footer-since { color: var(--ink-faint); opacity: 0.7; margin-left: 4px; }
+
   @media (max-width: 640px) {
-    .site-footer { flex-direction: column; gap: 8px; padding: 16px 20px; }
+    .site-footer-inner { flex-direction: column; gap: 8px; padding: 16px 20px; }
   }
 </style>

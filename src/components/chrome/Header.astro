@@ -7,16 +7,25 @@ export interface Props {
 const { activeNav = null } = Astro.props;
 ---
 <header class="site-header">
-  <a href="/" class="brand">🪳 大大黄油</a>
-  <Nav active={activeNav} />
+  <div class="site-header-inner">
+    <a href="/" class="brand">
+      <span class="brand-en">BigButters</span>
+      <span class="brand-sep">·</span>
+      <span class="brand-cn">大大黄油</span>
+    </a>
+    <Nav active={activeNav} />
+  </div>
 </header>
 <style>
   .site-header {
+    border-bottom: 1px solid var(--rule);
+    width: 100%;
+  }
+  .site-header-inner {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     padding: 24px 32px;
-    border-bottom: 1px solid var(--rule);
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -27,9 +36,15 @@ const { activeNav = null } = Astro.props;
     letter-spacing: 0.04em;
     color: var(--ink);
     border-bottom: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
   }
+  .brand-en, .brand-cn { display: inline-block; }
+  .brand-sep { opacity: 0.4; }
+
   @media (max-width: 640px) {
-    .site-header { padding: 16px 20px; }
-    .brand { font-size: 16px; }
+    .site-header-inner { padding: 16px 20px; }
+    .brand { font-size: 15px; gap: 4px; }
   }
 </style>
