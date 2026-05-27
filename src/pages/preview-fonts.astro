@@ -1,0 +1,190 @@
+---
+// src/pages/preview-fonts.astro
+// 临时页面：比较 5 个中文艺术字体备选 · 用于挑选 Basquiat 主题大标题字体
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
+
+const samples = [
+  {
+    id: 'zcool-qingke-huangyou',
+    name: 'ZCOOL QingKe HuangYou · 清刻黄油体',
+    note: '当前在用 · 字体名与品牌"大大黄油"同源 · 圆胖卡通',
+    family: "'ZCOOL QingKe HuangYou', 'Noto Serif SC', serif",
+  },
+  {
+    id: 'liu-jian-mao-cao',
+    name: 'Liu Jian Mao Cao · 柳建毛草',
+    note: '狂野毛笔涂鸦感 · 最接近 Basquiat 街头气',
+    family: "'Liu Jian Mao Cao', 'Noto Serif SC', serif",
+  },
+  {
+    id: 'zcool-kuaile',
+    name: 'ZCOOL KuaiLe · 站酷快乐体',
+    note: '圆润粗壮 · 像马克笔写出来的',
+    family: "'ZCOOL KuaiLe', 'Noto Serif SC', serif",
+  },
+  {
+    id: 'zcool-xiaowei',
+    name: 'ZCOOL XiaoWei · 站酷小薇',
+    note: '现代衬线 · 优雅克制 · 与 Basquiat 反差大',
+    family: "'ZCOOL XiaoWei', 'Noto Serif SC', serif",
+  },
+  {
+    id: 'ma-shan-zheng',
+    name: 'Ma Shan Zheng · 马善政毛笔楷书',
+    note: '行书笔意 · 慢节奏文人风',
+    family: "'Ma Shan Zheng', 'Noto Serif SC', serif",
+  },
+  {
+    id: 'noto-bold',
+    name: 'Noto Serif SC SemiBold（原有 · 不下载新字体）',
+    note: '已自托管 600 字重 · 朴素粗重 · 无新成本',
+    family: "'Noto Serif SC', serif",
+    weight: 600,
+  },
+];
+---
+<BaseLayout title="字体预览" description="Basquiat 主题中文艺术字体比较" theme="basquiat">
+  <Header activeNav={null} />
+  <main class="preview-main">
+    <header class="preview-head">
+      <p class="preview-eyebrow">FONT PREVIEW</p>
+      <h1>Basquiat 主题 · 中文艺术字候选</h1>
+      <p class="preview-note">同一段标题 + 同一段正文，6 种字体并列。挑你觉得最像 Basquiat 气质的，告诉我 id，我应用到整个主题。</p>
+    </header>
+
+    <div class="grid">
+      {samples.map(s => (
+        <article class="card" id={s.id}>
+          <div class="card-meta">
+            <span class="card-id">id: {s.id}</span>
+            <h3>{s.name}</h3>
+            <p class="card-note">{s.note}</p>
+          </div>
+          <div class="card-demo" style={`font-family: ${s.family}; ${s.weight ? 'font-weight: ' + s.weight + ';' : 'font-weight: 400;'}`}>
+            <div class="demo-title">AI 安全边界</div>
+            <div class="demo-h2">三层能力约束</div>
+            <p class="demo-p">把 AI 当作一种技术而非产品来追问——它能力的天花板由什么决定？产品的上限是市场、成本、合规、工程化；技术的上限是更硬的东西。</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <section class="how">
+      <h2>怎么用</h2>
+      <p>选定后告诉我对应 id（如 <code>liu-jian-mao-cao</code>），我把 base.css 里 Basquiat hero / prose h2/h3 / article-title 的 font-family 改成那个。其他选项的 woff2 不会被生产使用，但留在 public/fonts/ 备用（删除可释放 ~5MB 资产）。</p>
+      <p><strong>关于"卓特自由体"</strong>：商业字库 · 不在 @fontsource · 需许可（若你有 woff2 + 商用许可，给我直接接入）。</p>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .preview-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 80px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .preview-head { margin-bottom: 40px; }
+  .preview-eyebrow {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .preview-head h1 {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .preview-note {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    background: #fffdf5;
+    border: 3.5px solid var(--ink);
+    box-shadow: 6px 6px 0 0 var(--ink);
+    padding: 22px 22px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card-meta { border-bottom: 2px dashed var(--ink); padding-bottom: 12px; }
+  .card-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 2px 6px;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+  .card-meta h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 6px 0 4px 0;
+  }
+  .card-note {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .card-demo { color: var(--ink); }
+  .demo-title {
+    font-size: 44px;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    padding-left: 10px;
+    border-left: 5px solid var(--accent);
+  }
+  .demo-h2 {
+    font-size: 24px;
+    margin: 14px 0 6px 0;
+    background: linear-gradient(180deg, transparent 60%, #f8d12b 60%, #f8d12b 95%, transparent 95%);
+    padding: 0 6px;
+    display: inline-block;
+  }
+  .demo-p {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    line-height: 1.75;
+    margin-top: 12px;
+  }
+
+  .how {
+    margin-top: 56px;
+    padding: 20px;
+    background: var(--bg-soft);
+    border: 3px solid var(--ink);
+  }
+  .how h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .how p { font-size: 14px; line-height: 1.7; margin-bottom: 8px; }
+  .how code {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 2px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+  }
+</style>

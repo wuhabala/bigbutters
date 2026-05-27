@@ -6,6 +6,7 @@ import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
 import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
 import Crown from '@components/themes/basquiat/Crown.astro';
+import ReadingControls from '@components/core/ReadingControls.svelte';
 import type { ThemeId } from '@themes';
 import type { ImageMetadata } from 'astro';
 
@@ -78,6 +79,7 @@ const isBasquiat = theme === 'basquiat';
     </div>
   </article>
   <Footer />
+  <ReadingControls client:idle />
 </BaseLayout>
 <style>
   .article-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }

@@ -52,12 +52,36 @@
   src: url('/fonts/ZCOOLQingKeHuangYou-Regular.woff2') format('woff2');
 }
 @font-face {
-  /* 马善政毛笔楷书 · OFL · 用于慢读句子 / 引文 / 签名 */
+  /* 马善政毛笔楷书 · OFL */
   font-family: 'Ma Shan Zheng';
   font-weight: 400;
   font-style: normal;
   font-display: swap;
   src: url('/fonts/MaShanZheng-Regular.woff2') format('woff2');
+}
+@font-face {
+  /* 柳建毛草 · OFL · 狂野毛笔涂鸦感 */
+  font-family: 'Liu Jian Mao Cao';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/LiuJianMaoCao-Regular.woff2') format('woff2');
+}
+@font-face {
+  /* 站酷快乐体 · OFL · 圆润粗壮 */
+  font-family: 'ZCOOL KuaiLe';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/ZCOOLKuaiLe-Regular.woff2') format('woff2');
+}
+@font-face {
+  /* 站酷小薇 · OFL · 现代衬线 */
+  font-family: 'ZCOOL XiaoWei';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/ZCOOLXiaoWei-Regular.woff2') format('woff2');
 }
 
 /* ============ root tokens (default = 席勒) ============ */
@@ -286,53 +310,58 @@ body.theme-basquiat .prose code {
   border-radius: 0;
 }
 
-/* table · Basquiat 风：黑边粗、表头黑底奶黄字、行 hover 黄底 */
-body.theme-basquiat .prose .table-wrap,
+/* table · Basquiat 风 · v2：黄色顶 bar + 干净分隔 + 隔行变色 */
 body.theme-basquiat .prose table {
   width: 100%;
   margin: 28px 0;
+  border-collapse: collapse;
+  background: transparent;
+  font-size: 15px;
   display: block;
-  overflow-x: auto;        /* 移动端横向滚 */
+  overflow-x: auto;
   max-width: 100%;
 }
-body.theme-basquiat .prose table {
-  border-collapse: collapse;
-  border: 3px solid var(--ink);
-  background: #fffdf5;
-  display: table;          /* 还原为 table 渲染（容器在外层 .prose 已是 block）*/
-  min-width: 100%;
+@media (min-width: 641px) {
+  body.theme-basquiat .prose table {
+    display: table;
+    min-width: 100%;
+  }
 }
-body.theme-basquiat .prose thead {
-  background: var(--ink);
-  color: var(--bg);
+body.theme-basquiat .prose thead tr {
+  background: #f8d12b;
 }
 body.theme-basquiat .prose th {
-  padding: 10px 14px;
+  padding: 12px 16px;
   text-align: left;
-  font-family: 'Permanent Marker', cursive;
-  font-size: 13.5px;
-  letter-spacing: 0.08em;
-  border-right: 2px solid var(--bg);
-  font-weight: 400;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  border-bottom: 3px solid var(--ink);
   white-space: nowrap;
 }
-body.theme-basquiat .prose th:last-child { border-right: none; }
-body.theme-basquiat .prose td {
-  padding: 10px 14px;
-  border-top: 2px solid var(--ink);
-  border-right: 2px dashed rgba(10,10,10,0.3);
-  font-size: 15px;
-  line-height: 1.6;
-  vertical-align: top;
-}
-body.theme-basquiat .prose td:last-child { border-right: none; }
 body.theme-basquiat .prose tbody tr {
+  background: #fffdf5;
   transition: background 0.15s ease;
 }
-body.theme-basquiat .prose tbody tr:hover {
-  background: rgba(248, 209, 43, 0.45);
+body.theme-basquiat .prose tbody tr:nth-child(even) {
+  background: #fff5d6;             /* 偶数行带浅黄 */
 }
-/* 表格内 strong / em 弱化（已在表格高对比环境）*/
+body.theme-basquiat .prose tbody tr:hover {
+  background: #fff0b8;
+}
+body.theme-basquiat .prose td {
+  padding: 11px 16px;
+  font-size: 15px;
+  line-height: 1.65;
+  vertical-align: top;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(10, 10, 10, 0.12);
+}
+body.theme-basquiat .prose tbody tr:last-child td {
+  border-bottom: 3px solid var(--ink);
+}
 body.theme-basquiat .prose td strong {
   background: none;
   color: var(--accent);
@@ -340,12 +369,184 @@ body.theme-basquiat .prose td strong {
 }
 
 @media (max-width: 640px) {
-  body.theme-basquiat .prose table {
-    font-size: 13px;
-    border-width: 2.5px;
-  }
-  body.theme-basquiat .prose th { font-size: 12px; padding: 8px 10px; }
-  body.theme-basquiat .prose td { font-size: 13.5px; padding: 8px 10px; line-height: 1.55; }
+  body.theme-basquiat .prose th { font-size: 13px; padding: 10px 12px; }
+  body.theme-basquiat .prose td { font-size: 14px; padding: 10px 12px; line-height: 1.55; }
+}
+
+/* =================================================================
+   阅读模式 · GitHub Markdown 风 · 跟随系统日间/夜间
+   ================================================================= */
+
+/* 隐藏所有主题装饰 / 把整页换成纯净 markdown 视图 */
+body.reading-mode { background: #ffffff; color: #1f2328; }
+body.reading-mode .bsq-bg { display: none !important; }
+body.reading-mode .site-header,
+body.reading-mode .site-footer {
+  background: #ffffff !important;
+  color: #1f2328 !important;
+  border-color: #d0d7de !important;
+}
+body.reading-mode .site-header * ,
+body.reading-mode .site-footer * {
+  background: transparent !important;
+  color: #1f2328 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: #d0d7de !important;
+}
+
+/* 文章 hero 简化 */
+body.reading-mode .article-hero { margin-bottom: 24px; }
+body.reading-mode .article-hero * {
+  background: transparent !important;
+  color: #1f2328 !important;
+  border-color: #d0d7de !important;
+  box-shadow: none !important;
+  transform: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  padding-left: 0 !important;
+  border-left: none !important;
+}
+body.reading-mode .article-title {
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding-bottom: 12px !important;
+}
+body.reading-mode .bsq-issue-stamp { display: none !important; }
+body.reading-mode .bsq-article-underline { display: none !important; }
+body.reading-mode .article-cover { display: none; }
+
+/* 正文 prose · GitHub markdown 视感 */
+body.reading-mode .article-body.prose,
+body.reading-mode .research-summary.prose,
+body.reading-mode .topic-summary.prose {
+  background: #ffffff !important;
+  color: #1f2328 !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  max-width: var(--content-max, 760px);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+}
+body.reading-mode .prose h1,
+body.reading-mode .prose h2,
+body.reading-mode .prose h3 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  display: block !important;
+  transform: none !important;
+}
+body.reading-mode .prose h2 {
+  font-size: 24px !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding-bottom: 8px !important;
+  margin-top: 32px !important;
+}
+body.reading-mode .prose h3 { font-size: 20px !important; }
+body.reading-mode .prose strong {
+  background: none !important;
+  color: #1f2328 !important;
+  font-weight: 600 !important;
+}
+body.reading-mode .prose em { color: #1f2328 !important; }
+body.reading-mode .prose a {
+  color: #0969da !important;
+  border-bottom: none !important;
+  text-decoration: underline !important;
+  background: none !important;
+  font-weight: 400 !important;
+}
+body.reading-mode .prose blockquote {
+  background: none !important;
+  border: none !important;
+  border-left: 4px solid #d0d7de !important;
+  color: #57606a !important;
+  font-style: normal !important;
+  padding: 0 16px !important;
+  margin: 16px 0 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  font-size: 16px !important;
+}
+body.reading-mode .prose hr {
+  height: 1px !important;
+  background: #d0d7de !important;
+  border: none !important;
+}
+body.reading-mode .prose code {
+  background: rgba(175, 184, 193, 0.2) !important;
+  color: #1f2328 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 6px !important;
+  font-size: 85% !important;
+}
+body.reading-mode .prose table {
+  border: 1px solid #d0d7de !important;
+}
+body.reading-mode .prose thead tr {
+  background: #f6f8fa !important;
+}
+body.reading-mode .prose th {
+  background: #f6f8fa !important;
+  color: #1f2328 !important;
+  font-family: -apple-system, sans-serif !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #d0d7de !important;
+  white-space: normal !important;
+}
+body.reading-mode .prose tbody tr,
+body.reading-mode .prose tbody tr:nth-child(even),
+body.reading-mode .prose tbody tr:hover {
+  background: #ffffff !important;
+}
+body.reading-mode .prose td {
+  border-bottom: 1px solid #d0d7de !important;
+  font-family: -apple-system, sans-serif !important;
+}
+body.reading-mode .prose ul li::before {
+  content: '•' !important;
+  font-family: inherit !important;
+  color: #1f2328 !important;
+}
+/* 自定义嵌套盒（layer-diagram 这种）保持原样可视，但去掉阴影 */
+body.reading-mode .prose .layer-diagram,
+body.reading-mode .prose .layer-box { box-shadow: none !important; }
+
+/* === 系统夜间模式 === */
+@media (prefers-color-scheme: dark) {
+  body.reading-mode { background: #0d1117 !important; color: #e6edf3 !important; }
+  body.reading-mode .site-header,
+  body.reading-mode .site-footer { background: #0d1117 !important; border-color: #30363d !important; }
+  body.reading-mode .site-header *,
+  body.reading-mode .site-footer * { color: #e6edf3 !important; border-color: #30363d !important; }
+  body.reading-mode .article-hero *,
+  body.reading-mode .article-title { color: #e6edf3 !important; border-color: #30363d !important; }
+  body.reading-mode .article-body.prose,
+  body.reading-mode .research-summary.prose,
+  body.reading-mode .topic-summary.prose { background: #0d1117 !important; color: #e6edf3 !important; }
+  body.reading-mode .prose h1,
+  body.reading-mode .prose h2,
+  body.reading-mode .prose h3,
+  body.reading-mode .prose strong,
+  body.reading-mode .prose em { color: #e6edf3 !important; }
+  body.reading-mode .prose h2 { border-bottom-color: #30363d !important; }
+  body.reading-mode .prose a { color: #2f81f7 !important; }
+  body.reading-mode .prose blockquote { border-left-color: #30363d !important; color: #8b949e !important; }
+  body.reading-mode .prose hr { background: #30363d !important; }
+  body.reading-mode .prose code { background: rgba(110,118,129,0.4) !important; color: #e6edf3 !important; }
+  body.reading-mode .prose table { border-color: #30363d !important; }
+  body.reading-mode .prose th,
+  body.reading-mode .prose thead tr { background: #161b22 !important; color: #e6edf3 !important; border-color: #30363d !important; }
+  body.reading-mode .prose tbody tr,
+  body.reading-mode .prose tbody tr:nth-child(even) { background: #0d1117 !important; }
+  body.reading-mode .prose td { border-bottom-color: #30363d !important; }
 }
 
 /* 移动端 · 卡片边距收紧、字号再降一档 */
@@ -455,21 +656,11 @@ body.theme-basquiat .site-footer {
   width: 100%;
 }
 body.theme-basquiat .site-footer-inner {
-  padding: 28px 32px;
+  padding: 24px 32px;
   max-width: 1200px;
   margin: 0 auto;
   color: var(--bg);
   font-size: 13px;
-}
-/* 第一句话 · 慢读体（马善政毛笔楷书）*/
-body.theme-basquiat .footer-claim {
-  font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif;
-  font-style: normal;
-  color: #f8d12b;                         /* 高对比黄色 */
-  font-size: 17px;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
-  max-width: 60%;
 }
 body.theme-basquiat .footer-meta {
   font-size: 13px;
@@ -480,10 +671,12 @@ body.theme-basquiat .footer-meta {
   gap: 6px;
   flex-wrap: wrap;
 }
+/* footer 英文恢复 EB Garamond（用户反馈：英文字体不变）*/
 body.theme-basquiat .footer-brand-en {
-  font-family: 'Permanent Marker', cursive;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
   font-size: 16px;
-  color: #f8d12b;                         /* 黄色高对比 */
+  color: #f8d12b;
   letter-spacing: 0.02em;
 }
 body.theme-basquiat .footer-sep {
@@ -506,8 +699,7 @@ body.theme-basquiat .footer-since {
 
 @media (max-width: 640px) {
   body.theme-basquiat .site-footer { border-top-width: 3px; margin-top: 50px; }
-  body.theme-basquiat .site-footer-inner { padding: 20px 18px; flex-direction: column; gap: 14px; }
-  body.theme-basquiat .footer-claim { font-size: 15px; max-width: none; }
+  body.theme-basquiat .site-footer-inner { padding: 16px 18px; }
   body.theme-basquiat .footer-brand-en, body.theme-basquiat .footer-brand-cn { font-size: 15px; }
 }
 
