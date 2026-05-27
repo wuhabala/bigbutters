@@ -1,0 +1,80 @@
+---
+// src/layouts/ArticleLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import Header from '@components/chrome/Header.astro';
+import Footer from '@components/chrome/Footer.astro';
+import type { ThemeId } from '@themes';
+
+export interface Props {
+  title: string;
+  researchTitle: string;
+  researchHref: string;
+  date: Date;
+  type: string;
+  tags?: string[];
+  theme: ThemeId;
+  description?: string;
+  ogImage?: string;
+}
+const { title, researchTitle, researchHref, date, type, tags = [], theme, description, ogImage } = Astro.props;
+const dateStr = date.toISOString().slice(0, 10);
+---
+<BaseLayout {title} {description} {theme} {ogImage} ogType="article">
+  <Header activeNav="research" />
+  <article class="article-main">
+    <header class="article-hero">
+      <p class="article-eyebrow"><a href={researchHref}>{researchTitle}</a> · {type}</p>
+      <h1 class="article-title">{title}</h1>
+      <p class="article-date">{dateStr}</p>
+      {tags.length > 0 && (
+        <div class="article-tags">
+          {tags.map(t => <span class="tag">#{t}</span>)}
+        </div>
+      )}
+    </header>
+    <div class="article-body prose">
+      <slot />
+    </div>
+  </article>
+  <Footer />
+</BaseLayout>
+<style>
+  .article-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; }
+  .article-hero { margin-bottom: 32px; }
+  .article-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .article-eyebrow a { border-bottom: none; }
+  .article-title {
+    font-size: clamp(28px, 4.5vw, 40px);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .article-date {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+  .article-tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-family: 'EB Garamond', serif;
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .article-body { font-size: 17px; line-height: 1.85; }
+  @media (max-width: 640px) {
+    .article-main { padding: 24px 20px; }
+    .article-body { font-size: 16px; }
+  }
+</style>
