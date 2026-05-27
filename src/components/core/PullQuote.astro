@@ -1,0 +1,31 @@
+---
+// src/components/core/PullQuote.astro
+export interface Props {
+  source?: string;
+}
+const { source } = Astro.props;
+---
+<blockquote class="pull-quote">
+  <p><slot /></p>
+  {source && <cite class="pull-quote-source">— {source}</cite>}
+</blockquote>
+<style>
+  .pull-quote {
+    border-left: 2px solid var(--accent);
+    padding: 12px 20px;
+    margin: 32px 0;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--bg-soft);
+  }
+  .pull-quote p { margin-bottom: 4px; }
+  .pull-quote-source {
+    font-family: 'EB Garamond', serif;
+    font-size: 13px;
+    font-style: normal;
+    color: var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+</style>

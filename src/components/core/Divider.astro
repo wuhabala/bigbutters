@@ -1,0 +1,29 @@
+---
+// src/components/core/Divider.astro
+export interface Props {
+  variant?: 'dots' | 'line';
+}
+const { variant = 'dots' } = Astro.props;
+---
+{variant === 'dots' && (
+  <div class="divider-dots">·   ·   ·</div>
+)}
+{variant === 'line' && (
+  <hr class="divider-line" />
+)}
+<style>
+  .divider-dots {
+    text-align: center;
+    color: var(--rule);
+    letter-spacing: 0.8em;
+    margin: 32px 0 16px 0;
+    font-size: 14px;
+  }
+  .divider-line {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    border: 0;
+    margin: 32px auto;
+  }
+</style>
