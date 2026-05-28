@@ -227,7 +227,7 @@ body.theme-basquiat .topic-summary.prose {
 
 /* h2/h3 字号 —— 比正文 16px 显著更大，建立清晰层级 */
 body.theme-basquiat .prose h2 {
-  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
   font-size: 34px;
   font-weight: 500;
   line-height: 1.25;
@@ -238,7 +238,7 @@ body.theme-basquiat .prose h2 {
   letter-spacing: 0.02em;
 }
 body.theme-basquiat .prose h3 {
-  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
   font-size: 26px;
   font-weight: 500;
   line-height: 1.35;
@@ -642,7 +642,7 @@ body.theme-basquiat .brand-sep {
   font-size: 18px;
 }
 body.theme-basquiat .brand-cn {
-  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
   font-weight: 400;
   font-size: 24px;
   color: var(--bg);
@@ -722,7 +722,7 @@ body.theme-basquiat .footer-sep {
   opacity: 0.7;
 }
 body.theme-basquiat .footer-brand-cn {
-  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
   font-weight: 400;
   font-size: 16px;
   color: var(--bg);
@@ -744,7 +744,7 @@ body.theme-basquiat .footer-since {
 
 /* === Article hero · 大标题（增强） · 与中文品牌名同字体 === */
 body.theme-basquiat .article-title {
-  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
   font-weight: 400;
   font-size: clamp(30px, 5vw, 48px);
   line-height: 1.1;
