@@ -24,6 +24,12 @@ export interface FeaturedTopic {
   issueNum: number;
   blurb: string;
   coverImage?: ImageMetadata | string;
+  eyebrow?: string;
+  meta?: string;
+  stamp?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
 }
 export interface TopicCardData {
   slug: string;
@@ -82,21 +88,23 @@ const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
                 href={featured.issueHref}
                 title={featured.title}
                 theme={featured.theme}
-                meta={`第 ${featured.issueNum} 期`}
+                meta={featured.meta ?? `第 ${featured.issueNum} 期`}
                 coverImage={featured.coverImage}
                 aspectRatio="4 / 5"
               />
               {/* 红色印章 */}
-              <span class="hk-featured-stamp">第 {featured.issueNum} 期</span>
+              <span class="hk-featured-stamp">{featured.stamp ?? `第 ${featured.issueNum} 期`}</span>
             </a>
             <div class="hk-featured-meta">
-              <p class="hk-featured-eyebrow">现在正在写</p>
+              <p class="hk-featured-eyebrow">{featured.eyebrow ?? '现在正在写'}</p>
               <h2 class="hk-featured-title">{featured.issueTitle}</h2>
               <p class="hk-featured-by">{featured.title}</p>
               <p class="hk-featured-blurb">{featured.blurb}</p>
               <div class="hk-featured-actions">
-                <a href={featured.issueHref} class="hk-btn-primary">↪ 读这期</a>
-                <a href={`/topics/${featured.slug}/`} class="hk-btn-muted">↪ 看专题</a>
+                <a href={featured.issueHref} class="hk-btn-primary">{featured.primaryLabel ?? '↪ 读这期'}</a>
+                <a href={featured.secondaryHref ?? `/topics/${featured.slug}/`} class="hk-btn-muted">
+                  {featured.secondaryLabel ?? '↪ 看专题'}
+                </a>
               </div>
             </div>
           </div>

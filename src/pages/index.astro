@@ -18,12 +18,43 @@ const latestIssue = [...publishedIssues].sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 )[0];
 
+const allArticles = await getCollection('researchArticles');
+const researchAll = await getCollection('research');
+const researchMap = new Map(researchAll.map(r => [r.id.split('/')[0], r]));
+
 // 真空状态独立分支：不存在任何专题时，渲染纯介绍页（评审 #11）
 const isEmptyState = topics.length === 0;
 
 let featured: FeaturedTopic | null = null;
 if (!isEmptyState) {
-  if (latestIssue) {
+  const featuredArticleId = 'ai-safety-boundary/02-deep-risk-views';
+  const featuredArticle = allArticles.find(a => a.id === featuredArticleId);
+  const featuredResearchSlug = featuredArticleId.split('/')[0];
+  const featuredResearch = researchMap.get(featuredResearchSlug);
+
+  if (featuredArticle && featuredResearch) {
+    const articleSlug = featuredArticle.id.split('/').slice(1).join('/');
+    featured = {
+      slug: featuredResearchSlug,
+      title: featuredResearch.data.title,
+      theme: featuredResearch.data.theme,
+      issueTitle: featuredArticle.data.title,
+      issueHref: `/research/${featuredResearchSlug}/${articleSlug}/`,
+      issueNum: featuredArticle.data.order ?? 2,
+      blurb: '从维纳、古德、罗素到 mesa-optimizer 与欺骗性对齐，梳理 AI 安全中最有理论支撑的深层风险观点。',
+      coverImage: featuredArticle.data.cover?.hero_image
+        ?? featuredResearch.data.cover?.hero_image_portrait
+        ?? featuredResearch.data.cover?.hero_image,
+      eyebrow: '本期主推',
+      meta: '第 2 篇',
+      stamp: '第 2 篇',
+      primaryLabel: '↪ 读这篇',
+      secondaryHref: `/research/${featuredResearchSlug}/`,
+      secondaryLabel: '↪ 看研究全貌',
+    };
+  }
+
+  if (!featured && latestIssue) {
     const parts = latestIssue.id.split('/');
     const topicSlug = parts[0];
     const issueSlug = parts.slice(1).join('/');
@@ -84,8 +115,6 @@ const allTopics: TopicCardData[] = topics
   });
 
 // 研究 · 按研究专题分组，每组带最新 3 篇
-const allArticles = await getCollection('researchArticles');
-const researchAll = await getCollection('research');
 const researchOrder: Record<string, number> = {
   'ai-safety-boundary': 1,
   'aix-literature': 2,
