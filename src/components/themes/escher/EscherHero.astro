@@ -7,8 +7,10 @@ export interface Props {
   title: string;
   subtitle?: string;
   heroImage?: ImageMetadata;
+  eyebrow?: string;
+  routeLabel?: string;
 }
-const { title, subtitle, heroImage } = Astro.props;
+const { title, subtitle, heroImage, eyebrow = '专题', routeLabel = '12 ROUTES' } = Astro.props;
 ---
 <header class="esch-hero">
   <div class="geometry" aria-hidden="true">
@@ -17,7 +19,7 @@ const { title, subtitle, heroImage } = Astro.props;
     <span class="geo-node"></span>
   </div>
   <div class="hero-copy">
-    <div class="eyebrow"><ImpossibleSteps size={62} /><span>专题 · 12 ROUTES</span></div>
+    <div class="eyebrow"><ImpossibleSteps size={62} /><span>{eyebrow} · {routeLabel}</span></div>
     <h1>{title}</h1>
     {subtitle && <p>{subtitle}</p>}
     <div class="route"><span>A</span><i></i><span>B</span><i></i><span>A</span></div>

@@ -6,6 +6,8 @@ import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
 import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
 import Crown from '@components/themes/basquiat/Crown.astro';
+import EscherBackground from '@components/themes/escher/EscherBackground.astro';
+import ImpossibleSteps from '@components/themes/escher/ImpossibleSteps.astro';
 import ReadingControls from '@components/core/ReadingControls.svelte';
 import type { ThemeId } from '@themes';
 import type { ImageMetadata } from 'astro';
@@ -28,16 +30,24 @@ export interface Props {
 const { title, researchTitle, researchHref, date, type, tags = [], order, coverImage, theme, description, ogImage } = Astro.props;
 const dateStr = date.toISOString().slice(0, 10);
 const isBasquiat = theme === 'basquiat';
+const isEscher = theme === 'escher';
 ---
 <BaseLayout {title} {description} {theme} {ogImage} ogType="article">
   {isBasquiat && <BasquiatBackground />}
+  {isEscher && <EscherBackground />}
   <Header activeNav="research" />
-  <article class="article-main" class:list={{ 'bsq-article': isBasquiat }}>
-    <header class="article-hero" class:list={{ 'bsq-article-hero': isBasquiat }}>
+  <article class="article-main" class:list={{ 'bsq-article': isBasquiat, 'esch-article': isEscher }}>
+    <header class="article-hero" class:list={{ 'bsq-article-hero': isBasquiat, 'esch-article-hero': isEscher }}>
       {isBasquiat && order && (
         <div class="bsq-issue-stamp">
           <Crown size={28} />
           <span class="bsq-issue-num">第 {order} 期</span>
+        </div>
+      )}
+      {isEscher && order && (
+        <div class="esch-article-mark">
+          <ImpossibleSteps size={62} />
+          <span>第 {order} 期</span>
         </div>
       )}
       <p class="article-eyebrow">
@@ -84,8 +94,42 @@ const isBasquiat = theme === 'basquiat';
 <style>
   .article-main { max-width: var(--content-max); margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
   .bsq-article { padding-top: 60px; }   /* Basquiat 顶部线让位 */
+  .esch-article { padding-top: 52px; }
   .article-hero { margin-bottom: 32px; }
   .bsq-article-hero { position: relative; }
+  .esch-article-hero {
+    position: relative;
+    padding: 0 0 22px 28px;
+    border-left: 1px solid rgba(68, 141, 139, 0.42);
+  }
+  .esch-article-hero::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    bottom: 0;
+    width: clamp(110px, 25vw, 196px);
+    height: 1px;
+    background: var(--ochre);
+  }
+  .esch-article-hero::after {
+    content: '';
+    position: absolute;
+    left: clamp(110px, 25vw, 196px);
+    bottom: -5px;
+    width: 11px;
+    height: 11px;
+    background: var(--accent);
+  }
+  .esch-article-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--ochre);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    margin-bottom: 18px;
+  }
   .bsq-issue-stamp {
     display: inline-flex;
     align-items: center;

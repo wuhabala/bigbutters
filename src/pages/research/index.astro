@@ -4,7 +4,19 @@ import type { ListItem } from '@layouts/HeckelListPage.astro';
 import { getCollection } from 'astro:content';
 
 const research = await getCollection('research');
-const sorted = research.sort((a, b) => b.data.started.localeCompare(a.data.started));
+const researchOrder: Record<string, number> = {
+  'ai-safety-boundary': 1,
+  'aix-literature': 2,
+  'aix-education-family-guide': 3,
+  'foucault-studies': 4,
+  'ai-ethics-research': 5,
+};
+const getResearchRank = (id: string) => researchOrder[id.split('/')[0]] ?? 99;
+const sorted = research.sort((a, b) => {
+  const rankDiff = getResearchRank(a.id) - getResearchRank(b.id);
+  if (rankDiff !== 0) return rankDiff;
+  return b.data.started.localeCompare(a.data.started);
+});
 const items: ListItem[] = sorted.map(r => {
   const slug = r.id.split('/')[0];
   return {

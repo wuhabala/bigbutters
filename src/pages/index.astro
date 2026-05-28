@@ -86,6 +86,14 @@ const allTopics: TopicCardData[] = topics
 // 研究 · 按研究专题分组，每组带最新 3 篇
 const allArticles = await getCollection('researchArticles');
 const researchAll = await getCollection('research');
+const researchOrder: Record<string, number> = {
+  'ai-safety-boundary': 1,
+  'aix-literature': 2,
+  'aix-education-family-guide': 3,
+  'foucault-studies': 4,
+  'ai-ethics-research': 5,
+};
+const getResearchRank = (slug: string) => researchOrder[slug] ?? 99;
 
 const researchGroups: ResearchGroup[] = researchAll
   .map(r => {
@@ -122,8 +130,10 @@ const researchGroups: ResearchGroup[] = researchAll
     } satisfies ResearchGroup;
   })
   .filter(g => g.latestArticles.length > 0)
-  // 进行中优先；同状态按 started 降序
+  // 手动策展顺序优先；未指定的研究回退到进行中优先 + started 降序
   .sort((a, b) => {
+    const rankDiff = getResearchRank(a.slug) - getResearchRank(b.slug);
+    if (rankDiff !== 0) return rankDiff;
     if (a.status !== b.status) return a.status === 'ongoing' ? -1 : 1;
     return b.started.localeCompare(a.started);
   });
