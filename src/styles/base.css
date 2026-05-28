@@ -220,27 +220,29 @@ body.theme-basquiat .topic-summary.prose {
   position: relative;
   font-size: 16px;
   line-height: 1.8;
+  /* 长链接（URL / 长名词）破词换行，防溢出黑边 */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* 字号收小（h1 在 hero 已自定义；这里只管文章内的 h2/h3） */
-/* h2/h3 与 Basquiat 品牌标题统一使用卓特自由体 */
+/* h2/h3 字号 —— 比正文 16px 显著更大，建立清晰层级 */
 body.theme-basquiat .prose h2 {
-  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
-  font-size: 28px;
-  font-weight: 400;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-size: 34px;
+  font-weight: 500;
   line-height: 1.25;
-  margin: 36px 0 14px 0;
+  margin: 40px 0 16px 0;
   display: inline-block;
   background: linear-gradient(180deg, transparent 55%, #f8d12b 55%, #f8d12b 95%, transparent 95%);
   padding: 0 8px 0 4px;
   letter-spacing: 0.02em;
 }
 body.theme-basquiat .prose h3 {
-  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
-  font-size: 22px;
-  font-weight: 400;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  font-size: 26px;
+  font-weight: 500;
   line-height: 1.35;
-  margin: 28px 0 10px 0;
+  margin: 30px 0 12px 0;
   padding-bottom: 4px;
   border-bottom: 3px solid var(--ink);
   display: inline-block;
@@ -282,12 +284,14 @@ body.theme-basquiat .prose em {
   font-style: italic;
 }
 
-/* 链接 · 粗实下划线（marker 风） */
+/* 链接 · 粗实下划线（marker 风） · 防长 URL 溢出黑边 */
 body.theme-basquiat .prose a {
   border-bottom: 2.5px solid var(--ink);
   padding-bottom: 1px;
   font-weight: 600;
   text-decoration-skip-ink: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 body.theme-basquiat .prose a:hover {
   background: #f8d12b;
@@ -638,7 +642,7 @@ body.theme-basquiat .brand-sep {
   font-size: 18px;
 }
 body.theme-basquiat .brand-cn {
-  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   font-weight: 400;
   font-size: 24px;
   color: var(--bg);
@@ -648,7 +652,7 @@ body.theme-basquiat .brand-cn {
 /* nav 链接 Marker 字体 + 黑底主题适配 */
 body.theme-basquiat .site-nav { gap: 24px; }
 body.theme-basquiat .nav-link {
-  font-family: 'Taipei Sans TC Beta', 'Noto Serif SC', sans-serif;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   font-weight: 300;
   font-size: 14px;
   letter-spacing: 0.18em;
@@ -718,7 +722,7 @@ body.theme-basquiat .footer-sep {
   opacity: 0.7;
 }
 body.theme-basquiat .footer-brand-cn {
-  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   font-weight: 400;
   font-size: 16px;
   color: var(--bg);
@@ -740,7 +744,7 @@ body.theme-basquiat .footer-since {
 
 /* === Article hero · 大标题（增强） · 与中文品牌名同字体 === */
 body.theme-basquiat .article-title {
-  font-family: 'ZT ZiYouTi', 'Noto Serif SC', serif;
+  font-family: 'Taipei Sans TC Beta', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   font-weight: 400;
   font-size: clamp(30px, 5vw, 48px);
   line-height: 1.1;

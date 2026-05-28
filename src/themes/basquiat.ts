@@ -10,9 +10,9 @@ export const basquiat: ThemePack = {
   id: 'basquiat',
   name: 'Basquiat',
   tokens: {
-    bg:          '#f5d040',   // Basquiat 标志亮黄底（视觉强差异度 vs schiele 骨色）
-    bgSoft:      '#fae278',   // 亮黄软调（卡片底）
-    bgDeep:      '#e0bc28',   // 加深黄
+    bg:          '#f0dc88',   // 柔化的 Basquiat 黄——保留标志感但不刺眼（旧 #f5d040 太冲）
+    bgSoft:      '#f7e9b2',   // 卡片底 · 淡奶油黄
+    bgDeep:      '#d6c270',   // 加深黄（按钮 / accent block）
     ink:         '#0a0a0a',   // Basquiat 标志性近黑墨
     inkSoft:     '#1f1f1f',
     inkFaint:    '#5a5040',   // 黄底配的暖灰，不是冷灰
