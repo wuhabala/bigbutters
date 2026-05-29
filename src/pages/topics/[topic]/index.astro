@@ -33,12 +33,12 @@ const { Content } = await render(topic);
   ogImage={topic.data.cover?.hero_image?.src}
   heroImage={topic.data.cover?.hero_image}
 >
-  <div class="topic-summary prose">
+  <div class={`topic-summary prose ${topic.data.theme === 'basquiat' ? 'bsq-summary' : ''}`}>
     <p>{topic.data.summary}</p>
     <Content />
   </div>
 
-  <section class="issues">
+  <section class={`issues ${topic.data.theme === 'basquiat' ? 'bsq-issues' : ''}`}>
     <h2 class="issues-title">期目录</h2>
     {issues.length === 0 ? (
       <p class="issues-empty">这个专题暂时还没有发布的期。</p>
@@ -89,4 +89,36 @@ const { Content } = await render(topic);
   .i-title { display: block; font-size: 17px; font-weight: 500; margin-bottom: 4px; }
   .i-summary { display: block; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
   .i-date { font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-faint); }
+  .bsq-issues .issues-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 16px;
+    color: var(--accent);
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 6px;
+  }
+  .bsq-issues .issue-entry {
+    border-bottom: 2px dashed var(--ink);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .bsq-issues .issue-entry:hover {
+    background: var(--bg-soft);
+    transform: translateX(4px);
+  }
+  .bsq-issues .i-num {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--bg);
+    padding: 2px 8px;
+    border: 2px solid var(--ink);
+    align-self: flex-start;
+    transform: rotate(-1.5deg);
+  }
+  .bsq-issues .i-title {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .bsq-issues .i-summary {
+    color: var(--ink-soft);
+  }
 </style>

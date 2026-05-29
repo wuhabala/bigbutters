@@ -5,6 +5,8 @@ import BaseLayout from './BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
 import RomanChapter from '@components/themes/schiele/RomanChapter.astro';
+import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
+import Crown from '@components/themes/basquiat/Crown.astro';
 import EscherBackground from '@components/themes/escher/EscherBackground.astro';
 import ImpossibleSteps from '@components/themes/escher/ImpossibleSteps.astro';
 import type { ThemeId } from '@themes';
@@ -24,13 +26,21 @@ export interface Props {
 }
 const { title, issueNum, chapter, topicTitle, topicHref, date, theme, description, ogImage, heroImage } = Astro.props;
 const dateStr = date.toISOString().slice(0, 10);
+const isBasquiat = theme === 'basquiat';
 const isEscher = theme === 'escher';
 ---
 <BaseLayout {title} {description} {theme} {ogImage} ogType="article">
+  {isBasquiat && <BasquiatBackground />}
   {isEscher && <EscherBackground />}
   <Header activeNav="topics" />
-  <article class="issue-main" class:list={{ 'esch-issue-main': isEscher }}>
-    <header class="issue-hero" class:list={{ 'esch-issue-hero': isEscher }}>
+  <article class="issue-main" class:list={{ 'bsq-issue-main': isBasquiat, 'esch-issue-main': isEscher }}>
+    <header class="issue-hero" class:list={{ 'bsq-issue-hero': isBasquiat, 'esch-issue-hero': isEscher }}>
+      {isBasquiat && (
+        <div class="bsq-issue-stamp">
+          <Crown size={28} />
+          <span class="bsq-issue-num">{chapter ?? `第 ${issueNum} 期`}</span>
+        </div>
+      )}
       {isEscher && (
         <div class="esch-chapter-mark">
           <ImpossibleSteps size={66} />
@@ -40,10 +50,16 @@ const isEscher = theme === 'escher';
       <p class="issue-eyebrow"><a href={topicHref}>{topicTitle}</a> · {chapter ?? `第 ${issueNum} 期`}</p>
       {theme === 'schiele' && <RomanChapter num={issueNum} />}
       <h1 class="issue-title">{title}</h1>
+      {isBasquiat && (
+        <svg class="bsq-issue-underline" viewBox="0 0 300 10" preserveAspectRatio="none">
+          <path d="M 4 5 Q 50 2, 100 6 T 200 7 T 296 5"
+                fill="none" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      )}
       <p class="issue-date">{dateStr}</p>
     </header>
     {heroImage && (
-      <figure class="issue-cover" class:list={{ 'esch-cover': isEscher }}>
+      <figure class="issue-cover" class:list={{ 'bsq-cover': isBasquiat, 'esch-cover': isEscher }}>
         <Image
           src={heroImage}
           alt={title}
@@ -66,9 +82,13 @@ const isEscher = theme === 'escher';
     max-width: var(--content-max);
     margin: 0 auto;
     padding: 48px 32px;
+    position: relative;
+    z-index: 1;
   }
+  .bsq-issue-main { padding-top: 60px; }
   .esch-issue-main { position: relative; z-index: 1; padding-top: 52px; }
   .issue-hero { margin-bottom: 40px; }
+  .bsq-issue-hero { position: relative; }
   .esch-issue-hero {
     position: relative;
     padding: 0 0 22px 28px;
@@ -102,6 +122,24 @@ const isEscher = theme === 'escher';
     letter-spacing: 0.32em;
     margin-bottom: 18px;
   }
+  .bsq-issue-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 6px 14px 6px 8px;
+    background: #f8d12b;
+    border: 3px solid var(--ink);
+    transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .bsq-issue-num {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    line-height: 1;
+  }
   .issue-eyebrow {
     font-family: 'EB Garamond', serif;
     font-size: 11px;
@@ -117,6 +155,17 @@ const isEscher = theme === 'escher';
     margin-bottom: 16px;
     font-weight: 300;
   }
+  .bsq-issue-hero .issue-title {
+    font-weight: 400;
+    padding-left: 10px;
+    border-left: 5px solid var(--accent);
+  }
+  .bsq-issue-underline {
+    display: block;
+    width: 50%;
+    height: 10px;
+    margin: 4px 0 16px 10px;
+  }
   .issue-date {
     font-family: 'EB Garamond', serif;
     font-style: italic;
@@ -127,6 +176,11 @@ const isEscher = theme === 'escher';
   .issue-body { font-size: 17px; line-height: 1.85; }
   .issue-cover { margin: 0 0 38px; }
   .issue-cover img { width: 100%; height: auto; display: block; }
+  .bsq-cover {
+    border: 3.5px solid var(--ink);
+    box-shadow: 8px 8px 0 0 var(--ink);
+    background: var(--bg);
+  }
   .esch-cover { position: relative; border: 1px solid var(--rule); padding: 12px; background: var(--bg-soft); box-shadow: 14px 14px 0 rgba(201,188,169,0.24); }
   .esch-cover::before {
     content: '';
@@ -150,6 +204,7 @@ const isEscher = theme === 'escher';
   @media (max-width: 640px) {
     .issue-main { padding: 24px 20px; }
     .issue-body { font-size: 16px; line-height: 1.75; }
+    .bsq-cover { box-shadow: 5px 5px 0 0 var(--ink); border-width: 3px; }
     .esch-issue-hero { padding-left: 18px; }
     .esch-cover::after { display: none; }
   }

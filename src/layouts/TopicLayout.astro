@@ -3,6 +3,8 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/chrome/Header.astro';
 import Footer from '@components/chrome/Footer.astro';
+import BasquiatHero from '@components/themes/basquiat/BasquiatHero.astro';
+import BasquiatBackground from '@components/themes/basquiat/BasquiatBackground.astro';
 import EscherBackground from '@components/themes/escher/EscherBackground.astro';
 import EscherHero from '@components/themes/escher/EscherHero.astro';
 import type { ThemeId } from '@themes';
@@ -17,13 +19,23 @@ export interface Props {
   heroImage?: ImageMetadata;
 }
 const { title, subtitle, theme, description, ogImage, heroImage } = Astro.props;
+const isBasquiat = theme === 'basquiat';
 const isEscher = theme === 'escher';
 ---
 <BaseLayout {title} {description} {theme} {ogImage}>
+  {isBasquiat && <BasquiatBackground />}
   {isEscher && <EscherBackground />}
   <Header activeNav="topics" />
-  <main class="topic-main" class:list={{ 'esch-topic-main': isEscher }}>
-    {isEscher ? (
+  <main class="topic-main" class:list={{ 'bsq-topic-main': isBasquiat, 'esch-topic-main': isEscher }}>
+    {isBasquiat ? (
+      <BasquiatHero
+        eyebrow="专题"
+        title={title}
+        subtitle={subtitle}
+        stamp="TOPIC"
+        heroImage={heroImage}
+      />
+    ) : isEscher ? (
       <EscherHero {title} {subtitle} {heroImage} />
     ) : (
       <header class="topic-hero">
@@ -37,7 +49,8 @@ const isEscher = theme === 'escher';
   <Footer />
 </BaseLayout>
 <style>
-  .topic-main { max-width: 1100px; margin: 0 auto; padding: 48px 32px; }
+  .topic-main { max-width: 1100px; margin: 0 auto; padding: 48px 32px; position: relative; z-index: 1; }
+  .bsq-topic-main { padding-top: 60px; }
   .esch-topic-main { position: relative; z-index: 1; padding-top: 56px; }
   .topic-hero { margin-bottom: 48px; max-width: var(--content-max); }
   .topic-eyebrow {
