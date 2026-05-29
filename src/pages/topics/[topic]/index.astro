@@ -1,5 +1,6 @@
 ---
 import TopicLayout from '@layouts/TopicLayout.astro';
+import InvCultureTopic from '@components/topics/InvCultureTopic.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -15,6 +16,7 @@ export async function getStaticPaths() {
 
 const { topic } = Astro.props;
 const slug = topic.id.split('/')[0];
+const isInvCulture = slug === 'inv-culture';
 
 // 该专题的所有 published 期（过滤 draft）
 const allIssues = await getCollection('issues');
@@ -23,48 +25,55 @@ const issues = allIssues
   .filter(i => i.data.status === 'published')
   .sort((a, b) => a.data.issue - b.data.issue);
 
-const { Content } = await render(topic);
+let Content;
+if (!isInvCulture) {
+  ({ Content } = await render(topic));
+}
 ---
-<TopicLayout
-  title={topic.data.title}
-  subtitle={topic.data.subtitle}
-  theme={topic.data.theme}
-  description={topic.data.summary}
-  ogImage={topic.data.cover?.hero_image?.src}
-  heroImage={topic.data.cover?.hero_image}
->
-  <div class={`topic-summary prose ${topic.data.theme === 'basquiat' ? 'bsq-summary' : ''}`}>
-    <p>{topic.data.summary}</p>
-    <Content />
-  </div>
+{isInvCulture ? (
+  <InvCultureTopic topic={topic} />
+) : (
+  <TopicLayout
+    title={topic.data.title}
+    subtitle={topic.data.subtitle}
+    theme={topic.data.theme}
+    description={topic.data.summary}
+    ogImage={topic.data.cover?.hero_image?.src}
+    heroImage={topic.data.cover?.hero_image}
+  >
+    <div class={`topic-summary prose ${topic.data.theme === 'basquiat' ? 'bsq-summary' : ''}`}>
+      <p>{topic.data.summary}</p>
+      {Content && <Content />}
+    </div>
 
-  <section class={`issues ${topic.data.theme === 'basquiat' ? 'bsq-issues' : ''}`}>
-    <h2 class="issues-title">期目录</h2>
-    {issues.length === 0 ? (
-      <p class="issues-empty">这个专题暂时还没有发布的期。</p>
-    ) : (
-      <ol class="issues-list">
-        {issues.map(i => {
-          const issueSlug = i.id.split('/').slice(1).join('/').replace(/\.(md|mdx)$/, '');
-          return (
-            <li class="issue-entry">
-              <a href={`/topics/${slug}/${issueSlug}/`}>
-                  <span class="i-num">{i.data.chapter ?? String(i.data.issue).padStart(2, '0')}</span>
-                <span class="i-body">
-                  <span class="i-title">{i.data.title}</span>
-                  {i.data.summary && <span class="i-summary">{i.data.summary}</span>}
-                </span>
-                <span class="i-date">
-                  {i.data.date.toISOString().slice(0, 10)}
-                </span>
-              </a>
-            </li>
-          );
-        })}
-      </ol>
-    )}
-  </section>
-</TopicLayout>
+    <section class={`issues ${topic.data.theme === 'basquiat' ? 'bsq-issues' : ''}`}>
+      <h2 class="issues-title">期目录</h2>
+      {issues.length === 0 ? (
+        <p class="issues-empty">这个专题暂时还没有发布的期。</p>
+      ) : (
+        <ol class="issues-list">
+          {issues.map(i => {
+            const issueSlug = i.id.split('/').slice(1).join('/').replace(/\.(md|mdx)$/, '');
+            return (
+              <li class="issue-entry">
+                <a href={`/topics/${slug}/${issueSlug}/`}>
+                    <span class="i-num">{i.data.chapter ?? String(i.data.issue).padStart(2, '0')}</span>
+                  <span class="i-body">
+                    <span class="i-title">{i.data.title}</span>
+                    {i.data.summary && <span class="i-summary">{i.data.summary}</span>}
+                  </span>
+                  <span class="i-date">
+                    {i.data.date.toISOString().slice(0, 10)}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+    </section>
+  </TopicLayout>
+)}
 <style>
   .topic-summary { max-width: var(--content-max); font-size: 17px; line-height: 1.85; margin-bottom: 48px; }
   .issues-title {
