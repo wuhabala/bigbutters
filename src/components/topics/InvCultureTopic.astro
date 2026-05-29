@@ -7,6 +7,8 @@ import Crown from '@components/themes/basquiat/Crown.astro';
 import ScribbleStamp from '@components/themes/basquiat/ScribbleStamp.astro';
 import bodyMarkup from './inv-culture-body.html?raw';
 import type { ThemeId } from '@themes';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   topic: {
@@ -15,11 +17,17 @@ export interface Props {
       subtitle?: string;
       summary: string;
       theme: ThemeId;
+      cover?: {
+        hero_image?: ImageMetadata;
+        hero_image_portrait?: ImageMetadata;
+      };
     };
   };
 }
 
 const { topic } = Astro.props;
+const heroImage = topic.data.cover?.hero_image;
+const contentMarkup = bodyMarkup.replace(/<!-- HERO -->\s*<header class="hero">[\s\S]*?<\/header>\s*/, '');
 ---
 
 <BaseLayout
@@ -35,7 +43,32 @@ const { topic } = Astro.props;
       <Crown size={42} />
       <ScribbleStamp text="ZERO SUM · STATUS GAME" rotate={-2} color="red" />
     </div>
-    <Fragment set:html={bodyMarkup} />
+    <header class:list={['hero', { 'has-art': !!heroImage }]}>
+      <div class="hero-copy">
+        <div class="hero-eyebrow">哲学命题研究 · 第一辑</div>
+        <h1>内卷,<br />一个被误用的词,<br />与它真正指向的<em>处境</em></h1>
+        <p class="hero-lead">"内卷"看起来是"个人太卷"。但其实可能是个体理性叠加出的结构性陷阱——每个人都聪明,加起来却是集体灾难。</p>
+        <div class="hero-meta">
+          <span>研究 · <strong>2026.05</strong></span>
+          <span>阅读 · <strong>约 12 分钟</strong></span>
+          <span>互动 · <strong>滚动 / 点击</strong></span>
+        </div>
+      </div>
+      {heroImage && (
+        <figure class="hero-art">
+          <Image
+            src={heroImage}
+            alt={topic.data.title}
+            widths={[420, 640, 900]}
+            sizes="(max-width: 720px) 100vw, 42vw"
+            loading="eager"
+            decoding="async"
+            format="webp"
+          />
+        </figure>
+      )}
+    </header>
+    <Fragment set:html={contentMarkup} />
   </main>
 
   <Footer />
@@ -137,6 +170,36 @@ const { topic } = Astro.props;
     background: #f8d12b;
     box-shadow: 12px 12px 0 var(--ink);
     transform: rotate(-0.45deg);
+  }
+
+  .inv-bsq .hero.has-art {
+    max-width: 1080px;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    align-items: end;
+    column-gap: 30px;
+  }
+
+  .inv-bsq .hero-copy {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+
+  .inv-bsq .hero-art {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    border: 4px solid var(--ink);
+    background: var(--bg);
+    box-shadow: 8px 8px 0 var(--ink);
+    transform: rotate(1.3deg);
+    overflow: hidden;
+  }
+
+  .inv-bsq .hero-art img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .inv-bsq .hero::before {
@@ -270,8 +333,8 @@ const { topic } = Astro.props;
 
   .inv-bsq .sect-num {
     color: var(--accent);
-    font-size: 13px;
-    margin-bottom: 14px;
+    font-size: 16px;
+    margin-bottom: 18px;
   }
 
   .inv-bsq .sect-title {
@@ -457,6 +520,15 @@ const { topic } = Astro.props;
   .inv-bsq .cond.active .cond-desc,
   .inv-bsq .cond.active .cond-num {
     color: var(--bg);
+  }
+
+  .inv-bsq .checker .cond:not(.active) .cond-name,
+  .inv-bsq .checker .cond:not(.active) .cond-desc {
+    color: var(--ink);
+  }
+
+  .inv-bsq .checker .cond:not(.active) .cond-num {
+    color: var(--accent);
   }
 
   .inv-bsq .cond-box {
@@ -670,6 +742,15 @@ const { topic } = Astro.props;
       margin: 0 20px 34px;
       padding: 58px 22px 34px;
       box-shadow: 7px 7px 0 var(--ink);
+    }
+
+    .inv-bsq .hero.has-art {
+      grid-template-columns: 1fr;
+    }
+
+    .inv-bsq .hero-art {
+      box-shadow: 5px 5px 0 var(--ink);
+      transform: rotate(0.8deg);
     }
 
     .inv-bsq .hero::before {

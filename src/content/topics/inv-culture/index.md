@@ -5,6 +5,9 @@ theme: basquiat
 status: completed
 type: single
 summary: 内卷不是"卷"——是一场没有人能赢的赌博。从教育、职场、社交，重新审视"努力"这个词的当代含义。
+cover:
+  hero_image: ./images/hero.png
+  hero_image_portrait: ./images/hero-portrait.png
 started: 2026-01
 ---
 
