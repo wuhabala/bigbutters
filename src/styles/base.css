@@ -210,6 +210,7 @@ strong { font-weight: 600; }
 
 /* 正文容器 · 白底厚黑边偏移阴影（贴纸效果），blocks 装饰干扰 */
 body.theme-basquiat .article-body.prose,
+body.theme-basquiat .issue-body.prose,
 body.theme-basquiat .research-summary.prose,
 body.theme-basquiat .topic-summary.prose {
   background: #fffdf5;                  /* 微黄白底（不是纯白，更暖） */
@@ -456,6 +457,7 @@ body.reading-mode .article-cover { display: none; }
 
 /* 正文 prose · GitHub markdown 视感 */
 body.reading-mode .article-body.prose,
+body.reading-mode .issue-body.prose,
 body.reading-mode .research-summary.prose,
 body.reading-mode .topic-summary.prose {
   background: #ffffff !important;
@@ -565,6 +567,7 @@ body.reading-mode .prose .layer-box { box-shadow: none !important; }
   body.reading-mode .article-hero *,
   body.reading-mode .article-title { color: #e6edf3 !important; border-color: #30363d !important; }
   body.reading-mode .article-body.prose,
+  body.reading-mode .issue-body.prose,
   body.reading-mode .research-summary.prose,
   body.reading-mode .topic-summary.prose { background: #0d1117 !important; color: #e6edf3 !important; }
   body.reading-mode .prose h1,
@@ -588,6 +591,7 @@ body.reading-mode .prose .layer-box { box-shadow: none !important; }
 /* 移动端 · 卡片边距收紧、字号再降一档 */
 @media (max-width: 640px) {
   body.theme-basquiat .article-body.prose,
+  body.theme-basquiat .issue-body.prose,
   body.theme-basquiat .research-summary.prose,
   body.theme-basquiat .topic-summary.prose {
     padding: 22px 20px 18px 20px;
@@ -842,6 +846,8 @@ body.theme-escher .site-footer-inner {
 body.theme-escher .footer-brand-cn { color: var(--ochre); }
 
 body.theme-escher .topic-summary.prose,
+body.theme-escher .research-summary.prose,
+body.theme-escher .article-body.prose,
 body.theme-escher .issue-body.prose {
   background: rgba(251, 247, 238, 0.88);
   border: 1px solid var(--rule);
@@ -850,6 +856,8 @@ body.theme-escher .issue-body.prose {
   position: relative;
 }
 body.theme-escher .topic-summary.prose::before,
+body.theme-escher .research-summary.prose::before,
+body.theme-escher .article-body.prose::before,
 body.theme-escher .issue-body.prose::before {
   content: '';
   position: absolute;
@@ -987,6 +995,8 @@ body.theme-escher .i-date {
 
 @media (max-width: 640px) {
   body.theme-escher .topic-summary.prose,
+  body.theme-escher .research-summary.prose,
+  body.theme-escher .article-body.prose,
   body.theme-escher .issue-body.prose {
     padding: 22px 18px;
     box-shadow: 8px 8px 0 rgba(201, 188, 169, 0.18);
