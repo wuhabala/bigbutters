@@ -3,6 +3,7 @@ import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import rehypeObsidianCallouts from './src/markdown/rehypeObsidianCallouts.mjs';
 
 export default defineConfig({
   site: 'https://bigbutters.top',
@@ -13,7 +14,7 @@ export default defineConfig({
   output: 'static',
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [[rehypeKatex, { strict: 'ignore' }]],
+    rehypePlugins: [rehypeObsidianCallouts, [rehypeKatex, { strict: 'ignore' }]],
   },
   build: {
     format: 'directory',
