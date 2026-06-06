@@ -197,6 +197,14 @@ strong { font-weight: 600; }
   padding-bottom: 1px;
 }
 .prose a:hover { color: var(--accent); }
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 0;
+}
+.prose .katex-display > .katex {
+  white-space: nowrap;
+}
 
 /* ============ responsive ============ */
 @media (max-width: 640px) {
