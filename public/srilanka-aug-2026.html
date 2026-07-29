@@ -1,0 +1,536 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>斯里兰卡 8.6–8.20 · 行程图解</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9EAE2;
+  --paper-2:#F3F4EE;
+  --ink:#1E2420;
+  --ink-2:#5B635C;
+  --ink-3:#8D948B;
+  --rule:#C8CBC0;
+  --dry:#B5762A;
+  --wet:#2C5C63;
+  --tea:#5A6B4A;
+  --laterite:#9C4A2F;
+  --display:"Instrument Serif",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --cjk:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--cjk);font-size:15px;line-height:1.8;
+  padding:0 20px 100px;
+}
+.wrap{max-width:920px;margin:0 auto}
+a{color:var(--laterite)}
+:focus-visible{outline:2px solid var(--laterite);outline-offset:3px}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- hero ---------- */
+header{padding:72px 0 40px;border-bottom:1px solid var(--rule)}
+h1{
+  font-family:var(--display);font-weight:400;
+  font-size:clamp(58px,13vw,132px);line-height:.92;
+  margin:14px 0 0;letter-spacing:-.01em;
+}
+h1 .dash{color:var(--dry)}
+.sub{margin-top:22px;max-width:46em;color:var(--ink-2);font-size:16px}
+.sub strong{color:var(--ink);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:0 34px;margin-top:28px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.meta b{display:block;color:var(--ink-3);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+/* ---------- sections ---------- */
+section{padding:56px 0;border-bottom:1px solid var(--rule)}
+h2{font-family:var(--display);font-weight:400;font-size:34px;line-height:1.15;margin:8px 0 6px}
+.lede{color:var(--ink-2);max-width:44em;margin:0 0 30px}
+
+/* ---------- map ---------- */
+.mapgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:start}
+.mapbox{background:var(--paper-2);border:1px solid var(--rule);padding:8px}
+svg.map{display:block;width:100%;height:auto}
+.zone-dry{fill:var(--dry);opacity:.17}
+.zone-wet{fill:var(--wet);opacity:.2}
+.coast{fill:var(--paper-2);stroke:#9AA096;stroke-width:.7}
+.divider{stroke:var(--ink-3);stroke-width:.6;stroke-dasharray:4 4}
+.leg1{stroke:var(--dry);stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.leg2{stroke:var(--tea);stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 4}
+.stop circle{stroke:var(--paper-2);stroke-width:2;transition:r .18s ease}
+.stop.s1 circle{fill:var(--dry)}
+.stop.s2 circle{fill:var(--tea)}
+.stop text{font-family:var(--cjk);font-size:11.5px;fill:var(--ink);paint-order:stroke;stroke:var(--paper-2);stroke-width:3.5px;stroke-linejoin:round}
+.minor{fill:var(--ink-3)}
+.minor-t{font-family:var(--cjk);font-size:9.5px;fill:var(--ink-3);paint-order:stroke;stroke:var(--paper-2);stroke-width:3px}
+.stop.hot circle{r:9}
+.stop.hot text{font-weight:700}
+.zlabel{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase}
+
+.keynote{border-left:2px solid var(--rule);padding-left:20px;margin-bottom:26px}
+.keynote:last-child{margin-bottom:0}
+.keynote h3{margin:0 0 6px;font-size:15px;font-weight:600}
+.keynote p{margin:0;color:var(--ink-2);font-size:14.5px}
+.keynote.k-dry{border-color:var(--dry)}
+.keynote.k-wet{border-color:var(--wet)}
+.keynote.k-red{border-color:var(--laterite)}
+
+/* ---------- elevation ---------- */
+.elev{background:var(--paper-2);border:1px solid var(--rule);padding:20px 8px 8px;margin-top:8px}
+.elev svg{display:block;width:100%;height:auto}
+.elev-area{fill:var(--dry);opacity:.16}
+.elev-line{fill:none;stroke:var(--dry);stroke-width:1.8;stroke-linejoin:round}
+.elev-line2{fill:none;stroke:var(--tea);stroke-width:1.8;stroke-linejoin:round}
+.elev-area2{fill:var(--tea);opacity:.16}
+.elev-grid{stroke:var(--rule);stroke-width:.6}
+.elev-t{font-family:var(--mono);font-size:7.5px;fill:var(--ink-3)}
+.elev-n{font-family:var(--cjk);font-size:8.5px;fill:var(--ink-2)}
+
+/* ---------- days ---------- */
+.segbar{display:flex;align-items:baseline;gap:16px;margin:44px 0 4px;flex-wrap:wrap}
+.segbar .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px;color:var(--paper-2)}
+.segbar .tag.t1{background:var(--dry)}
+.segbar .tag.t2{background:var(--tea)}
+.segbar h3{font-family:var(--display);font-weight:400;font-size:27px;margin:0}
+.segbar .note{font-size:13px;color:var(--ink-2)}
+
+.day{
+  display:grid;grid-template-columns:78px 1fr 128px;gap:22px;
+  padding:18px 10px 18px 0;border-top:1px solid var(--rule);
+  transition:background .15s ease;cursor:default;
+}
+.day:hover,.day:focus-within{background:var(--paper-2)}
+.day .date{font-family:var(--display);font-size:31px;line-height:1;color:var(--ink)}
+.day .dow{font-family:var(--mono);font-size:10px;color:var(--ink-3);display:block;margin-top:5px;letter-spacing:.1em}
+.day .what{min-width:0}
+.day .what b{display:block;font-weight:600;font-size:15.5px;margin-bottom:3px}
+.day .what p{margin:0;color:var(--ink-2);font-size:14px}
+.day .stay{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:right;line-height:1.9}
+.day .stay .drive{color:var(--ink-3)}
+.day .stay .bed{color:var(--ink);display:block}
+.day.rest{background:linear-gradient(90deg,rgba(44,92,99,.07),transparent 60%)}
+.day.star .what b::after{content:"★";color:var(--laterite);margin-left:8px;font-size:13px}
+.day .what .why{display:block;margin-top:7px;font-size:12.5px;color:var(--ink-3);border-left:2px solid var(--rule);padding-left:10px}
+
+/* ---------- stay table ---------- */
+.stays{width:100%;border-collapse:collapse;font-size:13.5px}
+.stays th{
+  font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:400;text-align:left;padding:0 12px 10px 0;border-bottom:1px solid var(--rule);vertical-align:bottom
+}
+.stays td{padding:14px 12px 14px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.stays .place{font-weight:600;white-space:nowrap}
+.stays .place em{display:block;font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);font-weight:400;margin-top:3px}
+.stays .opt{color:var(--ink-2)}
+.stays .opt .price{font-family:var(--mono);font-size:11px;color:var(--ink-3);display:block;margin-top:3px}
+.stays .call{font-size:12.5px;color:var(--ink-2)}
+.stays tr.pri td{background:rgba(156,74,47,.07)}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 6px;border:1px solid var(--dry);color:var(--dry);white-space:nowrap}
+.pill.v{border-color:var(--wet);color:var(--wet)}
+
+/* ---------- budget + todo ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.money{width:100%;border-collapse:collapse;font-size:13.5px}
+.money td{padding:9px 0;border-bottom:1px solid var(--rule)}
+.money td:last-child{text-align:right;font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.money tr.tot td{border-bottom:none;border-top:2px solid var(--ink);font-weight:600;padding-top:12px}
+.money tr.tot td:last-child{font-size:15px;color:var(--laterite)}
+.money .sub td{color:var(--ink-3);font-size:12px;border-bottom:none;padding:2px 0 8px}
+
+ol.todo{list-style:none;counter-reset:t;margin:0;padding:0}
+ol.todo li{counter-increment:t;padding:14px 0 14px 46px;border-bottom:1px solid var(--rule);position:relative;font-size:14px}
+ol.todo li::before{
+  content:counter(t,decimal-leading-zero);position:absolute;left:0;top:15px;
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.05em
+}
+ol.todo li b{display:block;font-weight:600}
+ol.todo li span{color:var(--ink-2);font-size:13px}
+ol.todo li.now::before{color:var(--laterite)}
+ol.todo li.now b::after{content:"最急";font-family:var(--mono);font-size:9px;letter-spacing:.1em;background:var(--laterite);color:var(--paper-2);padding:2px 6px;margin-left:9px;vertical-align:2px}
+
+.cut{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
+.cut div{padding:16px 0;border-bottom:1px solid var(--rule)}
+.cut b{display:block;font-weight:600;font-size:14.5px}
+.cut p{margin:4px 0 0;color:var(--ink-2);font-size:13.5px}
+.cut s{color:var(--ink-3);text-decoration-color:var(--laterite)}
+
+footer{padding:40px 0;font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:2}
+
+@media (max-width:860px){
+  .mapgrid,.cols,.cut{grid-template-columns:1fr;gap:32px}
+  .day{grid-template-columns:60px 1fr;gap:16px}
+  .day .stay{grid-column:2;text-align:left;margin-top:8px}
+  .day .date{font-size:26px}
+  h2{font-size:28px}
+  .stays th:nth-child(4),.stays td:nth-child(4){display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Sri Lanka · 2026 年 8 月 · 包车自由行</div>
+  <h1>8.6<span class="dash">—</span>8.20</h1>
+  <p class="sub">一趟行程，两种性质。<strong>前九晚是两个人的度假</strong>：古迹、海、山、safari 各占一块，中间留了两段完全不安排的空白。<strong>后五晚是你一个人的加时</strong>，正好接上康提佛牙节的开幕两夜——这是全岛一年里最盛大的两个晚上。</p>
+  <div class="meta">
+    <span><b>人数</b>2 人 → 1 人</span>
+    <span><b>晚数</b>9 + 5</span>
+    <span><b>交通</b>全程包车</span>
+    <span><b>住宿</b>体验位 3 晚 · 实惠位 11 晚</span>
+    <span><b>季风</b>西南季风期（走东北侧）</span>
+  </div>
+</header>
+
+<section id="map">
+  <div class="eyebrow">01 — 为什么是这条线</div>
+  <h2>八月的斯里兰卡是被切成两半的</h2>
+  <p class="lede">五到九月是西南季风。加勒、美蕊莎那条网红南岸线正好在雨里；东北侧反而是全年最干、水最清的时候。所以这趟是"反向走"——把时间压在图上的黄色一侧。</p>
+
+  <div class="mapgrid">
+    <div class="mapbox">
+      <svg class="map" viewBox="130 40 390 462" role="img" aria-label="斯里兰卡地图，标注两段路线与季风分区">
+        <defs>
+          <clipPath id="isl">
+            <path d="M257,117 L215,80 L197,58 L157,66 L166,110 L162,147 L150,200 L155,247 L156,333 L157,362 L170,410 L195,457 L234,468 L290,447 L330,431 L367,372 L351,279 L360,240 L302,190 L310,160 Z"/>
+          </clipPath>
+        </defs>
+
+        <path class="coast" d="M257,117 L215,80 L197,58 L157,66 L166,110 L162,147 L150,200 L155,247 L156,333 L157,362 L170,410 L195,457 L234,468 L290,447 L330,431 L367,372 L351,279 L360,240 L302,190 L310,160 Z"/>
+        <g clip-path="url(#isl)">
+          <rect class="zone-dry" x="120" y="40" width="280" height="470"/>
+          <polygon class="zone-wet" points="140,240 380,470 380,520 60,520 60,240"/>
+        </g>
+        <line class="divider" x1="140" y1="240" x2="380" y2="470"/>
+
+        <text class="zlabel" x="300" y="128" fill="#B5762A">干季 · 八月首选</text>
+        <text class="zlabel" x="163" y="425" fill="#2C5C63">西南季风 · 多雨</text>
+
+        <path class="leg1" d="M156,333 L252,254 L302,190 L239,325 L283,369 L266,411 L156,333"/>
+        <path class="leg2" d="M156,333 L215,218 L239,325 L156,333"/>
+
+        <circle class="minor" cx="277" cy="256" r="2.6"/><text class="minor-t" x="284" y="252">波隆纳鲁沃</text>
+        <circle class="minor" cx="253" cy="358" r="2.6"/><text class="minor-t" x="196" y="352" text-anchor="end">Nanu Oya</text>
+        <circle class="minor" cx="157" cy="362" r="2.6"/><text class="minor-t" x="150" y="374" text-anchor="end">科伦坡</text>
+
+        <g class="stop s1" data-stop="negombo"><circle cx="156" cy="333" r="6"/><text x="148" y="330" text-anchor="end">尼甘布 · 机场</text></g>
+        <g class="stop s1" data-stop="sigiriya"><circle cx="252" cy="254" r="6"/><text x="380" y="230">锡吉里耶 · 丹布勒</text><line class="divider" x1="260" y1="252" x2="374" y2="226"/></g>
+        <g class="stop s1" data-stop="trinco"><circle cx="302" cy="190" r="6"/><text x="380" y="176">亭可马里</text><line class="divider" x1="310" y1="188" x2="374" y2="172"/></g>
+        <g class="stop s1" data-stop="kandy"><circle cx="239" cy="325" r="6"/><text x="380" y="316">康提</text><line class="divider" x1="247" y1="323" x2="374" y2="312"/></g>
+        <g class="stop s1" data-stop="ella"><circle cx="283" cy="369" r="6"/><text x="380" y="392">埃拉</text><line class="divider" x1="291" y1="371" x2="374" y2="388"/></g>
+        <g class="stop s1" data-stop="udawalawe"><circle cx="266" cy="411" r="6"/><text x="380" y="441">乌达瓦拉维</text><line class="divider" x1="274" y1="413" x2="374" y2="437"/></g>
+        <g class="stop s2" data-stop="anuradhapura"><circle cx="215" cy="218" r="6"/><text x="206" y="214" text-anchor="end">阿努拉德普勒</text></g>
+      </svg>
+    </div>
+
+    <div>
+      <div class="keynote k-dry">
+        <h3>东北侧是干的，南岸是湿的</h3>
+        <p>亭可马里八月是全岛水最清的地方，游客还比南岸少。美蕊莎的观鲸季十一月才开始，八月去等于花钱看浑水。</p>
+      </div>
+      <div class="keynote k-wet">
+        <h3>山区火车只通一半</h3>
+        <p>2025 年 11 月 Ditwah 气旋冲毁了山区铁路。Nanu Oya→埃拉这段已于 2026 年 6 月 20 日恢复，康提那一端仍在抢修。所以康提到努沃勒埃利耶走公路，只坐最出片的那一段。</p>
+      </div>
+      <div class="keynote k-red">
+        <h3>8.18 起是佩拉哈拉</h3>
+        <p>库姆巴尔佩拉哈拉 8 月 18–22 日，兰多利 23–27 日，8 月 28 日割水仪式收尾。你 8.20 走，正好赶上开幕的两夜。代价是康提那几天房价翻倍且早满。</p>
+      </div>
+      <div class="keynote">
+        <h3>海拔决定了车程</h3>
+        <p>下面那条曲线解释了 8.12 和 8.13 为什么开得久——不是路远，是在爬山。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="elev">
+    <svg viewBox="0 0 900 168" role="img" aria-label="行程海拔剖面，从海平面爬升到努沃勒埃利耶约 1900 米再下降">
+      <line class="elev-grid" x1="44" y1="24" x2="890" y2="24"/>
+      <line class="elev-grid" x1="44" y1="66" x2="890" y2="66"/>
+      <line class="elev-grid" x1="44" y1="108" x2="890" y2="108"/>
+      <line class="elev-grid" x1="44" y1="130" x2="890" y2="130"/>
+      <text class="elev-t" x="40" y="27" text-anchor="end">2000m</text>
+      <text class="elev-t" x="40" y="69" text-anchor="end">1300m</text>
+      <text class="elev-t" x="40" y="111" text-anchor="end">600m</text>
+      <text class="elev-t" x="40" y="133" text-anchor="end">0</text>
+
+      <path class="elev-area" d="M60,130 L110,124 L160,124 L210,130 L260,130 L310,130 L360,97 L410,30 L440,96 L490,127 L490,130 Z"/>
+      <path class="elev-line" d="M60,130 L110,124 L160,124 L210,130 L260,130 L310,130 L360,97 L410,30 L440,96 L490,127"/>
+      <path class="elev-area2" d="M490,127 L560,127 L630,127 L700,97 L770,97 L840,130 L840,130 L490,130 Z"/>
+      <path class="elev-line2" d="M490,127 L560,127 L630,127 L700,97 L770,97 L840,130"/>
+
+      <circle cx="410" cy="30" r="3" fill="#B5762A"/>
+      <text class="elev-n" x="410" y="22" text-anchor="middle">努沃勒埃利耶 1900m</text>
+      <text class="elev-n" x="440" y="112" text-anchor="middle">埃拉</text>
+
+      <text class="elev-n" x="60" y="146" text-anchor="middle">8.6</text>
+      <text class="elev-n" x="135" y="146" text-anchor="middle">8.7–8.8</text>
+      <text class="elev-n" x="260" y="146" text-anchor="middle">8.9–8.11</text>
+      <text class="elev-n" x="360" y="146" text-anchor="middle">8.12</text>
+      <text class="elev-n" x="425" y="146" text-anchor="middle">8.13</text>
+      <text class="elev-n" x="490" y="146" text-anchor="middle">8.14</text>
+      <text class="elev-n" x="595" y="146" text-anchor="middle">8.15–8.16</text>
+      <text class="elev-n" x="735" y="146" text-anchor="middle">8.17–8.19</text>
+      <text class="elev-n" x="840" y="146" text-anchor="middle">8.20</text>
+      <text class="elev-t" x="60" y="160">尼甘布</text>
+      <text class="elev-t" x="235" y="160">亭可马里</text>
+      <text class="elev-t" x="340" y="160">康提</text>
+      <text class="elev-t" x="470" y="160">乌达瓦拉维</text>
+      <text class="elev-t" x="560" y="160">阿努拉德普勒</text>
+      <text class="elev-t" x="710" y="160">康提 · 佩拉哈拉</text>
+    </svg>
+  </div>
+</section>
+
+<section id="days">
+  <div class="eyebrow">02 — 逐日</div>
+  <h2>十五天，两段</h2>
+  <p class="lede">带底色的是刻意留白的休息日。鼠标划过任意一天，地图上对应的站点会亮起。</p>
+
+  <div class="segbar">
+    <span class="tag t1">Leg 01</span>
+    <h3>两人同行 · 9 晚</h3>
+    <span class="note">8.6 抵达 → 8.15 送机</span>
+  </div>
+
+  <div class="day" data-stop="negombo" tabindex="0">
+    <div class="date">8.6<span class="dow">THU</span></div>
+    <div class="what"><b>落地，不赶路</b><p>机场开过去二十分钟就到。当晚什么都别安排。</p></div>
+    <div class="stay"><span class="bed">尼甘布</span><span class="drive">车程 20 min</span></div>
+  </div>
+
+  <div class="day" data-stop="sigiriya" tabindex="0">
+    <div class="date">8.7<span class="dow">FRI</span></div>
+    <div class="what"><b>丹布勒石窟寺 + 黄昏 safari</b><p>下午看石窟壁画，傍晚进 Minneriya 找象群。<span class="why">八月是旱季象群向水库聚集的高峰，几百头野象同框——这是全程"野生动物"的主菜，比后面碰运气靠谱得多。</span></p></div>
+    <div class="stay"><span class="bed">锡吉里耶</span><span class="drive">车程 4 h</span></div>
+  </div>
+
+  <div class="day rest" data-stop="sigiriya" tabindex="0">
+    <div class="date">8.8<span class="dow">SAT</span></div>
+    <div class="what"><b>Pidurangala 日出 → 狮子岩 → 泡泳池</b><p>天没亮先爬狮子岩对面那座小山，能把整块岩石收进画面里。下来吃完早饭再上狮子岩本体。<span class="why">下午彻底不安排。这是第一个缓冲日。</span></p></div>
+    <div class="stay"><span class="bed">锡吉里耶</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day" data-stop="trinco" tabindex="0">
+    <div class="date">8.9<span class="dow">SUN</span></div>
+    <div class="what"><b>波隆纳鲁沃骑行 → 东海岸</b><p>上午租自行车逛古都遗址群，两小时刚好。下午开去亭可马里。</p></div>
+    <div class="stay"><span class="bed">亭可马里</span><span class="drive">车程共 4 h</span></div>
+  </div>
+
+  <div class="day rest" data-stop="trinco" tabindex="0">
+    <div class="date">8.10<span class="dow">MON</span></div>
+    <div class="what"><b>Pigeon Island 浮潜</b><p>船程十分钟，珊瑚礁和黑鳍礁鲨。上午去，人少。</p></div>
+    <div class="stay"><span class="bed">亭可马里</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day rest" data-stop="trinco" tabindex="0">
+    <div class="date">8.11<span class="dow">TUE</span></div>
+    <div class="what"><b>空白</b><p>不排任何东西。Nilaveli 的沙滩，或者一整天待在酒店。<span class="why">这是第二个也是最长的躺平段。三晚同一张床，行李都不用动。</span></p></div>
+    <div class="stay"><span class="bed">亭可马里</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day" data-stop="kandy" tabindex="0">
+    <div class="date">8.12<span class="dow">WED</span></div>
+    <div class="what"><b>长途转场 → 佛牙寺晚课</b><p>今天主要在路上。傍晚赶佛牙寺的 Thewawa 晚课，是一天里最有气氛的时刻。</p></div>
+    <div class="stay"><span class="bed">康提</span><span class="drive">车程 5 h</span></div>
+  </div>
+
+  <div class="day" data-stop="ella" tabindex="0">
+    <div class="date">8.13<span class="dow">THU</span></div>
+    <div class="what"><b>翻山 → 坐那一段火车</b><p>上午翻越山区，路上停一家茶厂。到 Nanu Oya 让司机把行李带走，你们两个空手坐火车去埃拉。<span class="why">这是山区线目前唯一通车、也是最出片的一段。挂在车门口拍的照片全出自这里。</span></p></div>
+    <div class="stay"><span class="bed">埃拉</span><span class="drive">车程 4 h + 火车</span></div>
+  </div>
+
+  <div class="day" data-stop="udawalawe" tabindex="0">
+    <div class="date">8.14<span class="dow">FRI</span></div>
+    <div class="what"><b>小亚当峰日出 → 九拱桥 → 下午 safari</b><p>清晨爬山看日出，回来吃早饭，九拱桥和 Ravana 瀑布。中午出发，赶下午两点半那场 Udawalawe。</p></div>
+    <div class="stay"><span class="bed">乌达瓦拉维</span><span class="drive">车程 2 h</span></div>
+  </div>
+
+  <div class="day" data-stop="negombo" tabindex="0">
+    <div class="date">8.15<span class="dow">SAT</span></div>
+    <div class="what"><b>南部高速 → 送机</b><p>早上七点出发，中午到机场。<span class="why">⚠️ 如果土司订的是早班或凌晨机，8.14 晚就必须住到机场附近，那 Udawalawe 得往前挪或砍掉。订机票时先确认这一项，它会反过来改前面两天。</span></p></div>
+    <div class="stay"><span class="bed">— 送机 —</span><span class="drive">车程 4.5 h</span></div>
+  </div>
+
+  <div class="segbar">
+    <span class="tag t2">Leg 02</span>
+    <h3>你一个人 · 5 晚</h3>
+    <span class="note">8.15 送完机北上 → 8.20 回国</span>
+  </div>
+
+  <div class="day" data-stop="anuradhapura" tabindex="0">
+    <div class="date">8.15<span class="dow">SAT</span></div>
+    <div class="what"><b>直接北上圣城</b><p>从机场往北开，下午到。八月是这里的干季，游客比康提少一个量级。</p></div>
+    <div class="stay"><span class="bed">阿努拉德普勒</span><span class="drive">车程 3.5 h</span></div>
+  </div>
+
+  <div class="day" data-stop="anuradhapura" tabindex="0">
+    <div class="date">8.16<span class="dow">SUN</span></div>
+    <div class="what"><b>圣菩提树 · 大塔群 · Mihintale 日落</b><p>圣菩提树据传是佛陀成道那棵树的分枝，两千多年。傍晚爬 Mihintale 的石阶看日落。<span class="why">那是佛教传入斯里兰卡的起点。这一站补完了前九天没讲透的那条线。</span></p></div>
+    <div class="stay"><span class="bed">阿努拉德普勒</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day" data-stop="kandy" tabindex="0">
+    <div class="date">8.17<span class="dow">MON</span></div>
+    <div class="what"><b>南下康提，看一场康提舞</b><p>下午到。佛牙寺、康提湖，晚上鼓和火的传统表演。<span class="why">这场基本上是明晚佩拉哈拉的预习。</span></p></div>
+    <div class="stay"><span class="bed">康提</span><span class="drive">车程 3.5 h</span></div>
+  </div>
+
+  <div class="day star" data-stop="kandy" tabindex="0">
+    <div class="date">8.18<span class="dow">TUE</span></div>
+    <div class="what"><b>库姆巴尔佩拉哈拉 · 首夜</b><p>白天去佩拉德尼亚皇家植物园，或者干脆补觉。晚上是重点：装饰大象、鼓手、舞者、火把手夜巡全城。</p></div>
+    <div class="stay"><span class="bed">康提</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day star" data-stop="kandy" tabindex="0">
+    <div class="date">8.19<span class="dow">WED</span></div>
+    <div class="what"><b>佩拉哈拉 · 第二夜</b><p>一夜比一夜盛大。白天休息，晚上再看一场。</p></div>
+    <div class="stay"><span class="bed">康提</span><span class="drive">不转场</span></div>
+  </div>
+
+  <div class="day" data-stop="negombo" tabindex="0">
+    <div class="date">8.20<span class="dow">THU</span></div>
+    <div class="what"><b>返机场，回国</b><p>看当天航班时间倒推出发。</p></div>
+    <div class="stay"><span class="bed">— 回程 —</span><span class="drive">车程 3.5 h</span></div>
+  </div>
+</section>
+
+<section id="stays">
+  <div class="eyebrow">03 — 住宿配置</div>
+  <h2>三晚砸钱，十一晚实惠</h2>
+  <p class="lede">钱花在真正待得住的地方：泳池对着狮子岩、海边、以及佩拉哈拉那两晚的位置。只是路过、只是睡觉的站点一律民宿。价格是八月旺季的参考区间，实际浮动大。</p>
+
+  <table class="stays">
+    <thead><tr><th>站点</th><th>体验位</th><th>实惠位</th><th>怎么选</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="place">尼甘布<em>1 晚</em></td>
+        <td class="opt">—</td>
+        <td class="opt">Ubuntu Beach Villas、Villa Talia 一类海边小旅馆<span class="price">US$35–60</span></td>
+        <td class="call">过渡夜，钱别花在这</td>
+      </tr>
+      <tr class="pri">
+        <td class="place">锡吉里耶<em>2 晚</em></td>
+        <td class="opt">Water Garden Sigiriya、Jetwing Vil Uyana<span class="price">US$250–400</span></td>
+        <td class="opt">Aliya Resort &amp; Spa — 无边泳池正对狮子岩<span class="price">US$130–200</span></td>
+        <td class="call"><span class="pill">砸 1 晚</span> 直接 Aliya。它的泳池景观就是那张著名照片，不必上到 Water Garden 的价位。</td>
+      </tr>
+      <tr class="pri">
+        <td class="place">亭可马里<em>3 晚</em></td>
+        <td class="opt">Jungle Beach by Uga、Trinco Blu by Cinnamon<span class="price">US$130–350</span></td>
+        <td class="opt">Nilaveli / Uppuveli 一带 guesthouse<span class="price">US$30–55</span></td>
+        <td class="call"><span class="pill">砸 2 晚</span> 这是全程唯一真正躺着的地方，值得住好。第三晚可以换便宜的。</td>
+      </tr>
+      <tr>
+        <td class="place">康提<em>8.12 · 1 晚</em></td>
+        <td class="opt">Earl's Regent、Amaya Hills<span class="price">US$90–150</span></td>
+        <td class="opt">城区 homestay<span class="price">US$30–50</span></td>
+        <td class="call"><span class="pill v">实惠</span> 只睡一晚，第二天一早就走</td>
+      </tr>
+      <tr>
+        <td class="place">埃拉<em>1 晚</em></td>
+        <td class="opt">98 Acres Resort — 建在茶园斜坡上<span class="price">US$150–220</span></td>
+        <td class="opt">镇上 guesthouse，很多自带山谷景<span class="price">US$25–45</span></td>
+        <td class="call">二选一都成立。埃拉的便宜房景观往往不输</td>
+      </tr>
+      <tr>
+        <td class="place">乌达瓦拉维<em>1 晚</em></td>
+        <td class="opt">Kalu's Hideaway、Grand Udawalawe<span class="price">US$70–120</span></td>
+        <td class="opt">园区外家庭旅馆<span class="price">US$30–45</span></td>
+        <td class="call"><span class="pill v">实惠</span> 白天都在车上和园里</td>
+      </tr>
+      <tr>
+        <td class="place">阿努拉德普勒<em>2 晚</em></td>
+        <td class="opt">Ulagalla by Uga — 庄园别墅<span class="price">US$300–450</span></td>
+        <td class="opt">Sanctuary at Tissawewa — 殖民时期老宅，就在圣城保护区里<span class="price">US$60–90</span></td>
+        <td class="call">选 Tissawewa。位置无可替代，走出门就是遗址</td>
+      </tr>
+      <tr class="pri">
+        <td class="place">康提<em>8.18–19 · 2 晚</em></td>
+        <td class="opt">Queen's Hotel — 阳台正对游行路线<span class="price">节庆期翻倍</span></td>
+        <td class="opt">节庆期没有真正便宜的选项</td>
+        <td class="call"><span class="pill">位置 &gt; 星级</span> 这两晚买的不是房间是视角。Dalada Veediya 和 Yatinuwara Veediya 沿街的阳台是黄金位。<b>这是全表最急的一项。</b></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="money">
+  <div class="eyebrow">04 — 数字与待办</div>
+  <div class="cols">
+    <div>
+      <h2 style="font-size:26px">预算估算</h2>
+      <p class="lede" style="font-size:13.5px;margin-bottom:20px">美元，不含国际机票。按上面的混合住宿配置算。</p>
+      <table class="money">
+        <tr><td colspan="2" style="font-weight:600;border-bottom:none;padding-bottom:2px">Leg 01 · 每人（两人分摊）</td></tr>
+        <tr><td>住宿 9 晚（混合配置，双人分摊）</td><td>≈ 500</td></tr>
+        <tr><td>包车 10 天（$60/天 ÷ 2）</td><td>≈ 300</td></tr>
+        <tr><td>门票与 safari</td><td>≈ 220</td></tr>
+        <tr><td>餐饮</td><td>≈ 300</td></tr>
+        <tr><td>火车与杂项</td><td>≈ 50</td></tr>
+        <tr class="tot"><td>小计 / 人</td><td>≈ 1,370</td></tr>
+        <tr class="sub"><td colspan="2">门票是大头：狮子岩约 $35，波隆纳鲁沃约 $30，safari 每场 $40–60，外国人价与本地价差十倍以上。</td></tr>
+
+        <tr><td colspan="2" style="font-weight:600;border-bottom:none;padding:16px 0 2px">Leg 02 · 你一个人</td></tr>
+        <tr><td>住宿 5 晚（单人全付，含节庆溢价）</td><td>≈ 650</td></tr>
+        <tr><td>包车 5 天</td><td>≈ 300</td></tr>
+        <tr><td>佩拉哈拉看台 ×2 晚</td><td>≈ 80</td></tr>
+        <tr><td>门票与餐饮</td><td>≈ 200</td></tr>
+        <tr class="tot"><td>小计</td><td>≈ 1,230</td></tr>
+        <tr class="sub"><td colspan="2">节庆期康提房价弹性极大，这一项可能翻倍。定得越晚越贵。</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h2 style="font-size:26px">现在就得订</h2>
+      <p class="lede" style="font-size:13.5px;margin-bottom:20px">距离出发 8 天。按紧急程度排。</p>
+      <ol class="todo">
+        <li class="now"><b>康提 8.18–8.19 住宿 + 看台座位</b><span>节庆期最先满。看台票认佛牙寺官网或正规代理，路边卖的位置很坑。</span></li>
+        <li class="now"><b>机票，尤其土司的回程时刻</b><span>它倒推决定 8.14–8.15 怎么排。这一项不定，后面全是浮的。</span></li>
+        <li><b>ETA 电子签</b><span>只上 eta.gov.lk。免的是签证费不是签证本身，搜索结果里那些 .com 高仿站会多收几十美元。护照有效期须超过六个月，另需网上填入境卡。</span></li>
+        <li><b>8.13 的 Nanu Oya→埃拉 火车票</b><span>发车前 30 天开卖，也就是 7 月 14 日已开。一等观景车厢很快没。</span></li>
+        <li><b>包车司机</b><span>认 SLTDA 牌照。行前白纸黑字写清"不进任何宝石店和香料园"——回扣带客是这里最常见的坑。</span></li>
+        <li><b>锡吉里耶与亭可马里的体验位</b><span>Aliya 的泳池房和 Nilaveli 的海景房八月都紧。</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="cut">
+  <div class="eyebrow">05 — 减法</div>
+  <h2>砍掉了什么，为什么</h2>
+  <div class="cut">
+    <div><b><s>霍顿平原 · 世界尽头</s></b><p>要天亮前进园，八月山区西坡雾大，八成看到的是一片白墙。而它要占掉埃拉那半天。</p></div>
+    <div><b><s>加勒 · 美蕊莎</s></b><p>整个南岸在西南季风里，浪大水浑。观鲸季十一月才开始。八月去性价比太低。</p></div>
+    <div><b><s>阿鲁甘湾</s></b><p>八月确实是冲浪巅峰，但从任何一站过去都要 6–8 小时。塞进九天等于报废两天车程。真要冲浪，得用东海岸整体换掉山区。</p></div>
+    <div><b><s>雅拉国家公园</s></b><p>换成了乌达瓦拉维：全年开放、象群密度高，不像雅拉那样二十辆吉普围着一只豹。</p></div>
+  </div>
+</section>
+
+<footer>
+  行程会随机票时刻变动 · 佩拉哈拉日期以 sridaladamaligawa.lk 官网为准 · 山区铁路状态出行前再核对一次<br>
+  价格为 2026 年 8 月旺季参考区间，非报价
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var days = document.querySelectorAll('.day[data-stop]');
+  function set(id, on){
+    document.querySelectorAll('.stop[data-stop="'+id+'"]').forEach(function(g){
+      g.classList.toggle('hot', on);
+    });
+  }
+  days.forEach(function(d){
+    var id = d.getAttribute('data-stop');
+    ['mouseenter','focusin'].forEach(function(e){ d.addEventListener(e, function(){ set(id, true); }); });
+    ['mouseleave','focusout'].forEach(function(e){ d.addEventListener(e, function(){ set(id, false); }); });
+  });
+})();
+</script>
