@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>会安 · 六个版本</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{
+  color-scheme: light;
+  --surface-1:#fcfcfb; --plane:#f9f9f7;
+  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --rule:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
+  --v1:#2a78d6; --v2:#eb6834; --v3:#1baf7a; --v4:#eda100; --v5:#e87ba4; --v6:#008300;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 8px 24px rgba(11,11,11,.06);
+  --maxw:1080px;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:#1a1a19; --plane:#0d0d0d;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --rule:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+  --v1:#3987e5; --v2:#d95926; --v3:#199e70; --v4:#c98500; --v5:#d55181; --v6:#008300;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --surface-1:#1a1a19; --plane:#0d0d0d;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --rule:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+    --v1:#3987e5; --v2:#d95926; --v3:#199e70; --v4:#c98500; --v5:#d55181; --v6:#008300;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--plane); color:var(--ink-1);
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+section{padding:64px 0; border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0}
+h2{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+   margin:0 0 6px; font-weight:600}
+h3{font-size:clamp(22px,3.4vw,30px); line-height:1.35; margin:0 0 20px; font-weight:650; letter-spacing:-.01em}
+p{margin:0 0 14px; color:var(--ink-2)}
+strong{color:var(--ink-1); font-weight:650}
+.lede{font-size:17px; color:var(--ink-2); max-width:62ch}
+
+/* ---------- topbar ---------- */
+.topbar{position:sticky; top:0; z-index:900; background:color-mix(in srgb,var(--plane) 88%,transparent);
+  backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--rule)}
+.topbar .wrap{display:flex; align-items:center; gap:16px; height:52px}
+.brand{font-weight:650; font-size:14px; letter-spacing:.02em; white-space:nowrap}
+.navlinks{display:flex; gap:14px; margin-left:auto; overflow-x:auto; scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{color:var(--ink-3); text-decoration:none; font-size:13px; white-space:nowrap; padding:4px 0}
+.navlinks a:hover,.navlinks a.on{color:var(--ink-1)}
+.tgl{border:1px solid var(--ring); background:var(--surface-1); color:var(--ink-2);
+  border-radius:999px; height:30px; padding:0 12px; font-size:12px; cursor:pointer; white-space:nowrap}
+.tgl:hover{color:var(--ink-1)}
+
+/* ---------- hero ---------- */
+.hero{padding:76px 0 60px}
+.kicker{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3); margin-bottom:18px}
+.hero h1{font-size:clamp(38px,8vw,76px); line-height:1.04; margin:0 0 22px; font-weight:680; letter-spacing:-.03em}
+.hero h1 em{font-style:normal; color:var(--ink-3)}
+.creed{display:grid; gap:10px; margin:28px 0 0; padding:0; list-style:none; max-width:64ch}
+.creed li{display:flex; gap:12px; font-size:15px; color:var(--ink-2)}
+.creed b{color:var(--ink-1); font-weight:650}
+.creed span:first-child{color:var(--ink-3); font-variant-numeric:tabular-nums; flex:none}
+
+/* ---------- stat tiles ---------- */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:14px; overflow:hidden}
+.stat{background:var(--surface-1); padding:20px 18px}
+.stat .v{font-size:clamp(26px,4vw,34px); font-weight:660; letter-spacing:-.02em; line-height:1.1}
+.stat .k{font-size:12.5px; color:var(--ink-3); margin-top:6px; line-height:1.5}
+
+/* ---------- law ---------- */
+.formula{background:var(--surface-1); border:1px solid var(--rule); border-radius:16px;
+  padding:26px 24px; box-shadow:var(--shadow); margin-bottom:26px}
+.formula .big{font-size:clamp(19px,3vw,25px); line-height:1.5; font-weight:640; letter-spacing:-.01em; color:var(--ink-1)}
+.formula .sub{margin:12px 0 0; font-size:15px}
+.conds{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:12px; margin-top:8px}
+.cond{background:var(--surface-1); border:1px solid var(--rule); border-radius:12px; padding:14px 15px}
+.cond .n{font-size:11px; color:var(--ink-3); letter-spacing:.1em; font-variant-numeric:tabular-nums}
+.cond .t{font-weight:640; margin-top:3px; font-size:14.5px}
+.cond .d{font-size:13px; color:var(--ink-2); margin-top:4px; line-height:1.6}
+.freeze{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:22px}
+@media(max-width:620px){.freeze{grid-template-columns:1fr}}
+.freeze div{border:1px solid var(--rule); border-radius:12px; padding:16px; background:var(--surface-1)}
+.freeze .yr{font-size:12.5px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.freeze .ph{font-weight:650; margin-top:4px}
+
+/* ---------- versions ---------- */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px}
+.card{position:relative; background:var(--surface-1); border:1px solid var(--rule); border-radius:16px;
+  padding:22px 20px 20px; cursor:pointer; overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s, border-color .3s}
+.card::before{content:""; position:absolute; inset:0 auto 0 0; width:3px; background:var(--c); opacity:.9}
+.card:hover{transform:translateY(-3px); box-shadow:var(--shadow); border-color:var(--axis)}
+.card .num{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px;
+  border-radius:8px; background:var(--c); color:#fff; font-size:13px; font-weight:700;
+  font-variant-numeric:tabular-nums; margin-bottom:12px}
+:root[data-theme="dark"] .card .num{color:#0d0d0d}
+.card h4{margin:0 0 4px; font-size:20px; font-weight:660; letter-spacing:-.01em}
+.card .one{font-size:14.5px; color:var(--ink-1); font-weight:600; margin:10px 0 12px; line-height:1.55}
+.card dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:13px}
+.card dt{color:var(--ink-3); white-space:nowrap}
+.card dd{margin:0; color:var(--ink-2)}
+.card ul{margin:12px 0 0; padding-left:16px; font-size:13.5px; color:var(--ink-2); line-height:1.65}
+.card .go{margin-top:14px; font-size:12.5px; color:var(--ink-3); display:flex; justify-content:space-between; gap:10px}
+.card .go b{color:var(--c); font-weight:600}
+
+/* ---------- timeline ---------- */
+.tl{position:relative; margin-top:8px; padding-left:26px}
+.tl::before{content:""; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--rule)}
+.tl .prog{position:absolute; left:5px; top:6px; width:2px; background:var(--ink-1); height:0;
+  transition:height .18s linear}
+.ev{position:relative; padding:0 0 26px}
+.ev::before{content:""; position:absolute; left:-24px; top:9px; width:9px; height:9px; border-radius:50%;
+  background:var(--surface-1); border:2px solid var(--c,var(--axis)); transition:transform .3s}
+.ev:hover::before{transform:scale(1.35)}
+.ev .yr{font-size:12.5px; color:var(--ink-3); font-variant-numeric:tabular-nums; letter-spacing:.02em}
+.ev .ti{font-weight:640; font-size:16px; margin:1px 0 3px}
+.ev .tx{font-size:14px; color:var(--ink-2); line-height:1.65; max-width:60ch}
+.ev .tag{display:inline-block; font-size:11px; color:var(--c); border:1px solid currentColor;
+  border-radius:999px; padding:0 7px; margin-left:8px; vertical-align:1px; opacity:.85}
+
+/* ---------- map ---------- */
+.mapbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center}
+.chip{border:1px solid var(--rule); background:var(--surface-1); color:var(--ink-2); cursor:pointer;
+  border-radius:999px; padding:6px 13px; font-size:13px; display:inline-flex; align-items:center; gap:7px;
+  transition:background .2s,color .2s,border-color .2s}
+.chip:hover{border-color:var(--axis); color:var(--ink-1)}
+.chip[aria-pressed="true"]{background:var(--ink-1); color:var(--surface-1); border-color:var(--ink-1)}
+.chip i{width:9px; height:9px; border-radius:3px; background:var(--c,var(--axis)); display:inline-block; flex:none}
+.chip[aria-pressed="true"] i{box-shadow:0 0 0 2px var(--surface-1)}
+#map{height:min(66vh,600px); min-height:380px; border-radius:16px; border:1px solid var(--rule);
+  background:var(--surface-1); z-index:1}
+.leaflet-container{font-family:inherit; background:var(--surface-1)}
+.pin{display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+  background:var(--ink-1); color:var(--surface-1); font-size:12px; font-weight:700; border:2px solid var(--surface-1);
+  box-shadow:0 1px 5px rgba(0,0,0,.3); font-variant-numeric:tabular-nums;
+  transition:transform .25s cubic-bezier(.2,.7,.3,1)}
+.pin.on{background:var(--c); transform:scale(1.22)}
+.pin.off{opacity:.32}
+.pin.pulse{animation:pulse 1.6s ease-out 2}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--c) 60%,transparent)}
+                 100%{box-shadow:0 0 0 16px transparent}}
+.leaflet-popup-content-wrapper{border-radius:12px; box-shadow:var(--shadow)}
+.leaflet-popup-content{margin:14px 16px; font-size:14px; line-height:1.6; color:#0b0b0b}
+.pop b{display:block; font-size:15px; margin-bottom:2px}
+.pop .vi{color:#52514e; font-size:12.5px; margin-bottom:8px}
+.pop .ad{font-size:12.5px; color:#52514e; margin-top:8px; border-top:1px solid #e1e0d9; padding-top:8px}
+.pop .vt{display:inline-block; font-size:11px; padding:1px 7px; border-radius:999px; color:#fff; margin-bottom:8px}
+.note{font-size:12.5px; color:var(--ink-3); margin-top:12px; line-height:1.6}
+
+/* ---------- plan table ---------- */
+.tbl{width:100%; border-collapse:collapse; font-size:14.5px; background:var(--surface-1);
+  border:1px solid var(--rule); border-radius:14px; overflow:hidden}
+.tbl th,.tbl td{text-align:left; padding:13px 15px; border-bottom:1px solid var(--rule); vertical-align:top}
+.tbl thead th{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl td:first-child{font-variant-numeric:tabular-nums; color:var(--ink-3); white-space:nowrap}
+
+/* ---------- checklist ---------- */
+.ckgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px}
+.ckcol{background:var(--surface-1); border:1px solid var(--rule); border-radius:14px; padding:18px}
+.ckcol h5{margin:0 0 12px; font-size:14px; font-weight:650; display:flex; align-items:center; gap:8px}
+.ckcol h5 i{width:9px;height:9px;border-radius:3px;background:var(--c);flex:none}
+.ck{display:flex; gap:10px; align-items:flex-start; padding:7px 0; font-size:14px; cursor:pointer; line-height:1.6}
+.ck input{margin:5px 0 0; accent-color:var(--ink-1); width:16px; height:16px; flex:none; cursor:pointer}
+.ck span{color:var(--ink-2); transition:color .2s,opacity .2s}
+.ck input:checked + span{text-decoration:line-through; opacity:.45}
+.ckbar{display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:13px; color:var(--ink-3)}
+.ckbar .track{flex:1; height:4px; background:var(--rule); border-radius:99px; overflow:hidden; max-width:320px}
+.ckbar .fill{height:100%; width:0; background:var(--ink-1); transition:width .35s cubic-bezier(.2,.7,.3,1)}
+
+/* ---------- footer ---------- */
+footer{padding:44px 0 72px; color:var(--ink-3); font-size:13px; line-height:1.75; border-top:1px solid var(--rule)}
+footer a{color:var(--ink-2)}
+footer h6{margin:0 0 8px; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1; transform:none}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1; transform:none; transition:none}
+  .card,.pin,.ev::before,.ckbar .fill{transition:none}
+  .pin.pulse{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">会安 · 六个版本</span>
+    <nav class="navlinks">
+      <a href="#law">法则</a><a href="#time">时间轴</a><a href="#versions">六个版本</a>
+      <a href="#map-s">地图</a><a href="#plan">三天</a><a href="#check">清单</a>
+    </nav>
+    <button class="tgl" id="theme">深色</button>
+  </div>
+</div>
+
+<header class="wrap hero">
+  <div class="kicker">Hội An · Quảng Nam · 2026.08</div>
+  <h1>六个版本共用一套砖墙，<br><em>没有一个承认其他版本。</em></h1>
+  <p class="lede">一座城的六层身份：占婆的出海口、日本人的分号、华人的埠、法国人的收发室、UNESCO 的编号、算法的背景板。它们互相不认识，但共用一个收银台。</p>
+  <ul class="creed">
+    <li><span>01</span><span>不动感情地描述一个地方如何靠<b>遗忘自己</b>而活下来。遗忘不是失败，是它还能站在那里的条件。</span></li>
+    <li><span>02</span><span>它完好，是因为它<b>死得刚刚好</b>——穷到没人有钱改建，活到还有人年年修屋顶。</span></li>
+    <li><span>03</span><span>语调是<b>清点</b>，不是挽歌。挽歌是这里的官方文体之一。</span></li>
+  </ul>
+</header>
+
+<section class="wrap rv">
+  <div class="stats" id="stats"></div>
+  <p class="note">数据年份见页脚。人次与收入为 2024 年会安全市口径；产权比例出自会安市领导受访表述，非普查数据。</p>
+</section>
+
+<section class="wrap rv" id="law">
+  <h2>总法则</h2>
+  <h3>保存不是无为的结果，是一个很窄的区间</h3>
+  <div class="formula">
+    <div class="big">它完好，不是因为它死了，<br>而是因为它<u>死得刚刚好</u>。</div>
+    <p class="sub">死亡只提供"不改建"的条件，提供不了"不塌"的条件。木构、热带、年年洪水、白蚁——这个气候里的木头三十年没人管就完了。真正保住会安的，是一百四十年低强度、无资本、纯手工的修补。<strong>遗产名录上不会有他们的名字。</strong></p>
+  </div>
+  <div class="conds" id="conds"></div>
+  <div class="freeze">
+    <div><div class="yr">1888 – 1930</div><div class="ph">行政摘除：没人<em>要</em>它变</div><p style="margin:6px 0 0;font-size:13.5px">岘港割让地、Faifo 降为省城、1930 年铁路绕开。没有一次轰炸——<strong>它是被公文杀死的，而公文不损坏建筑。</strong></p></div>
+    <div><div class="yr">1999 – 至今</div><div class="ph">旅游经济：没人<em>准</em>它变</div><p style="margin:6px 0 0;font-size:13.5px">登录标准奖励"未被现代化改变"，保护条例把它从事实变成义务。<strong>两次冻结，方法相反，效果相同。</strong></p></div>
+  </div>
+</section>
+
+<section class="wrap rv" id="time">
+  <h2>时间轴</h2>
+  <h3>两千年里，它换过五个主人和两个名字</h3>
+  <div class="tl" id="tl"><div class="prog" id="prog"></div></div>
+</section>
+
+<section class="wrap rv" id="versions">
+  <h2>六个版本</h2>
+  <h3>只有中间那三百年，会安是主语</h3>
+  <p class="lede" style="margin-bottom:22px">前两层是别人的出海口与分号，后三层是别人的收发室、编号与背景板。而连那三百年的开放也是被迫的——所以更精确的说法是：它只是有三百年，是一句更长的句子里的<strong>主语从句</strong>。点任意一张卡片可在地图上定位该版本的地点。</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="wrap rv" id="map-s">
+  <h2>地图</h2>
+  <h3>把六个版本放回地面</h3>
+  <div class="mapbar" id="chips"></div>
+  <div id="map"></div>
+  <p class="note" id="mapnote"><strong>坐标为约值，用于定位街区，不等于门牌。</strong>到场以弹窗中的门牌号与实际指示牌为准。标记内的数字即版本号——颜色只做强调，身份由数字与文字承担。切到「整条走廊」可看美山、岘港、海云关与顺化。</p>
+</section>
+
+<section class="wrap rv" id="plan">
+  <h2>三天</h2>
+  <h3>每天写一个版本，最后让它们在同一页上互相打断</h3>
+  <table class="tbl">
+    <thead><tr><th>Day</th><th>主版本</th><th>副线</th><th>那天的一个具体动作</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>版本三 · 华人五帮埠</strong></td><td>版本一 · 井与面</td><td>抄一副楹联——你是那个空间里唯一的接收者</td></tr>
+      <tr><td>2</td><td><strong>版本二 · 日本町与日本桥</strong></td><td>版本四 · 黄色与 Faifo</td><td>拿两万盾对着桥拍：钞票上是 2024 重修前的版本</td></tr>
+      <tr><td>3</td><td><strong>版本六 · 容器</strong></td><td>版本五 · 说明牌与门票</td><td>自己做一次游客动作，全程记录流程与金额</td></tr>
+    </tbody>
+  </table>
+  <p class="note">摄影：清晨与 16:00 后同一机位各待一小时——两个会安。灯笼夜景可以不拍，但那是一个选择，不是清白。</p>
+</section>
+
+<section class="wrap rv" id="check">
+  <h2>现场清单</h2>
+  <h3>带着走的那一页</h3>
+  <div class="ckbar"><span id="ckn">0 / 0</span><span class="track"><span class="fill" id="ckf"></span></span><button class="tgl" id="ckreset">清空</button></div>
+  <div class="ckgrid" id="ckgrid"></div>
+  <p class="note">勾选状态存在本机浏览器里（localStorage），关掉页面不会丢。</p>
+</section>
+
+<footer class="wrap">
+  <h6>说明与出处</h6>
+  <p>本页是 Obsidian 笔记 <code>2026越南旅行/</code> 中 30–46 各篇的可视化索引，论点与引文以 <code>.md</code> 原文为准。<br>
+  数据：2024 年到访约 440 万人次、国际约 357 万、旅游全行业收入 4,538.6 tỷ 盾 · 会安市统计口径；产权 30%/40% 出自会安市人委会主席受访表述；1,107 座木构建筑与 1999.12.4 登录 · <a href="https://whc.unesco.org/en/list/948/" target="_blank" rel="noopener">UNESCO</a>；2023 门票方案与 5.11 退让 · Tuổi Trẻ / VnExpress / Dân trí；日本桥修复与调色 · VnExpress / Dân Việt / 越南文体旅游部；巴勒井与高楼面 · vi.wikipedia / Saigon Times / VOV World。<br>
+  地图底图 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 贡献者 · © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>；渲染 <a href="https://leafletjs.com/" target="_blank" rel="noopener">Leaflet</a>。需要联网加载底图。</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+/* ============ 数据 ============ */
+const V = [
+  {id:1,name:"占婆港口",vi:"Chiêm cảng",c:"var(--v1)",center:"上游：茶蕎、美山",role:"出海口——钱包，不是心脏",
+   one:"它留下的不是遗物，是选址。",
+   ev:["巴勒井：占婆砖干砌，与美山同一工艺；今仍有约 8 人挑水为业","高楼面＝巴勒井的水＋占婆岛的灰——你吃的是占婆","这个河口做外贸做了两千年，其余各版本都只是租客"],
+   vis:"几乎不可拍",note:"41-会安-版本一-占婆港口"},
+  {id:2,name:"日本町",vi:"Nhật Bản kiều",c:"var(--v2)",center:"长崎／江户",role:"一个分号",
+   one:"形式在去日本化，标签在被日本化。",
+   ev:["五次大修后日本要素掉光，今存结构为越、中风格","1719 年的「来远」金匾，挂上去时客人已走了 84 年","2006 年上两万盾纸币——把开放追认为一种本性"],
+   vis:"极高（在钞票上）",note:"42-会安-版本二-日本町与日本桥"},
+  {id:3,name:"华人五帮埠",vi:"Ngũ bang",c:"var(--v3)",center:"会安",role:"主语",
+   one:"它保住自己的方法，是先把自己掏空。",
+   ev:["会馆不是庙是公所：仲裁、义学、义山、义庄——神明是信用背书","满墙汉字，无人能读：持续广播而无人收听","明乡人没有消失，他们赢了——代价是可辨识性"],
+   vis:"高（五座完整会馆）",note:"43-会安-版本三-华人五帮埠"},
+  {id:4,name:"法属邮政站",vi:"Faifoo",c:"var(--v4)",center:"岘港、顺化、河内",role:"收发室——地址，不是地方",
+   one:"它是被公文杀死的。",
+   ev:["法属功能清单里没有一项是贸易：行政、税收、监视、通信","1898–1945 它的法定名字是 Faifo，今天在几块店招上","港口靠停留赚钱，邮局靠不停留运转"],
+   vis:"高，但不被识别",note:"44-会安-版本四-法属邮政站"},
+  {id:5,name:"UNESCO 遗产",vi:"Di sản",c:"var(--v5)",center:"巴黎",role:"一个编号",
+   one:"把「它已经死了」写成一份证书。",
+   ev:["登录理由之一：东南亚唯一被完整保存的传统港市——表彰的是它的失败","遗产化的第一个动作是清点：1,107 座木构建筑","认证取代了阅读——牌子替所有人读过了"],
+   vis:"高，但没人当它是内容",note:"45-会安-版本五-UNESCO遗产"},
+  {id:6,name:"网红目的地",vi:"Check-in",c:"var(--v6)",center:"服务器",role:"背景板",
+   one:"不是它的堕落，是它的收入。",
+   ev:["一个地方要活下去，必须把自己翻译成动词：租、穿、放、划、量体","最终规则是：来消费不收费，来观看才收费","七成的老城房子，由不住在里面的人经营"],
+   vis:"极高，且只剩这个",note:"46-会安-版本六-网红目的地"},
+];
+const VC = id => `var(--v${id})`;
+
+const STATS = [
+  {v:"440万",k:"2024 年到访人次"},
+  {v:"81%",k:"其中国际客占比"},
+  {v:"70%",k:"老城房屋由不住在里面的人经营"},
+  {v:"1,107",k:"登录在册的木构建筑"},
+  {v:"140年",k:"沉睡期：1850s–1990s"},
+  {v:"300年",k:"它做主语的全部时间"},
+];
+
+const CONDS = [
+  {t:"摘除",d:"失去功能，资本不再进入"},
+  {t:"有人继续住",d:"低强度维护，修补而不置换"},
+  {t:"无战略价值",d:"不被炸。顺化因重要而被摧毁"},
+  {t:"沉睡够久",d:"横跨整个现代化窗口，约 140 年"},
+  {t:"醒来时旧值钱",d:"遗产经济与国际旅游同时到位"},
+];
+
+const TL = [
+  {y:"公元前后",v:1,t:"沙黄文化",x:"墓葬里有汉钱与印度玻璃珠。这个河口做外贸，比占婆还早。"},
+  {y:"2–15 世纪",v:1,t:"占婆港口",x:"美山（神）— 茶蕎（都）— 大占海口（钱），一条秋盆江串起三段。占婆把利润送上游造塔，所以它在会安不表现为建筑。"},
+  {y:"1600–1635",v:2,t:"日本町",x:"朱印船贸易的六十年。1635 年幕府锁国，社群在两代人内消融——通婚、改姓、变成越南人。"},
+  {y:"17–18 世纪",v:3,t:"五帮埠",x:"郑阮分裂，南阮只有一段海岸线，只能把海开出来。开放不是性格，是地缘政治的被迫。"},
+  {y:"1719",v:2,t:"御赐「来远桥」",x:"阮福淍巡广南，见街西有桥为商船聚集处，赐名并颁金匾。而日本人已经 84 年没来了。"},
+  {y:"1780",v:3,t:"西山之乱毁城",x:"城大部被毁，其后重建。你看到的「17 世纪港市」，物质上多为此后之物——而没有人对会安追问这件事。"},
+  {y:"1802",v:3,t:"阮朝统一，重心北移顺化",x:"第二次摘除：政治性的。"},
+  {y:"1888",v:4,t:"岘港成为法国割让地",x:"华商与资本转往岘港。会安商业停滞的两个原因并列：水路困难，以及法国发展岘港的政策。"},
+  {y:"1898",v:4,t:"Ville de Faifoo 设为广南省城",x:"四坊之一叫明乡。公使、密探、金库、关税、电报——功能清单里没有一项是贸易。"},
+  {y:"1930",v:4,t:"铁路绕开会安",x:"最致命也最平淡的一次摘除：一条铁路决定不经过这里。会安至今没有火车站。"},
+  {y:"1945",v:4,t:"Faifo 这个名字消失",x:"一个曾经的法定地名，今天是几块店招。"},
+  {y:"1850s–1990s",v:0,t:"沉睡一百四十年",x:"穷到没人有钱改建，活到还有人年年修屋顶。保存不是无为，是无资本的持续劳动。"},
+  {y:"1993",v:5,t:"日方团队进场",x:"日本文化厅主导、昭和女子大学等参与的街区保存技术支援。第一次来是做买卖，第二次来是保存自己曾经在场的证据。"},
+  {y:"1995",v:5,t:"联票制开始",x:"会馆的法定身份，从此是一张联票上的勾选项。"},
+  {y:"1999.12.04",v:5,t:"列入世界遗产",x:"马拉喀什。理由之一：东南亚唯一被完整保存的传统港市——注意「唯一」，它的同行全都活了下来，所以全都没了。"},
+  {y:"2006.05.17",v:2,t:"日本桥上两万盾纸币",x:"那一年河内办 APEC、次年入 WTO。把一项政策追认为一种本性：开放不是 1986 年的转向，是十七世纪就有的传统。"},
+  {y:"2015–16",v:6,t:"过度旅游",x:"每天从下午四点到深夜，人满为患。"},
+  {y:"2020–21",v:6,t:"疫情：一次真做过的实验",x:"售票与步行街停摆，重开首日只有几十人买票。流被关掉，它不会回到 1750 年，只会回到 1980 年——安静、完好、且没有收入。"},
+  {y:"2022.12–2024.08",v:2,t:"日本桥大修与颜色之争",x:"JICA 派专家参与。竣工后舆论说「把文物做新了」，市府一边说石灰会自己长苔变旧，一边指示回头调色。真实性不是被发现的，是被决议的。"},
+  {y:"2023.04–05",v:6,t:"强制购票之争",x:"曾拟在入口分设通道、辨认谁是会安人。退让后的规则是：来吃饭喝咖啡拍婚纱照的不收费——被征税的是「看」，不是「买」。"},
+  {y:"2024",v:6,t:"440 万人次",x:"国际客占八成。韩国自 2022 年起是岘港最大国际客源，会安的韩国客经岘港入境——同一个岘港，先杀死它，再供养它。"},
+];
+
+/* 坐标为约值：老城各点按街区定位，门牌以弹窗为准 */
+const P = [
+  {n:"来远桥 / 日本桥",vi:"Chùa Cầu",v:2,ll:[15.87715,108.32651],ad:"古城西端，Trần Phú 街西口",w:"读 1719 年的「来远」金匾；找 1817 年脊梁题记；验证官方说的「石灰会自己长苔」"},
+  {n:"福建会馆",vi:"Hội quán Phúc Kiến",v:3,ll:[15.87702,108.32852],ad:"46 Trần Phú",w:"梁下塔香上的一次性名字；与捐题碑上的永久名单对照"},
+  {n:"广肇会馆",vi:"Hội quán Quảng Đông",v:3,ll:[15.87692,108.32636],ad:"176 Trần Phú",w:"天井里的光——上午与午后各拍一次"},
+  {n:"潮州会馆",vi:"Hội quán Triều Châu",v:3,ll:[15.87873,108.33245],ad:"157 Nguyễn Duy Hiệu",w:"核实主祀的「伏波将军」是不是马援。不论结论如何，去核实这件事本身就是一段文章"},
+  {n:"海南会馆（昭应祠）",vi:"Hội quán Hải Nam",v:3,ll:[15.87742,108.33021],ad:"10 Trần Phú",w:"若只深挖一处就是这里：1851、一百零八、嗣德帝敕封。一桩针对越南政权的控诉，被转成越南的旅游资产"},
+  {n:"嘉应会馆",vi:"Hội quán Gia Ứng",v:3,ll:[15.87709,108.32906],ad:"64 Trần Phú",w:"五帮里最少人进的一座"},
+  {n:"明乡萃先堂",vi:"Minh Hương Tụy Tiên Đường",v:3,ll:[15.87738,108.33055],ad:"Trần Phú 街（位置待现场核）",w:"那个成功自我删除的社群留下的堂。街上走过而不进去的人，就是碑上名字的后代"},
+  {n:"巴勒井",vi:"Giếng Bá Lễ",v:1,ll:[15.87877,108.32907],ad:"Trần Hưng Đạo 街小巷内，免费",w:"方形井身、占婆砖干砌——与美山砖缝用同一支镜头对拍一组。清晨能看到挑水的人"},
+  {n:"沙黄文化博物馆",vi:"Bảo tàng Sa Huỳnh",v:1,ll:[15.87684,108.32711],ad:"149 Trần Phú（联票内）",w:"占婆之前的那一层。几乎没有游客进"},
+  {n:"秋盆江渡口",vi:"Bến đò Hội An",v:1,ll:[15.87587,108.32960],ad:"Bạch Đằng 河岸",w:"往上游看一次——那是美山的方向，也是沉香下来的方向"},
+  {n:"会安市场",vi:"Chợ Hội An",v:6,ll:[15.87712,108.33098],ad:"Trần Phú 东端",w:"清晨收货的两小时，是这座城少数不表演的时段"},
+  {n:"白藤路河岸",vi:"Bạch Đằng",v:6,ll:[15.87615,108.32888],ad:"沿江",w:"数动词：一小时内记下所见全部可完成动作及价格。听口音：韩语／汉语／越南语各占多少"},
+  {n:"售票亭（代表点）",vi:"Quầy bán vé",v:5,ll:[15.87747,108.32610],ad:"古城各入口均有",w:"票面名录列了哪些点、分几类、背面写什么。规则牌与 2023 年那版差在哪"},
+  {n:"Cửa Đại 河口",vi:"Cửa Đại",v:1,ll:[15.89383,108.37066],ad:"城东约 5 km",w:"古称大占海口（Cửa Đại Chiêm）——「占」字被省掉了。今天是海滩度假区的名字"},
+  {n:"占婆岛",vi:"Cù Lao Chàm",v:1,ll:[15.95278,108.50111],ad:"外海约 18 km，快艇约 30 分钟",w:"名字直接写着「占」。古代商船在此补淡水；高楼面的碱灰来自这里"},
+  {n:"美山圣地",vi:"Mỹ Sơn",v:0,ll:[15.76389,108.12361],ad:"西南约 40 km",w:"6:30 前进场。长焦压缩砖缝纹理——与巴勒井的砖对拍"},
+  {n:"茶蕎 Simhapura",vi:"Trà Kiệu",v:0,ll:[15.81250,108.22310],ad:"美山与会安之间",w:"占婆都城故址。神在上游、钱在下游，这里是中间"},
+  {n:"占族雕刻博物馆",vi:"Bảo tàng Điêu khắc Chăm",v:0,ll:[16.06047,108.22370],ad:"岘港市中心",w:"1915 年法国人所建。保存占婆文明的是殖民者，摧毁它的分别是征服者和解放者"},
+  {n:"海云关",vi:"Đèo Hải Vân",v:0,ll:[16.19750,108.13000],ad:"岘港与顺化之间",w:"自己骑，不穿隧道。穿隧道是抹掉这条线，翻山是承认它"},
+  {n:"顺化皇城",vi:"Kinh thành Huế",v:0,ll:[16.46981,107.57964],ad:"顺化",w:"找没修的部分：塌墙、弹孔、树根撑开的门洞。接缝比完整体更诚实"},
+  {n:"明命陵",vi:"Lăng Minh Mạng",v:0,ll:[16.41770,107.55450],ad:"顺化西南",w:"完美的中轴对称——一个自信的帝国的自我形象"},
+  {n:"启定陵",vi:"Lăng Khải Định",v:0,ll:[16.40220,107.57660],ad:"顺化南",w:"混凝土、巴洛克、高棉纹样、彩瓷。一具没有内在语法的躯体：所有元素都是引用"},
+];
+
+const CHECK = [
+  {v:3,title:"版本三 · 五帮会馆",items:["抄一副完整楹联（原文＋你的读法）","捐题碑：第几代开始出现陈／阮／黎","记账货币：银两 → 法郎 → 盾","昭应祠：1851、一百零八、敕封的措辞","潮州会馆：伏波将军是不是马援","看守人叫什么名字，他读不读得懂墙上的字","街上走过会馆而不进去的人——站半小时"]},
+  {v:1,title:"版本一 · 占婆",items:["巴勒井：方形井身与干砌占婆砖","清晨去看挑水的人（约 8 人以此为业）","吃高楼面时问：水是巴勒井的吗？灰是占婆岛的吗？","沙黄文化博物馆（联票内）","秋盆江边往上游看一次","Cửa Đại 现场还有没有写着「Chiêm」"]},
+  {v:2,title:"版本二 · 日本桥",items:["拿两万盾对着桥拍——两个版本同框","用印着桥的钞票买进桥的联票","读「来远桥」金匾，看说明牌翻不翻译","找 1817 年脊梁题记与桥头碑","石灰长苔了吗？调过的红与白现在什么程度","数名字：Chùa Cầu／Lai Viễn Kiều／Japanese Bridge","结构上还剩什么是日本的——找不到就是结论"]},
+  {v:4,title:"版本四 · 法属",items:["找公使署、金库、关税、邮政（dây thép）旧址","「Faifo」今天出现在哪里、几次、什么业态","集邮／古玩店问 FAIFO 邮戳","黄色：哪些建筑黄、会馆黄不黄、石灰还是涂料","有无公示的色彩规定"]},
+  {v:5,title:"版本五 · 遗产",items:["读说明牌措辞：谁在说话、用什么人称","找一块不存在的牌子：全城有没有提到它破产过","找 1780：有说明提到西山之乱毁城吗","核心区与缓冲区的界线在街上有无标示","「1,107」这个数字在现场哪里出现","有没有日方参与的铭牌，措辞是什么"]},
+  {v:6,title:"版本六 · 容器",items:["数动词：一小时内的全部可完成动作及价格","进古城到底要不要票？规则牌怎么写","问一家店：房东是谁、住不住这儿、月租多少","找 2020 年的痕迹：空置或转让告示","同一机位两次：清晨一小时、16:00 后一小时","自己做一次游客动作，全程记录流程与金额","听口音：韩语／汉语／越南语各占多少","老宅墙上的历年洪水线"]},
+];
+
+/* ============ 渲染 ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+$("#stats").innerHTML = STATS.map(s=>`<div class="stat"><div class="v">${s.v}</div><div class="k">${s.k}</div></div>`).join("");
+$("#conds").innerHTML = CONDS.map((c,i)=>`<div class="cond"><div class="n">条件 ${i+1}</div><div class="t">${c.t}</div><div class="d">${c.d}</div></div>`).join("");
+
+$("#cards").innerHTML = V.map(v=>`
+  <article class="card rv" style="--c:${VC(v.id)}" data-v="${v.id}" tabindex="0" role="button" aria-label="在地图上定位版本${v.id}">
+    <div class="num">${v.id}</div>
+    <h4>${v.name}</h4>
+    <div style="font-size:12.5px;color:var(--ink-3)">${v.vi}</div>
+    <div class="one">${v.one}</div>
+    <dl><dt>中心在哪</dt><dd>${v.center}</dd><dt>会安是什么</dt><dd>${v.role}</dd><dt>可见度</dt><dd>${v.vis}</dd></dl>
+    <ul>${v.ev.map(e=>`<li>${e}</li>`).join("")}</ul>
+    <div class="go"><span>${v.note}.md</span><b>在地图上看 →</b></div>
+  </article>`).join("");
+
+$("#tl").insertAdjacentHTML("beforeend", TL.map(e=>`
+  <div class="ev rv" style="--c:${e.v?VC(e.v):"var(--axis)"}">
+    <div class="yr">${e.y}</div>
+    <div class="ti">${e.t}${e.v?`<span class="tag">版本 ${e.v}</span>`:`<span class="tag" style="--c:var(--ink-3)">法则</span>`}</div>
+    <div class="tx">${e.x}</div>
+  </div>`).join(""));
+
+$("#chips").innerHTML =
+  `<button class="chip" data-f="all" aria-pressed="true">全部</button>` +
+  V.map(v=>`<button class="chip" data-f="${v.id}" style="--c:${VC(v.id)}" aria-pressed="false"><i></i>${v.id} ${v.name}</button>`).join("") +
+  `<button class="chip" data-f="0" aria-pressed="false"><i></i>整条走廊</button>`;
+
+/* ============ 清单 + localStorage ============ */
+const KEY="hoian-check-v1";
+let done = JSON.parse(localStorage.getItem(KEY)||"{}");
+$("#ckgrid").innerHTML = CHECK.map(g=>`
+  <div class="ckcol rv" style="--c:${VC(g.v)}">
+    <h5><i></i>${g.title}</h5>
+    ${g.items.map(it=>{const id=g.v+"|"+it;
+      return `<label class="ck"><input type="checkbox" data-id="${esc(id)}" ${done[id]?"checked":""}><span>${it}</span></label>`;}).join("")}
+  </div>`).join("");
+function ckSync(){
+  const all=[...document.querySelectorAll(".ck input")];
+  const n=all.filter(i=>i.checked).length;
+  $("#ckn").textContent=`${n} / ${all.length}`;
+  $("#ckf").style.width=(all.length? n/all.length*100:0)+"%";
+}
+$("#ckgrid").addEventListener("change",e=>{
+  if(e.target.type!=="checkbox")return;
+  const id=e.target.dataset.id;
+  e.target.checked? done[id]=1 : delete done[id];
+  localStorage.setItem(KEY,JSON.stringify(done)); ckSync();
+});
+$("#ckreset").onclick=()=>{done={};localStorage.removeItem(KEY);
+  document.querySelectorAll(".ck input").forEach(i=>i.checked=false); ckSync();};
+ckSync();
+
+/* ============ 地图 ============ */
+const HOIAN=[15.8785,108.3300], CORRIDOR=[16.06,108.20];
+const map=L.map("map",{scrollWheelZoom:false,zoomControl:true}).setView(HOIAN,15);
+const tiles={
+  light:"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+  dark:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+};
+let layer=L.tileLayer(tiles.light,{maxZoom:19,subdomains:"abcd",
+  attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+map.on("click",()=>map.scrollWheelZoom.enable());
+map.on("mouseout",()=>map.scrollWheelZoom.disable());
+
+const marks=P.map(p=>{
+  const label=p.v||"·";
+  const m=L.marker(p.ll,{icon:L.divIcon({className:"",html:
+    `<div class="pin" style="--c:${p.v?VC(p.v):"var(--ink-2)"}">${label}</div>`,
+    iconSize:[26,26],iconAnchor:[13,13]}),title:p.n});
+  const tag=p.v?`<span class="vt" style="background:${p.v?getComputedStyle(document.documentElement).getPropertyValue("--v"+p.v):"#52514e"}">版本 ${p.v}</span>`:`<span class="vt" style="background:#52514e">走廊</span>`;
+  m.bindPopup(`<div class="pop">${tag}<b>${p.n}</b><div class="vi">${p.vi}</div>${p.w}<div class="ad">${p.ad}</div></div>`,{maxWidth:290});
+  m.addTo(map); m._v=p.v; m._ll=p.ll; return m;
+});
+function pinEl(m){return m.getElement()?m.getElement().querySelector(".pin"):null;}
+function filter(f){
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.f===f)));
+  const pts=[];
+  marks.forEach(m=>{
+    const el=pinEl(m); if(!el)return;
+    el.classList.remove("on","off","pulse");
+    if(f==="all"){ pts.push(m._ll); return; }
+    if(String(m._v)===f){ el.classList.add("on","pulse"); pts.push(m._ll); }
+    else el.classList.add("off");
+  });
+  if(pts.length){
+    const b=L.latLngBounds(pts).pad(.25);
+    map.flyToBounds(b,{maxZoom:f==="0"?9:16,duration:.8});
+  }
+}
+$("#chips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(b) filter(b.dataset.f);
+});
+document.querySelectorAll(".card").forEach(c=>{
+  const go=()=>{document.getElementById("map-s").scrollIntoView({behavior:"smooth",block:"start"});
+    setTimeout(()=>filter(c.dataset.v),400);};
+  c.addEventListener("click",go);
+  c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
+});
+setTimeout(()=>filter("all"),300);
+
+/* ============ 主题 ============ */
+const root=document.documentElement, tbtn=$("#theme");
+const saved=localStorage.getItem("hoian-theme");
+if(saved) root.dataset.theme=saved;
+else root.dataset.theme=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";
+function paint(){
+  const d=root.dataset.theme==="dark";
+  tbtn.textContent=d?"浅色":"深色";
+  map.removeLayer(layer);
+  layer=L.tileLayer(d?tiles.dark:tiles.light,{maxZoom:19,subdomains:"abcd",
+    attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+}
+tbtn.onclick=()=>{root.dataset.theme=root.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem("hoian-theme",root.dataset.theme); paint();};
+paint();
+
+/* ============ 动效：滚动揭示 + 时间轴进度 + 导航高亮 ============ */
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(!reduce){
+  const io=new IntersectionObserver((es)=>{
+    es.forEach((e,i)=>{ if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add("in"), Math.min(i*55,220));
+      io.unobserve(e.target);} });
+  },{rootMargin:"0px 0px -8% 0px",threshold:.08});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+  const tl=$("#tl"), prog=$("#prog");
+  const onScroll=()=>{
+    const r=tl.getBoundingClientRect(), h=innerHeight;
+    const p=Math.max(0,Math.min(1,(h*.7-r.top)/(r.height||1)));
+    prog.style.height=(p*(r.height-12))+"px";
+  };
+  addEventListener("scroll",onScroll,{passive:true}); onScroll();
+}else{
+  document.querySelectorAll(".rv").forEach(el=>el.classList.add("in"));
+}
+const secs=[...document.querySelectorAll("section[id]")];
+const nav=[...document.querySelectorAll(".navlinks a")];
+addEventListener("scroll",()=>{
+  const y=scrollY+120; let cur=null;
+  secs.forEach(s=>{if(s.offsetTop<=y)cur=s.id;});
+  nav.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+cur));
+},{passive:true});
+</script>
+</body>
+</html>
