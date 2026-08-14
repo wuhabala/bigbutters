@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>会安 · 纪年矩阵</title>
+<style>
+:root{
+  color-scheme:light;
+  --surface:#fcfcfb; --plane:#f9f9f7; --panel:#ffffff;
+  --ink1:#0b0b0b; --ink2:#52514e; --ink3:#898781;
+  --rule:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
+  /* 历法底色：极低彩度，身份由文字承担 */
+  --c-nguyen:#eef3fb; --c-qing:#fdf0ea; --c-roc:#fdf6e3;
+  --c-ce:#eef6f2;     --c-quoc:#f3f0f8; --c-avoid:#f0efec; --c-jp:#fbeef2;
+  --b-nguyen:#2a78d6; --b-qing:#eb6834; --b-roc:#eda100;
+  --b-ce:#1baf7a;     --b-quoc:#4a3aa7; --b-avoid:#898781; --b-jp:#e87ba4;
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 10px 30px rgba(11,11,11,.08);
+}
+:root[data-theme="dark"]{
+  --surface:#1a1a19; --plane:#0d0d0d; --panel:#1f1f1e;
+  --ink1:#fff; --ink2:#c3c2b7; --ink3:#898781;
+  --rule:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+  --c-nguyen:#16233a; --c-qing:#33190f; --c-roc:#2e2410;
+  --c-ce:#0f2a20;     --c-quoc:#211b33; --c-avoid:#242422; --c-jp:#331722;
+  --b-nguyen:#3987e5; --b-qing:#d95926; --b-roc:#c98500;
+  --b-ce:#199e70;     --b-quoc:#9085e9; --b-avoid:#898781; --b-jp:#d55181;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--plane);color:var(--ink1);
+  font-family:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1400px;margin:0 auto;padding:0 18px}
+a{color:inherit}
+
+/* ── header ── */
+header{padding:38px 0 20px;border-bottom:1px solid var(--rule)}
+.kick{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 14px;font-weight:680;letter-spacing:-.02em}
+.lede{max-width:70ch;color:var(--ink2);font-size:15.5px;margin:0}
+.lede b{color:var(--ink1)}
+.thesis{margin:18px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--rule);
+  border-radius:12px;max-width:70ch;font-size:14.5px}
+.thesis b{color:var(--ink1)}
+
+/* ── controls ── */
+.bar{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--plane) 92%,transparent);
+  backdrop-filter:blur(10px) saturate(1.4);border-bottom:1px solid var(--rule);padding:10px 0}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.grp .lbl{font-size:11.5px;color:var(--ink3);letter-spacing:.06em;margin-right:2px}
+button.b{border:1px solid var(--rule);background:var(--surface);color:var(--ink2);cursor:pointer;
+  border-radius:999px;padding:5px 12px;font-size:12.5px;font-family:inherit;
+  transition:background .18s,color .18s,border-color .18s}
+button.b:hover{border-color:var(--axis);color:var(--ink1)}
+button.b[aria-pressed="true"]{background:var(--ink1);color:var(--surface);border-color:var(--ink1)}
+.sp{flex:1}
+
+/* ── legend ── */
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 4px}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);
+  border:1px solid var(--rule);border-radius:8px;padding:3px 9px;background:var(--surface)}
+.lg i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.hint{font-size:12.5px;color:var(--ink3);padding:6px 0 14px;line-height:1.6}
+
+/* ── matrix ── */
+.scroller{overflow-x:auto;overflow-y:visible;border:1px solid var(--rule);border-radius:14px;
+  background:var(--surface);box-shadow:var(--shadow)}
+table.mx{border-collapse:separate;border-spacing:0;font-size:12px}
+table.mx th,table.mx td{padding:0;vertical-align:top}
+.rowhead{position:sticky;left:0;z-index:20;background:var(--surface);
+  border-right:1px solid var(--axis);min-width:132px;max-width:132px;padding:8px 10px !important;
+  text-align:left;font-weight:600;font-size:12.5px;border-bottom:1px solid var(--rule)}
+.rowhead .sub{display:block;font-weight:400;font-size:11px;color:var(--ink3);line-height:1.4}
+.rowhead .vt{display:inline-block;font-size:10px;color:var(--ink3);border:1px solid var(--rule);
+  border-radius:4px;padding:0 4px;margin-top:3px}
+thead .rowhead{z-index:30;border-bottom:1px solid var(--axis)}
+thead th.yr{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--axis);
+  border-left:1px solid var(--rule);padding:7px 4px !important;text-align:center;font-weight:600;
+  font-variant-numeric:tabular-nums;white-space:nowrap;vertical-align:bottom}
+thead th.yr .g{display:block;font-size:10px;font-weight:400;color:var(--ink3);letter-spacing:.02em}
+thead th.yr.era{background:linear-gradient(to bottom,transparent,var(--c-avoid))}
+td.cell{border-left:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:3px !important}
+tbody tr:hover .rowhead{background:var(--plane)}
+.chip{display:block;width:100%;border:1px solid var(--ring);border-radius:7px;padding:5px 4px;
+  cursor:pointer;text-align:center;font-family:inherit;line-height:1.35;
+  transition:transform .16s cubic-bezier(.2,.7,.3,1),box-shadow .16s,border-color .16s}
+.chip:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--axis)}
+.chip .cal{display:block;font-size:11.5px;font-weight:650;color:var(--ink1);letter-spacing:.01em}
+.chip .ty{display:block;font-size:10px;color:var(--ink2);margin-top:1px;white-space:nowrap}
+.chip .q{color:var(--b-qing);font-weight:700}
+.chip.star{box-shadow:inset 0 0 0 1.5px var(--axis)}
+.k-nguyen{background:var(--c-nguyen)} .k-qing{background:var(--c-qing)}
+.k-roc{background:var(--c-roc)}       .k-ce{background:var(--c-ce)}
+.k-quoc{background:var(--c-quoc)}     .k-avoid{background:var(--c-avoid)}
+.k-jp{background:var(--c-jp)}
+tr.bg td.cell{border-bottom:none}
+tr.bg .rowhead{background:var(--plane);font-size:11.5px;color:var(--ink2)}
+.bgchip{display:block;font-size:10.5px;color:var(--ink2);background:var(--plane);
+  border:1px dashed var(--axis);border-radius:6px;padding:4px 3px;text-align:center;line-height:1.35;cursor:default}
+.brk{background:repeating-linear-gradient(45deg,transparent,transparent 3px,var(--axis) 3px,var(--axis) 4px)}
+
+/* ── cards (narrow) ── */
+.cards{display:none}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.card h3{margin:0;padding:13px 15px;font-size:15px;font-weight:650;border-bottom:1px solid var(--rule);
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h3 small{font-weight:400;font-size:11.5px;color:var(--ink3)}
+.card .items{padding:6px 10px 10px}
+.ci{display:flex;gap:10px;padding:8px 5px;border-bottom:1px solid var(--rule);cursor:pointer;align-items:flex-start}
+.ci:last-child{border-bottom:0}
+.ci:hover{background:var(--plane)}
+.ci .y{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--ink3);min-width:44px;flex:none;padding-top:1px}
+.ci .m{flex:1;min-width:0}
+.ci .m b{display:block;font-size:13.5px;font-weight:650}
+.ci .m span{display:block;font-size:12px;color:var(--ink2)}
+.ci .dot{width:8px;height:8px;border-radius:3px;flex:none;margin-top:6px}
+
+/* ── panel ── */
+.ov{position:fixed;inset:0;background:rgba(11,11,11,.42);opacity:0;pointer-events:none;
+  transition:opacity .25s;z-index:900;backdrop-filter:blur(2px)}
+.ov.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;z-index:901;right:0;top:0;height:100%;width:min(520px,100%);
+  background:var(--panel);border-left:1px solid var(--rule);box-shadow:var(--shadow);
+  transform:translateX(102%);transition:transform .32s cubic-bezier(.2,.7,.3,1);
+  display:flex;flex-direction:column}
+.panel.on{transform:none}
+.ph{padding:20px 22px 14px;border-bottom:1px solid var(--rule)}
+.ph .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.ph .bld{font-size:12px;color:var(--ink3)}
+.ph h2{margin:2px 0 0;font-size:21px;font-weight:660;letter-spacing:-.01em}
+.ph .cal{margin-top:10px;display:inline-block;font-size:14px;font-weight:650;padding:4px 11px;border-radius:8px}
+.ph .yr{font-size:12px;color:var(--ink3);margin-left:8px;font-variant-numeric:tabular-nums}
+.pb{padding:18px 22px 40px;overflow-y:auto;flex:1}
+.sec{margin-bottom:20px}
+.sec h4{margin:0 0 7px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.orig{font-size:15px;line-height:2;background:var(--plane);border:1px solid var(--rule);
+  border-radius:10px;padding:14px 16px;white-space:pre-wrap}
+.sign{font-size:13.5px;color:var(--ink2);background:var(--plane);border-left:2px solid var(--axis);
+  padding:8px 12px;border-radius:0 8px 8px 0;white-space:pre-wrap}
+.gloss{font-size:14.5px;color:var(--ink1);line-height:1.8}
+.gloss b{font-weight:650}
+.src{font-size:12.5px;color:var(--ink3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--plane);border:1px solid var(--rule);border-radius:8px;padding:8px 11px;word-break:break-all}
+.warn{font-size:13px;color:var(--ink1);background:var(--c-qing);border:1px solid var(--b-qing);
+  border-radius:9px;padding:10px 13px}
+.x{border:1px solid var(--rule);background:var(--surface);color:var(--ink2);border-radius:8px;
+  width:30px;height:30px;cursor:pointer;font-size:16px;line-height:1;flex:none;font-family:inherit}
+.x:hover{color:var(--ink1);border-color:var(--axis)}
+
+footer{padding:36px 0 60px;color:var(--ink3);font-size:12.5px;line-height:1.8}
+h2.sh{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);
+  margin:34px 0 10px;font-weight:600}
+
+@media(max-width:900px){
+  .scroller{display:none}
+  .cards{display:block}
+  .legend{gap:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <div class="kick">Hội An · 田野工作台 · 2026.08</div>
+  <h1>纪年矩阵</h1>
+  <p class="lede">横着读一行，是<b>一座建筑换了几次历法</b>；竖着读一列，是<b>同一年不同的人各用各的时间</b>。
+  每一格的主角不是事件，是<b>那件东西上刻的年号</b>。</p>
+  <div class="thesis">同一面墙上有五套时间在走：<b>嗣德四年 / 咸豐元年 / 光緒壬寅 / 中華民國六十三年 / 一九七五年後</b>。
+  同一群死者，被越南朝廷、清朝、民国、以及散居各国的后人，各自用自己的时间刻了一遍。<br>
+  <b>同一面墙上的纪年方式，比墙上写的内容更能说明发生了什么。</b></div>
+  <p class="hint" style="padding-top:16px;margin:0">姊妹页　<a href="/hoian-aug-2026.html" style="color:var(--ink1)"><b>会安 · 六个版本 →</b></a>　那一页是出发前的框架（读来的），这一页是四天田野（看来的）。</p>
+</div></header>
+
+<div class="bar"><div class="wrap">
+  <div class="grp"><span class="lbl">刻度</span>
+    <button class="b" id="s-ev" aria-pressed="true">事件刻度</button>
+    <button class="b" id="s-re" aria-pressed="false">真实年距</button>
+  </div>
+  <div class="grp"><span class="lbl">背景轨</span>
+    <button class="b" id="s-bg" aria-pressed="false">国家与外交</button>
+  </div>
+  <div class="grp" id="filt"><span class="lbl">建筑</span></div>
+  <span class="sp"></span>
+  <button class="b" id="s-th">深色</button>
+</div></div>
+
+<div class="wrap">
+  <div class="legend" id="lg"></div>
+  <p class="hint">点任意一格看释文（原文／落款／释义／出处笔记）。<b class="q" style="color:var(--b-qing)">?</b> = 该项待现场核实。粗边框 = 关键件。
+  最左「無年款」一列，收的是<b>刻意不写年份或年代不详</b>的东西——锦铺亭那块「龍飛歲次己未」就在那里。</p>
+
+  <div class="scroller"><table class="mx" id="mx"></table></div>
+  <div class="cards" id="cards"></div>
+
+  <h2 class="sh">怎么读这张表</h2>
+  <p class="lede" style="font-size:14.5px">
+  <b>1885–87</b>：潮州会馆密集建成，同行送匾，广州铸钟，香港已在捐款名单上。<br>
+  <b>1897–1908</b>：锦铺亭连立六匾——港口早已死透，<b>经济基础消失之后，仪式装置反而加固</b>；而这正是汉字在越南的最后窗口（1919 科举终结）。<br>
+  <b>1971–74</b>：五帮同时大修，全部用民国纪年。那是南越经济尾声、战事最烈、而侨社财力仍在的最后一个窗口。<br>
+  <b>1975</b>：整列断裂。此后再无年号，只剩公元加干支，1990 年代重新出现的是<b>捐款人的英文地址</b>。</p>
+
+  <footer>
+  工作台版本，未公开。数据取自 <code>60-实地见闻/</code> 61–79 各篇与 <code>12/42/43/44/45</code>，论断以 md 原文为准。<br>
+  纪年原文按拍摄所见迻录，个别字迹存疑处已标 <b style="color:var(--b-qing)">?</b>；<b>不使用照片</b>，释文即证据本身。<br>
+  历法底色只做分组提示，<b>身份由格中的年号原文承担</b>——因为能读它的人才是这张表的读者。
+  </footer>
+</div>
+
+<div class="ov" id="ov"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="p-t">
+  <div class="ph">
+    <div class="top"><div><div class="bld" id="p-b"></div><h2 id="p-t"></h2></div>
+      <button class="x" id="p-x" aria-label="关闭">✕</button></div>
+    <div><span class="cal" id="p-c"></span><span class="yr" id="p-y"></span></div>
+  </div>
+  <div class="pb" id="p-body"></div>
+</aside>
+
+<script>
+/* ═══ 历法 ═══ */
+const CAL={
+  nguyen:{n:"阮朝年号",c:"k-nguyen",b:"--b-nguyen"},
+  qing  :{n:"清年号",  c:"k-qing",  b:"--b-qing"},
+  roc   :{n:"民国纪年",c:"k-roc",   b:"--b-roc"},
+  ce    :{n:"公元／干支",c:"k-ce",  b:"--b-ce"},
+  quoc  :{n:"国语字·当代越南",c:"k-quoc",b:"--b-quoc"},
+  avoid :{n:"回避年号／无年款",c:"k-avoid",b:"--b-avoid"},
+  jp    :{n:"日本年号",c:"k-jp",    b:"--b-jp"}
+};
+/* ═══ 建筑（行） ═══ */
+const B=[
+ {id:"jp",   n:"日本商人墓", s:"谷弥次郎兵卫", v:"版本二"},
+ {id:"lyq",  n:"来远桥",     s:"日本桥／Chùa Cầu", v:"版本二"},
+ {id:"zh",   n:"中华会馆",   s:"原洋商会馆", v:"版本三"},
+ {id:"qf",   n:"琼府会馆",   s:"昭应祠·海南", v:"版本三"},
+ {id:"fj",   n:"福建会馆",   s:"金山寺", v:"版本三"},
+ {id:"cz",   n:"潮州会馆",   s:"伏波将军", v:"版本三"},
+ {id:"gz",   n:"广肇会馆",   s:"澄汉宫", v:"版本三"},
+ {id:"cx",   n:"明乡萃先堂", s:"祠，不是庙", v:"版本三"},
+ {id:"gg",   n:"关公庙",     s:"协天宫·明乡佛寺", v:"版本三"},
+ {id:"da",   n:"德安古宅",   s:"药铺→革命据点", v:"版本三"},
+ {id:"jp2",  n:"锦铺亭",     s:"土著·村亭", v:"越人"},
+ {id:"nx",   n:"阮祥家祠",   s:"官宦家祠", v:"越人"}
+];
+/* ═══ 单元格 ═══ y:null → 無年款列 ═══ */
+const C=[
+/* 日本商人墓 */
+{b:"jp",y:1647,k:"jp",cal:"…亥年",t:"墓碑",star:1,
+ o:"谷弥次郎兵衛\n日本\n〔左侧年款〕…亥年",
+ g:"顶部一朵家纹（花菱一类），中央竖刻墓主名，右侧只写「日本」。1647 年正是丁亥，与说明牌一致。\n\n<b>这就是全部了。</b>没有生卒详注，没有籍贯乡里，没有捐资名录，没有子孙落款——<b>一块石头，一个名字，一个国名。</b>\n\n对比潮州会馆 1887 年那口铜钟：一面铜上刻了四五十家商号和他们越南妻子的姓氏。<b>同样是十七世纪来的海商，一边留下的是名册，一边留下的是名字。</b>",
+ s:"73-日本商人墓-最好的对照组"},
+{b:"jp",y:1928,k:"jp",cal:"昭和三年",t:"日文碑",star:1,
+ o:"昭和三年西曆一九二八年\n文學博士黑板勝美教授ノ提唱ニ\n墓モ印度支那在留日本人一同\n工事監督ヲ順化府在住中山氏ニ委嘱シ\n此墓所ヲ又修築ス",
+ sg:"黑板勝美教授 提唱／印度支那在留日本人一同／順化府在住 中山氏 監督",
+ g:"黑板胜美（1874–1946）是东京帝大国史学者、《新订增补国史大系》主编，更要紧的是——<b>他是日本近代文物保护制度的推手，参与推动了 1919 年的《史迹名胜天然纪念物保存法》。</b>\n\n把「古迹保护」这套制度装进日本国家机器的那个人，1928 年到了会安，指着一座荒废的墓说，这个要修。\n\n<b>注意这里的断裂：修墓的人和墓主之间没有任何血缘或社群关系。</b>谷弥次郎兵卫死于 1647 年，1928 年来修墓的，是两百八十年后另一批因殖民地贸易而来的日本人。\n\n对比中国碑：福建会馆 1974 年重修的捐款人姓蔡姓谢姓许，与「历任帮长之灵位」是同一批。<b>中国人修的是自己的祖先，日本人修的是一个被重新认领的陌生人。</b>\n\n而<b>同一年</b>，会安的洋商会馆在双十节把匾额改成「中華會館」。<b>那正是东亚民族主义把侨民纳入国家叙事的年份。</b>",
+ s:"73-日本商人墓-最好的对照组"},
+{b:"jp",y:2005,k:"quoc",cal:"四语说明牌",t:"说明牌",
+ g:"越南语、日语、英语、法语四种语言，落款「会安遗迹管理中心」。牌子自己写了 <i>\"The legend told that\"</i>——<b>那个为寻会安恋人死在归途上的故事，不是史料，是传说。</b>\n\n而这块牌立在一片稻田里，<b>没有围墙，没有门票，没有验票桌。</b>\n\n华人留下的东西太多、太完整、太有观赏性，于是被收编进旅游经济；日本人只留下三座坟，反而被收编进外交礼仪。<b>遗存越少，越容易被赋予意义。</b>",
+ s:"73-日本商人墓-最好的对照组"},
+/* 来远桥 */
+{b:"lyq",y:1719,k:"nguyen",cal:"己亥年",t:"金匾",star:1,
+ o:"來遠橋",
+ sg:"阮福淍赐名并颁金匾；据《大南实录前编》卷八，己亥年（1719）春三月",
+ g:"阮主巡广南，见街西有桥为商船聚集之处，赐名「来远」并颁金匾，<b>意在招徕外国商人前来贸易</b>。\n\n<b>而日本人已经八十四年没来了</b>——1635 年德川幕府锁国，朱印船不再来，日本町在两代人内消融。\n\n这块「欢迎远方来客」的匾，是在客人已经不来了之后挂上去的。用中华帝国「远人来归」的修辞，把「我需要你们的钱」写成「四夷向化」。",
+ s:"42-会安-版本二-日本町与日本桥"},
+{b:"lyq",y:1817,k:"nguyen",cal:"嘉隆年间",t:"重建",q:1,
+ g:"据脊梁题记与桥头碑，桥于此年重建。此后 1865、1915、1986 又经重修——<b>日本建筑要素逐次脱落，今存结构基本是越、中风格。</b>\n\n〔具体年份（丁丑 1817？）待现场核碑〕",
+ s:"42-会安-版本二-日本町与日本桥"},
+{b:"lyq",y:1917,k:"ce",cal:"一九一七",t:"重修碑",
+ g:"碑上刻着大量会安土产商号的名字：安利号、金发号、锦盛号、合兴号、公平号、东兴号、芳生、瑞丰、泰丰行、昌盛、荣发……\n\n<b>桥的修缮账本也是一份工商名录。</b>你走的这几座庙，功德榜从来不是抽象的「华人社群」，而是一间一间具体的店。",
+ s:"66-物产馆与药馆-货商号与文献"},
+{b:"lyq",y:2006,k:"quoc",cal:"2006.5.17",t:"纸币",star:1,
+ g:"两万盾聚合物纸币发行，正面胡志明与国徽，<b>背面就是这座桥</b>。\n\n那一年河内办 APEC，次年入 WTO，日本是最大 ODA 提供国。<b>把一项政策追认为一种本性：开放不是 1986 年的转向，是十七世纪就有的传统。</b>\n\n从 1719 年的金匾到 2006 年的纸币，是同一份招商广告的两个版本——同一个发行方（国家）、同一个受众（外国资本）、同一块招牌，中间隔了 287 年。",
+ s:"42-会安-版本二-日本町与日本桥"},
+{b:"lyq",y:2024,k:"quoc",cal:"2024.8.3",t:"大修竣工",star:1,
+ g:"2022.12.28 动工，20.2 tỷ 盾（约 80 万美元），JICA 派专家参与，历时 19 个月竣工——史上第六次大修。\n\n竣工后舆论说「把文物做新了」。官方回应有互相矛盾的两层：一边说用的是传统石灰，<b>遇雨长苔会自己变旧</b>；一边指示遗产中心<b>回头调色</b>，把桥前后的红调淡、侧面的白调深。\n\n<b>真实性不是被发现的，是被决议的。</b>而纸币上那座桥不会变旧——图像冻结在 2006 年，指涉物 2024 年被重做，然后被要求向图像靠拢。",
+ s:"42-会安-版本二-日本町与日本桥"},
+/* 中华会馆 */
+{b:"zh",y:1741,k:"qing",cal:"乾隆六年",t:"创建·据碑载",star:1,
+ o:"溯我會安中華會館，即昔之洋商會館也",
+ sg:"《会安中华会馆重修简志》，据碑记条例所载创建于清乾隆六年",
+ g:"「洋商」就是跑远洋的船商。<b>所以它从来不是同乡会——它是港口的行业公所，是五帮之上的公共机构。</b>\n\n福建、潮州、广肇、琼府、嘉应各拜各的乡亲与乡神，而<b>所有人的船进出会安港，都要在这里过一道手。</b>\n\n天后圣母在这里的身份也就清楚了：她不是福建人的乡神，是所有跑海人的行业神。<b>福建会馆拜她是「我们莆田人的娘娘」，中华会馆拜她是「我们这行的祖师」。同一位神，两种法理。</b>",
+ s:"64-中华会馆-1741年的港口宪章"},
+{b:"zh",y:1801,k:"avoid",cal:"歲次辛酉",t:"公议条例碑",star:1,q:1,
+ o:"《洋商會館公議條例》\n歲次辛酉年三月吉旦　各船長眾商公立",
+ sg:"签名者是船长与商人集体，不是某一姓某一帮",
+ g:"<b>全会安最重要的一件文献，等于一份港口宪章：</b>\n\n· <b>抽分</b>：会馆设立印簿，每船一本，货物随开随誊，按货值抽厘入公\n· <b>公柜与审计</b>：馆内设大柜一口，钱与账簿俱存柜中，用时须当事人公同开取，「一人不得擅專」；船长到岸之日集体查数\n· <b>小额分摊</b>：小船与空船不足抽分者，每船题练钱五贯\n· <b>海难救济</b>：失水落难客商住会馆，每月每人给伙食钱，以三个月为期\n· <b>丧葬互助</b>：孤客病死者须先问明籍贯姓名、附搭何船「以杜詐偽」；殡葬由会馆出资，葬处须登记「無致後日流落」\n· <b>防挪用</b>：会馆余钱不准借名生利，须留作失水风灾时应急\n\n<b>海关、公积金、海难救济、丧葬互助、审计制度、防挪用条款——一块石头上刻着一个小共和国的章程。</b>",
+ w:"「辛酉年」具体所指 1801 还是 1861，差六十年。建议当面问管理员。本表暂置于 1801。",
+ s:"64-中华会馆-1741年的港口宪章"},
+{b:"zh",y:1928,k:"roc",cal:"民國十七年",t:"改名碑",star:1,
+ o:"中華會館，古洋商會館也，今只顏之曰中華，示不忘祖耳",
+ sg:"大中華民國十七年戊辰歲雙十節國慶紀念日　廣南華僑重修會館董事會仝勒石",
+ g:"重修简志第三次记载：「民國十七年（1928），以洋商會館大門上之匾額易名為中華會館」。\n\n<b>这一步跨得极大。从「洋商」到「中华」，从职业身份变成国族身份。</b>\n\n双十节、民国纪年、「华侨」一词、捐款人里的「华侨工团」「兴华学校」——1928 年正是国民政府形式统一、南洋侨务大兴的年份。<b>一个十八世纪的船商行会，被二十世纪的民族主义重新命名了。</b>\n\n同一年，一位日本教授在城外给一座 1647 年的荒坟接上了国族的谱系。",
+ s:"64-中华会馆-1741年的港口宪章"},
+{b:"zh",y:1943,k:"roc",cal:"1943–1945",t:"烈士遗像",star:1,
+ o:"越南中圻華僑抗戰烈士遺像",
+ sg:"叶传英、林建中、林东衡、梁星标、李仲珣、许文茂、谢福康、罗允正、郑燕昌、程诒训、王青松、蔡文礼、甘炳培",
+ g:"十三位，籍贯广东、海南、福建，多在会安、岘港经商或任教，因参与华侨救亡工作被日本宪兵逮捕处死。\n\n<b>这就是「中华」二字兑现的时刻：1741 年的行会互助，到 1943 年变成了为一个遥远国家去死。</b>\n\n他们死时的身份是「华侨」，效忠对象是一个从未去过的国家。同一份名单也出现在广肇会馆内殿「忠貞衛國」黑板上。",
+ s:"64-中华会馆-1741年的港口宪章"},
+{b:"zh",y:1993,k:"ce",cal:"1991–93",t:"重修碑",
+ g:"旅美会安同侨捐美金重修正殿天后宫神龛及东西廊，总计 <b>13,800 余美元</b>。",
+ s:"64-中华会馆-1741年的港口宪章"},
+{b:"zh",y:1995,k:"ce",cal:"一九九五",t:"重修碑",
+ g:"由本埠福建、广肇、琼府、潮州、嘉应<b>五帮会馆各捐两百万越币</b>，加上<b>礼义学校董事会</b>补助完成全部工程。落款「会安中华会馆重修委员会」。\n\n<b>这里至今是五帮的联席机构，是华校董事会的所在。</b>它不在门票名录上，游客不来；它没有自己的乡亲，抽象的共同体不产生日常香火。\n\n<b>冷清不是衰败，是它本来就不是给外人看的——它是办公室，不是庙。</b>",
+ s:"64-中华会馆-1741年的港口宪章"},
+/* 琼府会馆 */
+{b:"qf",y:1851,k:"nguyen",cal:"嗣德四年",t:"案发·实录",star:1,
+ o:"（尊室苕）將船內盡殺七十六丁，投棄於海",
+ sg:"《大南寔录》嗣德四年六月；中文碑作「咸豐元年」",
+ g:"巡哨掌卫范赤与郎中尊室苕上奏，称在南义洋面遇匪船三艘、尽杀七八十人请赏。嗣德帝起疑复查，队长陈文侑首告：那三艘根本没有还击，靠近后即收帆就官船，<b>船上三十三人呈出船牌，其中还有人自称寓居承天铺、与尊室苕相识</b>。\n\n案结：尊室苕被<b>剥夺皇族姓氏、改从母姓称「邓苕」</b>，与范赤同处凌迟；杨衢问斩。\n\n<b>他们出示了船牌，船上有人认识主使本人，搜出的只有货物没有武器。证据不管用，定义才管用。</b>\n\n而他们不是过路商船，是寓居顺化、广南、广义、准备回海南的侨民——<b>杀他们的，正是他们所居之国的水师。</b>",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:1880,k:"qing",cal:"光緒初年",t:"昭应殿建成",
+ o:"敕封義烈昭應百八英靈",
+ g:"遇难者屡屡显灵救助海难，海南乡亲立祠奉祀，光绪初年建成昭应殿。\n\n<b>数字打架：</b>《大南寔录》作「尽杀<b>七十六</b>丁」，法文解说牌作 <b>107</b> 人，中文碑与所有牌匾一律 <b>108</b>。\n\n<b>76 → 108 的膨胀，正是一桩案件变成一位神明的过程。</b>108 是佛教与《水浒》共有的圆满数——凑够这个数，死者才能整体登龛。\n\n<b>这是一座把国家暴力供成神的建筑。</b>受害者被加害者的朝廷「敕封」，冤魂转为海上保护神。",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:1902,k:"qing",cal:"光緒壬寅",t:"翻案碑",star:1,
+ o:"我瓊郡百有八人，其生前慘酷獨出千古，沒後英靈亦獨出千古，以忠厚長者而誣遭……",
+ sg:"試用鹽大使附貢生謝承宣謹撰并書／光緒壬寅仲冬吉旦勒石",
+ g:"<b>冤屈的核心不是被杀，是被安上了污名。</b>这块碑是一份翻案陈述。\n\n撰文者是附贡生，还挂着「试用盐大使」——<b>清朝的捐纳／候补虚衔</b>。在越南做了几代生意的华商，衡量身份的尺子仍然是北京那套科举与职官体系。\n\n左侧「茲將各捐題名列後」是捐款名录：锦纶号、美利号、万合号、瑞昌号、长裕号、广和利、和成号……<b>出资单位是公司，不是个人。</b>",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:1972,k:"roc",cal:"民國六十一年",t:"五帮贺匾",star:1,
+ o:"赫奕千秋",
+ sg:"福建會館、湖州會館、中華會館、廣肇會館、嘉應郡、安貴軒 全敬奉／中華民國六十一年歲次壬子孟春吉旦",
+ g:"<b>这块匾不是海南人自己挂的，是别的会馆送的。</b>五帮到齐。\n\n1851 年那桩案子，早已不只是海南人的家事——它对每一个在此地经商的华人来说，都是同一种处境的极端版本：<b>你在这里做了几代生意，但你的性命随时可以被重新定义。各帮出资挂匾，纪念的是共同的脆弱。</b>\n\n<b>1972 年正月，越战正打到最激烈的时候</b>（三个月后就是复活节攻势），会安的华人社群还在按民国纪年、按孟春吉旦，把五个会馆的名字一起刻上去。三年后这个社群大规模离散。",
+ w:"左款「湖州會館」应为「潮州」，疑刻工笔误或异写，需现场再核一眼。",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:1974,k:"roc",cal:"民國六十三年",t:"重修碑",
+ o:"瓊府會館重修碑誌",
+ sg:"中華民國六十三年歲次甲寅季夏月　重修委員會謹鐫",
+ g:"1974 年季夏——<b>西贡政权崩溃前十个月</b>，会安的海南人还在用民国纪年刻石。",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:1976,k:"ce",cal:"一九七五年後",t:"侨汇小碑",star:1,
+ o:"一九七五年後旅外同鄉捐助修葺會館芳名錄",
+ sg:"下列美國、德國、香港、海南省；金额记作美元、马克、港币",
+ g:"与上一格的 1974 碑必须<b>同框</b>看：1975 年之后这个社群自己散了，散到北美与西欧；<b>而维持这座会馆的钱，从此由流散者的流散汇回来。</b>\n\n名录里同时出现「海南省」，说明八十年代之后祖籍地那条线又接上了。\n\n而这批名字的正确读法是：<b>一份流亡名单，反过来给故地汇款。</b>那不是侨居的老华侨，那就是 1978 年被赶走的这批人本人或其子女。",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:2002,k:"ce",cal:"壬午年仲秋",t:"丘濬碑",
+ g:"丘濬：景泰进士、累官文渊阁大学士参预机务、谥文庄、著《大学衍义补》。落款「越南会安琼府会馆重修委员会谨录」。\n\n<b>昭应殿供的是一百零八个冤魂，那是神；海瑞、丘濬供在这里，是乡贤，管体面。</b>\n\n但放在这座会馆里还有一层更锋利的：<b>一群被诬为海盗而遭屠杀的商人，把帝国最著名的清官供在自己的祠堂里。</b>碑文那句「以忠厚长者而诬遭海盗」，和墙上海瑞的遗像，说的是同一件事：<b>清白</b>。\n\n另注：两块遗像匾写「邱文莊公」而石碑写「丘文莊公」——雍正三年为避孔子讳诏令丘姓加耳旁，<b>清代避讳制度留在越南的一枚指纹</b>。",
+ w:"海瑞碑疑将生年刻成「明武德九年」（武德是唐高祖年号，海瑞生于正德九年 1514）。需特写回核。",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+{b:"qf",y:2024,k:"ce",cal:"甲辰",t:"五指山立轴",
+ o:"五峰如指翠相連，撐起炎荒半壁天……疑是巨靈伸一臂，遙從海外數中原。",
+ sg:"一位八十五岁老人的手抄本，2024 年甲辰",
+ g:"丘濬《五指山》。<b>一个海南人写自己岛上的山，站位是「海外」，回望的是「中原」。</b>\n\n这句诗被会安的海南人挂在墙上，<b>位置一模一样，只是海更远了一点。</b>",
+ s:"62-琼府会馆-一桩冤案如何变成神"},
+/* 福建会馆 */
+{b:"fj",y:1757,k:"qing",cal:"乾隆丁丑",t:"增建·据碑载",
+ g:"《本會館重修及增建前門碑記》所列营造史：康熙年间创立，最初茅棚草舍，原为奉天后圣母的<b>金山寺</b>；乾隆丁丑（1757）增建殿宇供奉。\n\n三门门楼上写的是「金山寺」——<b>这才是它最初的名字</b>。越南人至今仍叫它 Chùa Phước Kiến（福建寺）。",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:1885,k:"qing",cal:"光緒乙酉",t:"重修·据碑载",
+ g:"碑记所列：光绪乙酉（1885）重修，光绪庚子（1900）再修并「将会馆分段大加修葺」。",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:1897,k:"qing",cal:"光緒丁酉",t:"状元题匾",star:1,
+ o:"福建會館\n〔联〕航海梯山，南越獨成都會\n〔联〕傾四海波濤舟楫咸沾大化",
+ sg:"光緒丁酉仲春　吳魯敬書",
+ g:"<b>吴鲁</b>是泉州晋江人，光绪十六年（1890）庚寅科状元——<b>福建历史上最后一位状元</b>。\n\n一座南洋侨埠的会馆，请到本省最后一个状元题匾，说明了福建帮当时在会安的分量，也说明这条商路两端的通达程度：<b>一个中了状元七年的翰林，愿意为海外同乡写这三个字。</b>\n\n「航海梯山，南越獨成都會」——渡海翻山而来，在南越之地独自建成一座都会。<b>这是一句自我加冕，写的是闽人对会安的功劳认领。</b>",
+ w:"下联「鑄坤陶坎……共沐恩波」中间一字光线下辨不真切，需正面补拍。",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:1973,k:"ce",cal:"癸丑年季冬",t:"摹刻旧联",
+ sg:"重修會謄鐫于癸丑年季冬月",
+ g:"吴鲁 1897 年的左联，<b>1973 年冬天被重新描摹上墙</b>，两个月后（甲寅孟春）三关门落成，香港的匾挂了上去。\n\n<b>一整套动作压缩在三个月里，而这是南越最后一个完整的农历新年。</b>",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:1974,k:"roc",cal:"一九七四年甲寅",t:"旅港贺匾",star:1,
+ o:"惠我同人",
+ sg:"右款：會安天后宮 福建會館 重修落成誌慶／左款：一九七四年甲寅孟春　旅港福建同鄉會 敬奉",
+ g:"<b>香港福建同乡会送的贺匾</b>——与琼府会馆「赫奕千秋」结构完全一样，只是那一块来自会安本地五帮，<b>这一块来自香港</b>。\n\n<b>1974 年，香港的福建人给越南的福建人送匾。香港，早在离散发生之前，就已经是这个网络的节点。</b>\n\n于是这道门上有三重署名：<b>吴鲁（1897，清末状元）→ 重修委员会（1973，本地）→ 旅港福建同乡会（1974，离散网络）</b>——故国的文化权威／在地的组织能力／海外的资金联系。<b>而 1975 年之后，前两项都失效了，只剩第三项。</b>",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:1985,k:"quoc",cal:"1985.3.19",t:"列级牌",
+ g:"文化部列 <code>Di tích loại 1</code>。<b>比萃先堂的 1993 年早八年</b>——它一直是会安最先被制度看见的那一处。\n\n而门前戴斗笠卖 bánh xoài 的小贩、举伞的游客、台阶上摆拍的年轻人，构成的是另一套现实。<b>同一条街上，两种存活方式。</b>",
+ s:"63-福建会馆-用组织延续自己"},
+{b:"fj",y:2001,k:"ce",cal:"公元貳零零壹辛巳",t:"功德永垂",star:1,
+ o:"蔡俊明　1911.4 – 1975.10.10　享年七十六\n蔡寶古　1919 – 2009　壽九十　經營永新影室\n蔡支興　1915.2.19 – 2001　享年八十七",
+ sg:"公元貳零零壹辛巳年中秋節　本會館奉祀",
+ g:"三位都姓蔡，都来自<b>福建晋江县塘东乡</b>（著名侨乡），侨居会安。传记里反复出现「<b>养正学校</b>」——与前贤祠「協助興辦……華僑學校」圆匾对上了。\n\n<b>职业的世俗性</b>：汽车零件商、照相馆老板。不是耆老不是乡绅，是二十世纪中期一个小城的生意人。<b>而永新影室尤其妙——开照相馆的人，最后自己的照片被镶进了祠堂的木框里。</b>\n\n<b>时间的形状</b>：三人卒于 1975、2001、2009。第一位死在旧秩序终结的当年，另两位活过整个封闭期，<b>直到 2001 年才由会馆一起立牌。这块牌子等了二十六年——那个空白就是会馆不能立牌的年月。</b>",
+ s:"63-福建会馆-用组织延续自己"},
+/* 潮州会馆 */
+{b:"cz",y:1852,k:"qing",cal:"咸豐貳年",t:"买地碑",star:1,q:1,
+ o:"福緣善慶\n越南國貿易得逢盛世之秋……集我同人樂捐資斧，置買豐順戶地址\n伏波老爺……功冠雲臺，著標名之銅柱，奠定海邦",
+ sg:"咸豐貳年歲次壬子孟春",
+ g:"<b>比其他潮州碑早三十三年。先买地，再建庙，最后才有会馆</b>——所有华人社群在异地扎根的标准三步，而这块碑把第一步写在了石头上。\n\n<b>「伏波老爺……功冠雲臺，著標名之銅柱」——伏波将军即马援。</b>云台二十八将，公元 43 年南征交趾，平定征侧、征贰起义，立铜柱为界。<b>而征氏姐妹是越南国族叙事里最高级别的民族英雄。</b>\n\n<b>一群华商在越南的土地上，供奉着征服越南的那位将军，并且把「铜柱奠定海邦」直接刻在墙上。</b>\n\n必须取两层：<b>实用层</b>——对跑海的潮汕人，「伏波」字面就是镇伏波涛，是海神，铜钟、衔牌、楹联「潮海慶安瀾」全围绕平息风浪；<b>政治层</b>——铭文选择保留「铜柱」这个典故，同时在说：<b>我们来自那个立柱的一方。</b>\n\n而琼府会馆把国家暴力的受害者供成神，这里供的是施暴的一方——<b>两座庙相距不到一公里，同属五帮。</b>",
+ w:"「咸豐貳年」是否准确，建议现场再核。",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1885,k:"qing",cal:"光緒十一年",t:"脊梁题记",
+ sg:"光緒十一年歲次乙酉仲冬穀旦重建；木作编号亦标 1885",
+ g:"会馆建成。此后两年间同行陆续送匾道贺。",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1886,k:"qing",cal:"光緒十二年",t:"广肇贺匾",
+ o:"海國恩波",
+ sg:"越南會安埠廣肇會館等敬送／右侧小字：潮洲會館落成之喜／光緒十二年丙戌季冬。另有「恩周瀛海」匾，丙戌年，伍合公司敬",
+ g:"<b>又是一次「同行送匾」</b>：1886 广肇送潮州、1972 五帮送琼府、1974 旅港同乡会送福建——<b>这个礼节整整持续了一百年。</b>",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1887,k:"qing",cal:"光緒十叁年",t:"铜钟",star:1,
+ o:"伍合號 氏黎　陳森記號 氏宋　陳喜順號 氏阮\n蔡柔合號 氏王　李錦源號 氏陳　杜卿炳 氏阮　楊卿合號 氏張",
+ sg:"羊城天平街仁興店造／光緒十叁年歲次丁亥孟春",
+ g:"<b>礼器是从广州订货、装船运来的。同一条商路，来时载沉香肉桂，去时载铜钟瓷炉。</b>\n\n但真正要紧的是捐资名单。「<b>氏 X</b>」是越南女性的名字结构（Thị，如 Nguyễn Thị、Lê Thị）——<b>每一家商号后面跟着的，是店主的越南妻子。</b>\n\n还记得大汕《海外纪事》1695 年那句「凡客此者必娶一婦，以便交易」吗——<b>一百九十二年后，那句话在这口钟上有了名单。男人的姓是汉字商号，女人的姓是越南的阮、黎、陈、杜。</b>\n\n<b>这口钟是全片最好的一件实物：华人社群的下一代，是从这些名字里生出来的。</b>而萃先堂那份「十老六姓三家」的父系族谱，背面就是这批不留姓名的越南母亲。\n\n同年另有《潮州會館重建碑記》（陳鵬南書），捐款名单里赫然有「<b>香港眾商捐銀開列</b>」——1887 年，香港已经是这个网络的节点。碑文「出入相友，守望相助」是《孟子》原话：<b>会馆用经典给自己的互助制度找法理。</b>",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1970,k:"ce",cal:"一九七〇",t:"炮火碑",star:1,
+ o:"本會館建於光緒十一年，距今已八十五年……遭炮火擊傷……全座之一",
+ sg:"《會安潮州會館重修碑記》，1970",
+ g:"<b>这是这几天看到的所有碑里，唯一直接写下越战的一块。</b>那些 1971、1972、1974 年的重修，你都只能从年份推断背景；这一块把原因写出来了：<b>房子被炮弹打中了。</b>\n\n捐款人名单同样是一张地图：西堤、蜆港、順化、三岐、芽莊、會安；公司名有<b>湄江纸业公司、大生船务公司、远洋实业行</b>——1970 年的南越，华商仍然在做纸、做船运、做进出口。\n\n配着那张 1970 年重修落成典礼照片：二十几位穿西装打领带的男人站在殿前。<b>五年后，这张照片里的人大部分会离开。</b>",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1990,k:"ce",cal:"一九九〇",t:"送别照",star:1,
+ o:"歡送余遠志理事長合府赴美團聚",
+ g:"理事长带全家去美国，会馆全体在门前合影送行。\n\n<b>这不是历史照片，这是一次实时的离散。</b>前排的老太太、被抱着的两个小孩，都在这张照片里。\n\n而五年后的 1995 年碑上，余远志的名字<b>很可能就出现在「旅美」那一栏</b>——<b>送走的人，变成了汇钱回来的人。</b>",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+{b:"cz",y:1995,k:"ce",cal:"公元一九九五年歲次乙亥",t:"侨汇重修碑",
+ o:"韓江泱泱，源遠流長／承先啟後，世澤綿綿",
+ sg:"捐款分栏：美 · 旅加拿大 · 旅澳 · 旅法 · 香港 · 日本（金谷園飯店）· 蜆港 · 三岐 · 順化 · 芽莊 · 平陽 · 會安",
+ g:"自 1990 庚午孟春举行第二次重修，历时数载告竣。\n\n<b>韩江是潮州的母亲河。一百四十三年了，写在越南墙上的自我定位，仍然是那条江。</b>",
+ s:"72-潮州会馆-八块石头与铜钟上的妻子"},
+/* 广肇会馆 */
+{b:"gz",y:1885,k:"qing",cal:"光緒乙酉",t:"建馆·门联",
+ o:"鷲峽沐恩波／鶩湖蒙德澤",
+ sg:"光緒乙酉春三月穀旦；与《重修簡誌》「本會館建于清代光緒十一年」吻合",
+ g:"鹫峡、鹜湖指西江羚羊峡与鼎湖一带——<b>把家乡的山水搬进异国的门联</b>，和琼府会馆挂丘濬《五指山》是同一个动作。\n\n外柱那副更工整：「<b>廣</b>資集公益群賢盛<b>會</b>／<b>肇</b>啟濟眾生合境同<b>安</b>」——<b>首字嵌「廣肇」，尾字嵌「會安」，一副联把籍贯和落脚地锁在一起。</b>\n\n进门可见「澄漢宮」匾，主祀关公。<b>所以会安有两处关帝：陈富街 24 号那座是五帮公有的協天宮，这里是广府人自己的澄漢宮。</b>",
+ s:"65-广肇会馆与民国纪年的政治背景"},
+{b:"gz",y:1918,k:"nguyen",cal:"啟定三年",t:"好義可嘉匾",
+ g:"阮朝启定帝年号，多半是表彰赈济善举。\n\n<b>注意这是全表少数几处用越南年号的华人会馆题刻</b>——它标记的是与阮朝地方官府的关系，而不是与故国的关系。",
+ s:"65-广肇会馆与民国纪年的政治背景"},
+{b:"gz",y:1964,k:"roc",cal:"中華民國五十三年",t:"重修简志",star:1,
+ sg:"署「中華民國五十三年十月十日」",
+ g:"《會安廣肇會館重修簡誌》：建馆八十余载，<b>民國五十二年（1963）秋馆之西廊倾倒</b>，乃集众议成立重修委员会，次年夏完工。\n\n<b>落成署双十节。</b>此后 1971 年再修、1992 壬申大修、1999 己卯又修万善堂——<b>六十年里修了四次，最近一次不到三十年。这就是它看起来最新的原因。</b>",
+ s:"65-广肇会馆与民国纪年的政治背景"},
+{b:"gz",y:1992,k:"ce",cal:"壬申仲夏",t:"门额",
+ sg:"壬申仲夏　李松章書",
+ g:"<b>1975 年之后，年号消失了。</b>1992 壬申碑、1999 己卯碑——只有<b>公元加干支</b>，再无年号。\n\n因为 1975 南越覆灭、1978 排华、1979 中越战争、大批华人出海，会馆停摆；1986 革新开放、1991 中越关系正常化，才重新开始修。",
+ s:"65-广肇会馆与民国纪年的政治背景"},
+{b:"gz",y:2002,k:"quoc",cal:"2002.3",t:"访问照片",star:1,
+ g:"<b>江泽民到访广肇会馆，题字、与理事会合影。</b>\n\n<b>七十四年之间，同一座建筑的墙上先后挂过民国国庆的落款和中华人民共和国主席的照片。</b>\n\n资助人也换了三轮：清末的商号 → 1964 至 74 年的西堤、岘港、香港侨商 → 1990 年代之后的美国、加拿大、澳洲、台湾、香港（碑上金额直接刻美元）。\n\n<b>会馆从不表达立场，它只是忠实地记下当时谁付钱、谁承认它。</b>\n\n另：它至今最「活」——那面近年彩照墙全是元宵舞狮、福禄寿巡游、旗袍奥黛合影，<b>是五座里唯一还在办大型节庆的。中华会馆冷清是因为它是办公室，广肇热闹是因为它是社区客厅。</b>",
+ s:"65-广肇会馆与民国纪年的政治背景"},
+/* 萃先堂 */
+{b:"cx",y:1725,k:"ce",cal:"約1725",t:"始建·两说",q:1,
+ g:"官方遗产资料称始建约 1725，而堂内维新二年（1908）碑记称 1820 年建于明乡文圣庙旧地。<b>两说并存，待核。</b>",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"cx",y:1820,k:"nguyen",cal:"明命元年",t:"谱本",star:1,
+ o:"明鄉社歷代鄉賢\n十大老：孔、颜、余、徐、朱、黄、张、陈、蔡、刘\n六姓：许、魏、吴、伍、庄、邵\n三家：张弘基、吴廷宽、洗国详",
+ sg:"《萃先堂前賢鄉譜圖本》立于明命元年（1820），绍治六年（1846）重修，嗣德三十三年（1880）由李成意抄录",
+ g:"「萃先」直译就是「聚先人于一堂」。<b>它供的不是神，是人。</b>\n\n<b>这不是一座宗祠。</b>中国的祠堂拜同一个祖宗，而萃先堂把十个姓、六个姓、三户人拼成一个共同的「先贤」序列——<b>血缘不够，就用户籍造祖先。</b>\n\n堂里还有「诸族派明—清」的牌位，把明遗民和后来的清人并祀——<b>历史裂缝在仪式里被抹平了。</b>",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"cx",y:1908,k:"nguyen",cal:"維新二年",t:"迁建碑",
+ g:"东厢两块石碑，碑文记的正是这座祠的迁建与身份：1905 年迁到现址，1906 年把供梓潼帝君的庙移到堂前一角。\n\n<b>文圣庙加梓潼庙这条线尤其可写——明乡人有资格应越南科举、入仕阮朝，这是他们和五帮华侨最根本的区别。</b>",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"cx",y:1993,k:"quoc",cal:"1993.3.29",t:"列级石牌",
+ g:"列为国家级历史文化遗迹。",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"cx",y:2009,k:"quoc",cal:"2008–09",t:"国家出资牌",star:1,
+ o:"Kinh phí nhà nước đầu tư 100%",
+ sg:"2008.2.18 开工，2009.4.16 竣工，历时 418 天",
+ g:"黑色花岗岩牌，最后一行是关键：<b>国家全额出资。</b>\n\n而功德榜上，绝大多数捐款是 20 万、30 万、50 万盾（约人民币五十到一百多元），最高不过 100 万。\n\n<b>国家修房子，社区续香火——两套钱在同一堵墙上分工。</b>这是遗产化之后的典型结构：建筑本体被收归国家叙事，日常祭祀仍由后人自己凑钱维持。",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"cx",y:null,k:"avoid",cal:"無年款",t:"諸族明鄉板",star:1,
+ o:"諸族明鄉\n1.安 … 11.CHÂU/CHU 周 … 34.HOÀNG/HUỲNH 黃 … 39.孔 … 46-47.LA/LÃ/LỮ 羅/呂 … 66.NGUYỄN 阮 … 67.顏 … 120.尤",
+ g:"<b>全场文眼。</b>120 个姓氏，每个都是越南拼音在左、汉字在右。\n\n对比 1820 年谱本里的「十大老、六姓、三家」（十几个姓），这块板已经膨胀成一部通用的中华百家姓——<b>边界从「谁是遗民之后」变成了「谁认这个身份」。</b>\n\n汉越转换的化石：34 号 HOÀNG／HUỲNH 同列一个「黃」字，<b>南方读 Huỳnh 是为避阮主讳</b>；66 号赫然是 NGUYỄN「阮」——<b>最越南的姓，被列进明乡族谱</b>。\n\n<b>而整块板的排序不是按汉字笔画或百家姓次序，是按越南国语字母表（An, Âu, Bạch, Bàng, Bành…）。字是汉字，秩序是拉丁字母的。</b>",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+/* 关公庙 */
+{b:"gg",y:1904,k:"qing",cal:"光緒甲辰",t:"协天宫匾",star:1,q:1,
+ o:"協天宮",
+ sg:"右上款：光緒甲辰年夏月吉旦／左下款：五幫會館敬奉",
+ g:"<b>这块匾几乎是一份产权声明。</b>\n\n关公庙最初为十七世纪明乡人所建；至清末，福建、潮州、广肇、琼府、嘉应五帮势力壮大，共组中华会馆，<b>庙的供奉与管理权随之转手</b>。\n\n<b>一块 1904 年的匾，记录的是谁在替这座庙出钱、谁有资格署名——从「前朝遗民的宗庙」变成「侨帮的公共神明」。</b>\n\n同一年的碑上，把出钱的每一家商号都刻了下来——<b>碑刻等于当年的工商名录。</b>",
+ w:"匾额是否确为「協天宮」，需现场再核。",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+{b:"gg",y:2010,k:"quoc",cal:"当代",t:"越文供养·验票桌",
+ o:"KÍNH LỄ VÍA NGÀI QUAN THÁNH",
+ g:"刺绣横披「關聖帝君」，两侧落款是<b>越南姓名</b>（阮公福、吕光娘一类）「全家奉供」；供桌前牌子用越语敬贺「关圣爷诞」。<b>关公已经脱离华人社群，被吸收进越南民间信仰。</b>\n\n供品柚子、火龙果、黄菊，完全是越南节俗；而天花抬梁式、梁下龙头雀替，是闽南匠作的骨架。\n\n<b>而正殿中央摆着 KIỂM SOÁT VÉ / TICKET CHECK 验票桌。</b>同一个院子里：山门写佛家的「真空妙有」，正殿是道封的「协天」，落款属于清末侨帮，跪拜的人说越南语，中间摆着售票处。",
+ s:"61-明乡三处-佛寺关公庙与萃先堂"},
+/* 德安古宅 */
+{b:"da",y:1908,k:"quoc",cal:"1908",t:"铜牌·抗税后",
+ g:"广南抗税运动（<code>phong trào chống thuế</code>，<b>广南是发源地</b>）之后，德安家转做<b>北药</b>生意，融入会安繁盛的药铺业，但仍是本地爱国志士的聚会点。",
+ s:"67-德安古宅-明乡最后的转身"},
+{b:"da",y:1925,k:"quoc",cal:"1925–26",t:"铜牌·地下刊物",star:1,
+ sg:"潘周桢维新著作、《鐘鳴》Chuông Rè、《东法时报》、《新世纪》、《人类》，特别是在法国出版的《越南魂》Việt Nam Hồn",
+ g:"运动转向更激进的方向，这里成了青年与知识分子的碰头处。\n\n<b>一个卖当归黄芪的柜台，柜台底下压着从巴黎寄来的地下刊物。药材从中国来，思想从法国来，都走同一条海路，都在同一间铺子里分发。</b>",
+ s:"67-德安古宅-明乡最后的转身"},
+{b:"da",y:1924,k:"quoc",cal:"1924",t:"高鸿岭·赴黄埔",star:1,
+ o:"高鴻嶺，本名潘海深 Phan Hải Thâm，1906.4.20 生于明香社（xã Minh Hương，今明安坊）",
+ sg:"1924 与几位华人兄弟一同赴中国广州，入黄埔军校",
+ g:"履历：1927 参与创立越南革命青年会会安支部 → 1929 参与创建印度支那共产党 → 1939 赴昆明组织交通线 → <b>1941 组织了接阮爱国（胡志明）回国的那条线</b> → 1957 任外交部领事司司长 → 2008 去世。\n\n<b>他的祖先从中国来，他往中国去。但他去的不是故乡，是革命策源地。</b>同一条海路，两百八十年前运的是沉香和瓷器，现在运的是共产国际的组织术。\n\n<b>明乡人最后一次发挥「中间人」的功能</b>——1827 年他们替阮朝采买药材，1941 年他们替越共打通中越交通线。<b>用途换了，机制没换。</b>\n\n而他的名字：出生叫潘海深，化名高鸿岭，<b>都是越南名字</b>。萃先堂那块板上，潘（Phan）在第 72 位。<b>姓还是那个姓，认同已经完全是另一个国家的了。</b>",
+ s:"67-德安古宅-明乡最后的转身"},
+/* 锦铺亭 */
+{b:"jp2",y:1817,k:"nguyen",cal:"1817",t:"现址重修",
+ g:"初祀<b>城隍与本境诸神</b>。平面是典型越式村亭：方亭在前、正殿在后、东屋西屋分列两厢，外有 <code>cây đa – bến nước – sân đình</code>（榕树—渡口—亭前场），越南村落的标准三件套。\n\n<b>和会馆的差别是结构性的，不是风格性的：</b>会馆按<b>籍贯</b>组织、主神管海、落款是商号船长、是侨居者的自治机构；村亭按<b>地域</b>组织、主神管土、落款是乡目房派、是国家祭祀体系的末梢。\n\n<b>但做匾的手艺是同一批人（金峰木匠村），文字是同一套汉文。社会逻辑完全不同的两种机构，共用一套物质语言。</b>",
+ s:"74-锦铺亭-土著的那一半"},
+{b:"jp2",y:1897,k:"nguyen",cal:"成泰丁酉",t:"敦而尊匾",q:1,
+ sg:"成泰丁酉孟夏／左款：東派西派仝奉供",
+ g:"大修之后加祀前贤、后贤，故又称「锦铺乡贤」（Cẩm Phô Hương Hiền）。\n\n<b>东西两房支共同出资，村内宗族结构直接写在匾上。</b>",
+ w:"匾额中字待核。",
+ s:"74-锦铺亭-土著的那一半"},
+{b:"jp2",y:1903,k:"nguyen",cal:"成泰癸卯",t:"锦铺亭匾",star:1,q:1,
+ o:"錦鋪亭\n〔同年另有〕參天贊化 · 盛其德 · 孚○誠",
+ sg:"左款似为「永隆布政使阮○奉供」",
+ g:"金漆雕框，规格最高。若左款不误，<b>这是一位锦铺出身、外放到永隆省（南圻）当布政使的官员，回捐给本村的亭额。</b>\n\n<b>同乡在外做官，把功名折回村里的匾——这是越南村亭最典型的赞助结构，会馆里从来看不到。</b>会馆的匾是商号送的，村亭的匾是官送的。\n\n「參天贊化」出《中庸》「参赞天地之化育」；「孚○誠」取《易·中孚》的诚信之义，二者分别以两个「社」的名义奉供。",
+ w:"左款姓名与左下两方印章需补拍特写。",
+ s:"74-锦铺亭-土著的那一半"},
+{b:"jp2",y:1908,k:"nguyen",cal:"維新戊申",t:"護國庇民匾",star:1,
+ sg:"維新戊申仲秋吉旦；捐名单最长，含乡目、什长与阮、陈、黄、刘、蔡诸姓",
+ g:"<b>匾的年代高度集中在 1897／1903／1908</b>，而此时港口早已死透（秋盆江淤塞、法国人改用沱㶞）。<b>经济基础消失之后，仪式装置反而加固。</b>\n\n而<b>1908 年正是广南抗税民变（中圻民变）爆发的年份</b>，运动就从广南大禄起。同年中秋，锦铺社立「护国庇民」，署名一长串乡目什长。\n\n不敢说有因果，但在那个时点、由基层乡官集体出资、选这四个字，<b>值得在片子里停一秒。</b>",
+ s:"74-锦铺亭-土著的那一半"},
+{b:"jp2",y:2026,k:"quoc",cal:"2026.3.25",t:"选举奖状",star:1,
+ o:"越南共产党光荣万岁\n〔奖状〕表彰怀浦街区组、第7选举组——第十六届国会及各级人民议会（2026–2031 任期）选举组织与宣传工作出色",
+ sg:"会安坊人民委员会与选举委员会；钤印作 thành phố Đà Nẵng",
+ g:"同一个空间里：<b>胡志明半身像取代神位所在的中轴</b>，两侧卷轴写党的领导与「勤俭廉正、至公无私」，蓝色横幅记 2026.6.29 怀浦街区组向困难户发放礼品。\n\n<b>这才是村亭真正的连续性。三百年来它一直是：集会所、分配所、表彰所、登记所。祭的神换了、文字从汉字换成国语字、主持人从乡目换成街区组长——功能一格没动。</b>\n\n两个地名细节：钤印上是「thành phố Đà Nẵng」——<b>2025 年区划改革后广南省并入岘港，会安从「市」降为「坊」</b>；而基层单位的名字叫「<b>Hoài Phô 怀浦</b>」——<b>正是 Faifo 的词源</b>。\n\n<b>行政层级一路降下去，地名却退回到十七世纪。</b>",
+ s:"74-锦铺亭-土著的那一半"},
+{b:"jp2",y:null,k:"avoid",cal:"龍飛歲次己未",t:"里社稷匾",star:1,q:1,
+ o:"里社稷\n龍飛歲次己未　孟冬吉旦",
+ g:"<b>「龙飞」是回避具体年号的纪年法。</b>己未年可能是 1799／1859／1919。\n\n会馆用的是「光緒」「民國十七年」——<b>明确的、有政治宣示意味的纪年</b>；村亭这块用「龙飞」，是<b>刻意不站队</b>。\n\n<b>同一个镇上，两套时间观。</b>\n\n（「里社稷」本身是土地神与谷神的合祀，是最古老的一层。）",
+ w:"己未年待定：1799／1859／1919 三选一。",
+ s:"74-锦铺亭-土著的那一半"},
+/* 阮祥家祠 */
+{b:"nx",y:1809,k:"nguyen",cal:"嘉隆八年",t:"降秩诏",star:1,
+ o:"詔舊該簿阮祥雲係前經莅事不謹，經廷議降秩示警。茲准敘為戶部僉事、雲成侯。",
+ sg:"嘉隆八年十二月廿二",
+ g:"<b>这道降级诏被裱起来、翻译成越文和英文、挂在正堂。</b>\n\n<b>中国宗祠挂的是捷报、诰命、旌表——从不挂处分。这家挂了。</b>\n\n含义是：<b>这里展示的不是荣耀的精选集，是档案的完整性。</b>有降级、有起复、有召回、有署理，一份连续十三年的人事卷宗——<b>从戴罪起复到执掌兵部印，正好十一年。</b>\n\n另需纠正一个几乎必然会犯的错：阮祥一族原姓阮如、后改阮文，<b>祖籍清化镇河中府宋山县福田社——宋山正是阮主与阮朝皇室的原籍。这是一支彻头彻尾的越南京族仕宦南迁家族，与华人无涉。</b>\n\n<b>会安的汉文并不等于「华人的遗留」。汉字在这里不是移民带来的乡音，是政权的公文体。</b>",
+ s:"76-阮祥家祠-第三种建筑与弑父"},
+{b:"nx",y:1812,k:"nguyen",cal:"嘉隆十一年",t:"公同·铁木税",star:1,
+ sg:"嘉隆十一年八月廿九，传乂安镇协镇润泽侯",
+ g:"一道公文里同时办两件事：<b>因国孝小祥大礼召大臣回京</b>，和<b>派工部佥事赴镇催收铁林（gỗ lim）及各项材木税</b>，数目须详编，一体带回。\n\n<b>礼与利、朝仪与木材，写在同一张黄纸上。</b>\n\n要一句话说明阮朝国家是什么——<b>它既是仪典的执行者，也是林木的抽税人</b>——这张就够了。",
+ s:"76-阮祥家祠-第三种建筑与弑父"},
+{b:"nx",y:1820,k:"nguyen",cal:"明命元年",t:"署兵部尚书",
+ o:"卿文學練達，從政年深……兵政關重，特准署兵部尚書，領部堂印，管理部內諸公務。",
+ sg:"明命元年七月十七；同年五月初五另有一道召回京诏",
+ g:"从 1809 年戴罪起复到此，正好十一年。\n\n<b>会馆的墙告诉你谁出了钱，家祠的墙告诉你国家承认了谁。</b>这是两种完全不同的自我证明方式，<b>而后者不需要任何社群——只需要一个王朝。</b>",
+ s:"76-阮祥家祠-第三种建筑与弑父"},
+{b:"nx",y:1856,k:"nguyen",cal:"嗣德八年",t:"官箴·御笔",
+ sg:"嗣德八年七月初七；「集古」体，书于黄笺，钤「嗣德宸翰」",
+ g:"三十四年后赐给后人的一篇廉政训诫。",
+ s:"76-阮祥家祠-第三种建筑与弑父"},
+{b:"nx",y:1932,k:"quoc",cal:"1932",t:"自力文团",star:1,
+ o:"阮祥三（一枝 Nhất Linh）· 阮祥麟（石蓝 Thạch Lam）· 阮祥龙（黄道 Hoàng Đạo）",
+ sg:"自力文团（Tự Lực Văn Đoàn）「八宿」中的三位；一枝《断绝》Đoạn Tuyệt, 1935",
+ g:"<b>这座房子供奉的东西，被它的子孙亲手拆掉。</b>\n\n自力文团的纲领几乎逐条针对这座祠堂所代表的一切：<b>废汉字、用国语字；反大家庭；反包办婚姻；反儒家宗法；反科举士大夫。</b>一枝那本小说<b>书名就是「断绝」</b>。\n\n<b>这两样东西现在陈列在同一个屋顶下：正堂神龛里是四十道汉文敕命，装在木匣里；后堂三个书柜，是他们的国语字小说。上一代用来立身的文字，被下一代当成必须废除的东西；而废除者的著作，如今由祖先的祠堂保管。</b>\n\n结局：石蓝 1942 病殁 33 岁；黄道 1948 殁于中国的火车上，41 岁；一枝 1963.7.7 于审判前夜服毒自尽。<b>2001 年，他的骨灰从西贡迁回会安，葬在始祖阮祥普墓旁——一个用一生反对宗族的人，最后回到了族墓里。</b>\n\n<b>汉字在会安有两条死亡线：华人那条是被外部政治清除（1975、1978），越人那条是被内部启蒙废除。第一条是驱逐，第二条是弑父。</b>而这栋房子把两条线的物证摆在同一进厅堂里：<b>前面是敕命，后面是《断绝》。</b>",
+ s:"76-阮祥家祠-第三种建筑与弑父"},
+{b:"nx",y:2013,k:"quoc",cal:"2013",t:"家族自译陈列",
+ g:"汉文由本地学者<b>黄涌夫妇</b>译出并陈列。说明牌是<b>家族自己用不太通顺的英文写的</b>（\"our ancestor\"、\"we have still kept\"、\"Good luck to you!\"），不是遗产中心的标准双语板；房子仍由<b>第十四代</b>住着；每年腊月十一族人扫墓。\n\n<b>继承权的四项——解释权、所有权、赞助权、认证权——仍在同一家人手上。全城独此一处。</b>\n\n（对照全城其他建筑：解释权在能读匾的人手上，所有权在越南国家，赞助权在流散的第三代华裔，认证权在日本与 UNESCO。<b>没有任何一方同时握有两项。</b>）",
+ s:"76-阮祥家祠-第三种建筑与弑父"}
+];
+/* ═══ 背景轨 ═══ */
+const BG=[
+ {y:1635,t:"日本锁国",d:"幕府禁日本人出海，1639 完成锁国。日本町无新人补充，两代内消融。"},
+ {y:1644,t:"明亡",d:"遗民南下；1679 杨彦迪、陈上川部入嘉定。「明香社」设立——一个专为明遗民后裔设的行政编制，不是族群认同。"},
+ {y:1802,t:"阮朝定都顺化",d:"1815《皇越律例》基本照抄《大清律例》。阮祥家祠那些「诏」「钦此」格式全是清式公文体。"},
+ {y:1827,t:"明香改明乡",d:"编入越南户籍、纳税服役、禁清式发服、不得回国。同年朱批命明乡社与四帮帮长采买药材解京——「明乡」的实质是行政功能，不是文化认同。"},
+ {y:1858,t:"法军炮击沱㶞",d:"殖民序幕。1867 南圻全境割让。"},
+ {y:1882,t:"南圻强制国语字",d:"法国人的第一刀砍在文字上。1865《嘉定报》已是第一份国语字报。"},
+ {y:1888,t:"岘港成割让地",d:"华商与资本转往岘港，会安商业停滞。1898 设 Ville de Faifoo 为广南省城。"},
+ {y:1908,t:"中圻民变",d:"抗税运动起于广南大禄。1907 东京义塾主张废汉字、兴国语。"},
+ {y:1919,t:"科举终结",d:"1915 北圻末科乡试，1918–19 顺化最后一次乡试与会试。汉字失去唯一的上升通道。"},
+ {y:1928,t:"国民政府侨务体系",d:"南京政府形式统一，侨务委员会建立。洋商会馆同年改名中华会馆。"},
+ {y:1930,t:"铁路绕开会安",d:"最致命也最平淡的一次摘除：一条铁路决定不经过这里。会安至今没有火车站。"},
+ {y:1945,t:"保大退位",d:"阮朝汉文公文体终止。同年 9 月胡志明设扫盲署，国语字成为国民识字的唯一形式。"},
+ {y:1954,t:"日内瓦会议",d:"17 度线分治。越南方面后来指控中国压其接受——但这套指控是二十五年后回溯性追认的。"},
+ {y:1956,t:"吴廷琰第48、53号令",d:"强制在越出生的华人入籍，禁外侨经营十一种行业（米、鱼、煤、布、五金），几乎全是华商命脉。"},
+ {y:1972,t:"尼克松访华",d:"河内视为最严重的背叛——中美和解发生在美军仍在轰炸北越期间。"},
+ {y:1975,t:"西贡陷落",d:"民国纪年在此终止。会馆停摆，社群大规模离散。"},
+ {y:1978,t:"排华",d:"「改造资产阶级工商业」，华人首当其冲，约 20–25 万华侨涌入中国。次年中越战争。明乡人「靠遗忘活下来」的策略，在这一年被证明是对的。"},
+ {y:1986,t:"革新开放",d:"1990 会安国际研讨会（日本主导）→ 1991 中越关系正常化 → 会馆重新开始修。"},
+ {y:1999,t:"列入世界遗产",d:"理由之一：东南亚唯一被完整保存的传统港市——这条标准表彰的是它的失败。"},
+ {y:2025,t:"广南并入岘港",d:"会安从「市」降为「坊」。而基层单位名叫 Hoài Phô 怀浦，正是 Faifo 的词源。"}
+];
+
+/* ═══ 构建 ═══ */
+const $=s=>document.querySelector(s);
+const YEARS=[...new Set(C.filter(c=>c.y!=null).map(c=>c.y))].sort((a,b)=>a-b);
+const COLS=[null,...YEARS];
+let scale="ev", showBG=false, active=null;
+
+/* 干支 */
+const GAN="甲乙丙丁戊己庚辛壬癸",ZHI="子丑寅卯辰巳午未申酉戌亥";
+const gz=y=>GAN[(y-4)%10]+ZHI[(y-4)%12];
+
+$("#lg").innerHTML=Object.entries(CAL).map(([k,v])=>
+  `<span class="lg"><i style="background:var(${v.b})"></i>${v.n}</span>`).join("")+
+  `<span class="lg" style="border-style:dashed"><i style="background:var(--axis)"></i>背景轨（国家与外交）</span>`;
+
+$("#filt").insertAdjacentHTML("beforeend",
+  `<button class="b" data-f="all" aria-pressed="true">全部</button>`+
+  B.map(b=>`<button class="b" data-f="${b.id}" aria-pressed="false">${b.n}</button>`).join(""));
+
+function widths(){
+  if(scale==="ev") return COLS.map(()=>"minmax(66px,1fr)");
+  const out=["minmax(66px,1fr)"];
+  for(let i=0;i<YEARS.length;i++){
+    const gap=i===0?8:YEARS[i]-YEARS[i-1];
+    out.push(Math.max(30,Math.min(220,gap*2.1))+"px");
+  }
+  return out;
+}
+function build(){
+  const w=widths();
+  let h=`<colgroup><col style="width:132px">`+w.map(x=>`<col style="width:${x.startsWith("minmax")?"66px":x}">`).join("")+`</colgroup>`;
+  h+=`<thead><tr><th class="rowhead">建筑 ／ 年</th>`+
+    COLS.map(y=>y===null
+      ? `<th class="yr era">無年款<span class="g">刻意不写</span></th>`
+      : `<th class="yr">${y}<span class="g">${gz(y)}</span></th>`).join("")+`</tr></thead>`;
+  h+=`<tbody>`;
+  for(const b of B){
+    h+=`<tr data-row="${b.id}"><th class="rowhead">${b.n}<span class="sub">${b.s}</span><span class="vt">${b.v}</span></th>`;
+    for(const y of COLS){
+      const cs=C.filter(c=>c.b===b.id && c.y===y);
+      h+=`<td class="cell">`+cs.map(c=>{
+        const i=C.indexOf(c);
+        return `<button class="chip ${CAL[c.k].c}${c.star?" star":""}" data-i="${i}">
+          <span class="cal">${c.cal}${c.q?'<span class="q">?</span>':""}</span>
+          <span class="ty">${c.t}</span></button>`;
+      }).join("")+`</td>`;
+    }
+    h+=`</tr>`;
+  }
+  if(showBG){
+    h+=`<tr class="bg"><th class="rowhead">国家与外交<span class="sub">背景轨</span></th>`;
+    for(const y of COLS){
+      const e=y===null?null:BG.filter(x=>x.y>= (YEARS[YEARS.indexOf(y)-1]??0)+1 && x.y<=y);
+      h+=`<td class="cell">`+(e&&e.length?e.map(x=>
+        `<span class="bgchip" title="${x.d.replace(/"/g,"&quot;")}">${x.y} ${x.t}</span>`).join(""):"")+`</td>`;
+    }
+    h+=`</tr>`;
+  }
+  h+=`</tbody>`;
+  $("#mx").innerHTML=h;
+  buildCards();
+}
+function buildCards(){
+  $("#cards").innerHTML=B.map(b=>{
+    const cs=C.map((c,i)=>({...c,i})).filter(c=>c.b===b.id)
+      .sort((x,y)=>(x.y??0)-(y.y??0));
+    return `<div class="card" data-row="${b.id}"><h3>${b.n}<small>${b.s} · ${b.v}</small></h3>
+      <div class="items">${cs.map(c=>
+      `<div class="ci" data-i="${c.i}">
+        <span class="dot" style="background:var(${CAL[c.k].b})"></span>
+        <span class="y">${c.y??"無"}</span>
+        <span class="m"><b>${c.cal}${c.q?'<span class="q" style="color:var(--b-qing)">?</span>':""}</b>
+        <span>${c.t}</span></span></div>`).join("")}</div></div>`;
+  }).join("");
+}
+build();
+
+/* ═══ 面板 ═══ */
+function open(i){
+  const c=C[i],b=B.find(x=>x.id===c.b);
+  $("#p-b").textContent=b.n+" · "+b.s;
+  $("#p-t").textContent=c.t;
+  const cal=$("#p-c"); cal.textContent=c.cal;
+  cal.className="cal "+CAL[c.k].c;
+  $("#p-y").textContent=(c.y??"年代不详")+(c.y?"　"+gz(c.y)+"　"+CAL[c.k].n:"　"+CAL[c.k].n);
+  let h="";
+  if(c.o) h+=`<div class="sec"><h4>原文</h4><div class="orig">${c.o}</div></div>`;
+  if(c.sg)h+=`<div class="sec"><h4>落款</h4><div class="sign">${c.sg}</div></div>`;
+  if(c.g) h+=`<div class="sec"><h4>释义</h4><div class="gloss">${c.g.replace(/\n/g,"<br>")}</div></div>`;
+  if(c.w) h+=`<div class="sec"><h4>待核实</h4><div class="warn">${c.w}</div></div>`;
+  h+=`<div class="sec"><h4>出处笔记</h4><div class="src">${c.s}.md</div></div>`;
+  $("#p-body").innerHTML=h; $("#p-body").scrollTop=0;
+  $("#panel").classList.add("on"); $("#ov").classList.add("on");
+}
+function close(){$("#panel").classList.remove("on");$("#ov").classList.remove("on");}
+document.addEventListener("click",e=>{
+  const chip=e.target.closest(".chip,.ci");
+  if(chip&&chip.dataset.i!==undefined){open(+chip.dataset.i);return;}
+  const f=e.target.closest("#filt .b");
+  if(f){
+    document.querySelectorAll("#filt .b").forEach(x=>x.setAttribute("aria-pressed",String(x===f)));
+    const id=f.dataset.f;
+    document.querySelectorAll("[data-row]").forEach(r=>{
+      r.style.display=(id==="all"||r.dataset.row===id||r.classList.contains("bg"))?"":"none";});
+  }
+});
+$("#p-x").onclick=close; $("#ov").onclick=close;
+addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+$("#s-ev").onclick=()=>{scale="ev";$("#s-ev").setAttribute("aria-pressed","true");$("#s-re").setAttribute("aria-pressed","false");build();};
+$("#s-re").onclick=()=>{scale="re";$("#s-re").setAttribute("aria-pressed","true");$("#s-ev").setAttribute("aria-pressed","false");build();};
+$("#s-bg").onclick=()=>{showBG=!showBG;$("#s-bg").setAttribute("aria-pressed",String(showBG));build();};
+const root=document.documentElement,tb=$("#s-th");
+if(matchMedia("(prefers-color-scheme:dark)").matches) root.dataset.theme="dark";
+tb.textContent=root.dataset.theme==="dark"?"浅色":"深色";
+tb.onclick=()=>{root.dataset.theme=root.dataset.theme==="dark"?"light":"dark";
+  tb.textContent=root.dataset.theme==="dark"?"浅色":"深色";};
+</script>
+</body>
+</html>
